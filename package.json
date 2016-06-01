@@ -5,6 +5,9 @@
   "scripts": {
     "start": "node app.js"
   },
+  "engines": {
+    "node": "4.2.3"
+  },
   "dependencies": {
     "azure-storage": "^1.0.1",
     "body-parser": "^1.13.3",
@@ -21,8 +24,10 @@
     "method-override": "^2.3.0",
     "morgan": "^1.6.1",
     "multiparty": "^4.1.2",
+    "npm": "^3.9.3",
     "semantic-ui": "^2.1.8",
-    "serve-favicon": "^2.3.0"
+    "serve-favicon": "^2.3.0",
+    "update": "^0.4.2"
   },
   "devDependencies": {
     "grunt": "^0.4.5",
