@@ -6,7 +6,7 @@
     "start": "node app.js"
   },
   "engines": {
-    "node": "6.0.0"
+    "node": "4.2.3"
   },
   "dependencies": {
     "array-union": "^1.0.1",
