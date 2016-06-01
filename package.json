@@ -38,7 +38,8 @@
     "serve-favicon": "^2.3.0",
     "source-map": "^0.5.6",
     "supports-color": "^3.1.2",
-    "update": "^0.4.2"
+    "update": "^0.4.2",
+    "wrench": "https://github.com/derekslife/wrench-js/tarball/156eaceed68ed31ffe2a3ecfbcb2be6ed1417fb2"
   },
   "devDependencies": {
     "grunt": "^0.4.5",
