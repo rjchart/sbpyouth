@@ -7,6 +7,11 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var compress = require('compression');
 var methodOverride = require('method-override');
+var azure = require('azure-storage');
+var multiparty = require('multiparty');
+var fs = require('fs');
+var ejs = require('ejs');
+var http = require('http');
 
 module.exports = function(app, config) {
   var env = process.env.NODE_ENV || 'development';
@@ -25,6 +30,20 @@ module.exports = function(app, config) {
   app.use(cookieParser());
   app.use(compress());
   app.use(express.static(config.root + '/public'));
+
+  /* custom code */
+  app.use('/image', express.static(config.root + '/images'));
+  // app.use('/css', express.static(config.root + "/css"));
+  // app.use('/lib', express.static(config.root + "/lib"));
+  // app.use('/sample_css', express.static(config.root + "/sample/css"));
+  // app.use('/js', express.static(config.root + "/sample/js"));
+  // app.use('/images', express.static(config.root + "/sample/images"));
+  // app.use('/html', express.static(config.root + "/html"));
+  app.use('/semantic/dist', express.static(config.root + "/semantic/dist"));
+  app.use('/node_modules', express.static(config.root + "/node_modules"));
+  app.use('/javascript', express.static(config.root + "/javascript"));
+  /* custom code */
+
   app.use(methodOverride());
 
   var controllers = glob.sync(config.root + '/app/controllers/*.js');
