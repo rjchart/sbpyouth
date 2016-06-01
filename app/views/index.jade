@@ -1,5 +1,15 @@
 extends layout
 
 block content
-  h1= title
-  p Welcome to #{title} 2
+	h1= title
+	p Welcome to #{title} 2
+	script(src="/javascript/menu.js")
+	div.ui.secondary.pointing.menu
+		a.item.active Home
+		a.item Messages
+		a.item Friends
+		//- div.right.menu
+		//- 	a.ui.item Logout
+	div.ui.segment
+		p abc
+
