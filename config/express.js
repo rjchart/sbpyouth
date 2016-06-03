@@ -39,6 +39,7 @@ module.exports = function(app, config) {
   // app.use('/js', express.static(config.root + "/sample/js"));
   // app.use('/images', express.static(config.root + "/sample/images"));
   // app.use('/html', express.static(config.root + "/html"));
+  app.use('/public/img', express.static(config.root + "/public/img"));
   app.use('/semantic/dist', express.static(config.root + "/semantic/dist"));
   app.use('/node_modules', express.static(config.root + "/node_modules"));
   app.use('/javascript', express.static(config.root + "/javascript"));

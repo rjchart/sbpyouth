@@ -1,6 +1,8 @@
 var express = require('express'),
   router = express.Router(),
   Article = require('../models/article');
+var sbp_time = require('../models/sbp-time');
+var sbp_branch = require('../models/sbp-branch');
 var azure = require('azure-storage');
 var flowpipe = require('flowpipe');
 
@@ -13,102 +15,156 @@ module.exports = function (app) {
 };
 
 router.get('/', function (req, res, next) {
-  var articles = [new Article(), new Article()];
-    res.render('index', {
-      title: 'Generator-Express MVC',
-      articles: articles
-    });
-});
+    
+    var tableService = azure.createTableService(storageAccount, accessKey);
+  
+    flowpipe.init( function(next) {
+        var page = 1;
+        next(null, page);
+    })
+    .pipe('makeTable', function (next, page) {
 
-router.get('/test', function (req, res, next) {
-	var tableService = azure.createTableService(storageAccount, accessKey);
-  
-  
-  flowpipe.init( function(next) {
-      var page = 1;
-      next(null, page);
-  })
-  .pipe('makeTable', function (next, page) {
-  
-      tableService.createTableIfNotExists('charges', function(error, result, res){
-          if(!error){
-              // Table exists or created
-              console.log("result:" + result);
-          }
-          else {
-              console.log("error:" + error);
-          }
-          next(null, page);
-      });  
-  })
-  .pipe('getChargeMembers', function (next, page) {
-      var query = new azure.TableQuery()
-      .where('PartitionKey eq ?', '청년부');
+        tableService.createTableIfNotExists('charges', function(error, result, res){
+            if(!error){
+                // Table exists or created
+                console.log("result:" + result);
+            }
+            else {
+                console.log("error:" + error);
+            }
+            next(null, page);
+        });  
+    })
+    .pipe('getChargeMembers', function (next, page) {
+        var query = new azure.TableQuery()
+        .where('PartitionKey eq ?', '청년부');
 
-      // 데이터베이스 쿼리를 실행합니다.
-      tableService.queryEntities('charges', query, null, function entitiesQueried(error, result) {
-          if (!error) {
-              var testString = JSON.stringify(result.entries);
-              var entries = JSON.parse(testString);
-      //         // response.send(ejs.render(data, 
-      //         //     {data: entries}
-      //         // ));
-              next(null, entries);
-          }
-          else {
-              console.log("error:" + error);
-              next("error", page);
-          }
-              
-      });
-      // next(null, page);
-  })
-  .end (function (err, result) {
-    if (!err) {
+        // 데이터베이스 쿼리를 실행합니다.
+        tableService.queryEntities('charges', query, null, function entitiesQueried(error, result) {
+            if (!error) {
+                var testString = JSON.stringify(result.entries);
+                var entries = JSON.parse(testString);
+                next(null, entries, page);
+            }
+            else {
+                console.log("error:" + error);
+                next(error);
+            }
+                
+        });
+    })
+    .pipe('showChargeMembers', function (next, result, page) {
         console.log("done");
         var articles = [new Article(), new Article()];
-        res.render('chargeList', {
-          title: 'Charge Member List',
-          articles: articles,
-          data: result
+        res.render('index', {
+            title: '신반포 중앙교회 청년부',
+            articles: articles,
+            data: result
         });
-      
-    }
-  });
+    })
+    .end ();
+    
+//   var articles = [new Article(), new Article()];
+//     res.render('index', {
+//       title: 'Generator-Express MVC',
+//       articles: articles
+//     });
+});
+
+router.get('/branch', function (req, res, next) {
+    var tableService = azure.createTableService(storageAccount, accessKey);
+    
+    var year = req.body['year'];
+	var attendSet = req.body['attendValue'];
+    if (year==null)
+        year = sbp_time.getYear();
+	if (!attendSet)
+		attendSet = 0;  
   
-  // flowpipe.init(function (next) {
-  //       var page = 1;
-  //       next(null, page);
-  //     })
-  //     .pipe('makeTable', function (next, page) {
-  //         tableService.createTableIfNotExists('charges', function(error, result, res){
-  //             if(!error){
-  //                 // Table exists or created
-  //                 next(null, page);
-  //             }
-  //         });
-  //     })
-  //     .pipe('getChargeMembers', function (next, page) {
-  //         // fs.readFile('chargeList.html', 'utf8', function (error, data) {
-  //           var query = new azure.TableQuery()
-  //           .where('PartitionKey eq ?', '청년부');
+    flowpipe.init( function(next) {
+        var page = 1;
+        next(null, page);
+    })
+    .pipe('getBranchMembers', function (next, page) {
 
-  //           // 데이터베이스 쿼리를 실행합니다.
-  //           tableService.queryEntities('charges', query, null, function entitiesQueried(error, result) {
-  //               if (!error) {
-  //                   var testString = JSON.stringify(result.entries);
-  //                   var entries = JSON.parse(testString);
-  //                   // response.send(ejs.render(data, 
-  //                   //     {data: entries}
-  //                   // ));
-  //                   next(null, entries);
-  //               }
-  //           });
+        /*****
+            Branch의 개수 만큼 데이터를 가져오기 위해서 임원 중 BS 데이터를 가져온다.
+        *****/
+        // 브랜치에서 BS의 데이터를 가져오는 쿼리 생성.
+        var branchQuery = new azure.TableQuery()
+        .where('PartitionKey eq ?', year.toString());
 
-  //         // });
-  //     })
-  //     .end(function (err, result) {
-  //          console.log(result);
-  //     });
+        // 데이터베이스 쿼리를 실행.
+        tableService.queryEntities('branchlog', branchQuery, null, function entitiesQueried(error, result) {
+            if (!error) {
+                next(null, result.entries, page);
+            }
+            else {
+                console.log("err: " + error);
+                next(error);   
+            }
+        });
+        console.log("done!!");
+    })
+    .pipe('makeBranchTables', function (next, entries, page) {
+        // 가져온 데이터를 읽어들일 수 있도록 수정한다.
+        var blTestString = JSON.stringify(entries);
+        var blList = JSON.parse(blTestString);
+        var bsList = [];
+        
+        blList.forEach (function (item, index) {
+            if (item.charge._ == 'bs')
+                bsList.push(item);
+        });
+
+        var branchTable = [];
+        var maxLength = 0;
+        var maxYoungLength = 0, maxArmy = 0, maxOther = 0;
+        var branchYoungTable = [];
+        var armyTable = [], otherTable = [];
+
+        /***
+            청년부 정보를 브랜치별로 정리한다.
+        ***/
+        bsList.forEach (function (item, index) {
+            var branchName = item.branch._;
+            var getList = sbp_branch.getOldBM(item, blList, attendSet);
+            var getYoungList = sbp_branch.getYoungBM(item, blList, attendSet);
+            var armyList = sbp_branch.getArmyBM(item, blList);
+            var otherList = sbp_branch.getOtherBM(item, blList);
+
+            if (maxLength < getList.length) maxLength = getList.length;
+            if (maxYoungLength < getYoungList.length) maxYoungLength = getYoungList.length;
+            if (maxArmy < armyList.length) maxArmy = armyList.length;
+            if (maxOther < otherList.length) maxOther = otherList.length;
+
+            branchTable.push(getList);
+            branchYoungTable.push(getYoungList);
+            armyTable.push(armyList);
+            otherTable.push(otherList);
+        });
+
+        var etcList = sbp_branch.getEtcOldMember(blList,attendSet);
+        branchTable.push(etcList);
+
+        var etcList2 = sbp_branch.getEtcYoungMember(blList,attendSet);
+        branchYoungTable.push(etcList2);
+
+        res.render('branch', {
+            bsList: bsList,
+            blList: blList,
+            maxNumber: maxLength,
+            maxYoungNumber: maxYoungLength,
+            branchTable: branchTable,
+            branchYoungTable: branchYoungTable,
+            armyTable: armyTable,
+            otherTable: otherTable,
+            maxArmy: maxArmy,
+            maxOther: maxOther,
+            year: year
+        });        
+
+    })
+    .end ();
 
 });

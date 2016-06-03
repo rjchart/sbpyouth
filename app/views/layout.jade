@@ -5,13 +5,11 @@ html(lang='en')
     meta(name='viewport', content='width=device-width')
     title= title
     block css
-      link(rel='stylesheet' type='text/css' href='/javascript/semantic.min.css')
-      link(rel='stylesheet', href='/css/style.css')
+      link(rel='stylesheet' type='text/css' href='/javascript/dist/semantic.min.css')
     block js
-
       script(src='/javascript/jquery.min.js')
+      script(src='/javascript/dist/semantic.min.js')
       script(src='/javascript/main.js')
-      script(src='/javascript/semantic.min.js')
 
       //- script(src="/javascript/docs.js")
 
@@ -20,4 +18,23 @@ html(lang='en')
 
 
   body
+    block header
+      div.ui.inverted.menu
+          div.ui.container
+            header.item
+              img.logo(src="/public/img/logo.png")
+              | <p> <span style="color:olive"> &nbsp;&nbsp; 대한예수교장로회 </span><br/>
+              | &nbsp; 신반포 중앙교회 청년부 </p>
+            block header_item01
+              a.item(href="/")
+                i.home.icon
+                |Home  
+            block header_item02
+              a.item(href="/branch")
+                i.grid.layout.icon 
+                |Branchs
+            block header_item03
+              a.item
+                i.child.icon 
+                |Friends
     block content
