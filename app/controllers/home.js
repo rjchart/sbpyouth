@@ -3,8 +3,10 @@ var express = require('express'),
   Article = require('../models/article');
 var sbp_time = require('../models/sbp-time');
 var sbp_branch = require('../models/sbp-branch');
+var sbp_member = require('../models/sbp-member');
 var azure = require('azure-storage');
 var flowpipe = require('flowpipe');
+var jade = require("jade");
 
 var accessKey = 'pnOhpX2pEOye58E2gtlU5gVGzUbFVk3GcNYerm4RDuNuzoqsSB06v28oy3EF/wUZo6cUq/SUNdH0AQqek6rg7Q==';
 var storageAccount = 'sbpccyouth';
@@ -74,8 +76,8 @@ router.get('/', function (req, res, next) {
 router.get('/branch', function (req, res, next) {
     var tableService = azure.createTableService(storageAccount, accessKey);
     
-    var year = req.body['year'];
-	var attendSet = req.body['attendValue'];
+    var year = req.query.year;
+	var attendSet = req.query['attendValue'];
     if (year==null)
         year = sbp_time.getYear();
 	if (!attendSet)
@@ -168,3 +170,44 @@ router.get('/branch', function (req, res, next) {
     .end ();
 
 });
+
+router.post('/branch_profile', function (req, res, next) {
+    var id = req.body.name;
+    
+    sbp_member.getMemberWithName(id, function (getData) {
+        getData.branch = req.body.branch;
+        getData.attend = req.body.attend;
+        getData.year = req.body.year;
+        var getHtml = jade.renderFile('app/views/profile_template.jade', getData);
+        res.send({
+            result: true,
+            message: getHtml
+        });
+        // res.render('profile_template', getData);
+    });  
+});
+
+router.get('/friends', function (req, res, next) {
+    // var year = req.query.year;
+    var year = sbp_time.getYear();
+	var attendSet = req.query.attendValue;
+    if (!attendSet)
+        attendSet = 0;
+    
+    sbp_member.getMembersWithYear(year, function (memberList) {
+        var memberList2 = [];
+        memberList.forEach(function (item, index) {
+            if (item.attend._ >= attendSet)
+                memberList2.push(item);
+        });
+
+        // 정리된 정보를 건내고 ejs 랜더링 하여 보여줌.
+        res.render('friends', 
+            {	
+                memberList: memberList2,
+                year: year
+            }
+        );
+    });
+});
+

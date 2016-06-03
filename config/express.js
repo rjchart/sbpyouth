@@ -32,7 +32,7 @@ module.exports = function(app, config) {
   app.use(express.static(config.root + '/public'));
 
   /* custom code */
-  app.use('/image', express.static(config.root + '/images'));
+  // app.use('/image', express.static(config.root + '/images'));
   // app.use('/css', express.static(config.root + "/css"));
   // app.use('/lib', express.static(config.root + "/lib"));
   // app.use('/sample_css', express.static(config.root + "/sample/css"));
@@ -43,6 +43,7 @@ module.exports = function(app, config) {
   app.use('/semantic/dist', express.static(config.root + "/semantic/dist"));
   app.use('/node_modules', express.static(config.root + "/node_modules"));
   app.use('/javascript', express.static(config.root + "/javascript"));
+  app.use('/app/views', express.static(config.root + "/app/views"));
   /* custom code */
 
   app.use(methodOverride());

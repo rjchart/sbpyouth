@@ -1,0 +1,95 @@
+extends layout
+block script
+	script.
+
+		function ProfileBS(year, name, branch, attend, bYear, bMonth, bDay, gender, phone, attendDesc, tension, photo) {
+			var getData = {};
+			getData.birthYear = bYear;
+			getData.birthMonth = bMonth;
+			getData.birthDay = bDay;
+			getData.branch = branch;
+			getData.name = name;
+			getData.attend = attend;
+			getData.gender = gender;
+			getData.phone = phone;
+			getData.attendDesc = attendDesc;
+			getData.tension = tension;
+			getData.year = year;
+			getData.photo = photo;
+			console.log(getData);
+			var html = new EJS({url: 'profile_template.html'}).render(getData);
+			console.log(html);
+			document.getElementById("profileData").innerHTML = html;
+		}
+		
+		function Display () {
+			var $htable = $('table.scrolled'), $table = $('table.scroll'), 
+			$bodyCells = $table.find('tbody tr:last').children(),
+			$headCells = $htable.find('thead tr').children(), colWidth, colWidth2, theadCols;
+			$(window).resize(function() {
+				colWidth = $bodyCells.map(function() {
+					return $(this).width();
+				}).get();
+				$htable.find('thead tr').children().each(function(i, v) {
+					$(v).width(colWidth[i]);
+				});
+			}).resize(); // Trigger resize handler
+		}
+		
+		window.onload = function () {
+			Display();
+		}
+	
+block header_item03
+	a.item.active(href="/friends")
+		i.child.icon 
+		|Friends
+block content
+	div.ui.secondary.pointing.menu
+		div.ui.container
+			a.active.item 전체 맴버 현황
+			a.item 부장 집사
+			a.item 임원
+	div.main.ui.container(onload="Display()")
+		div.ui.grid
+			div.twelve.wide.streched.column
+				div.ui.segment
+					h2.ui.header
+						|#{year}년도 청년부 맴버 리스트
+					div.ui.container
+						table.scrolled.ui.celled.striped.table
+							thead
+								tr
+									th 이름
+									th 또래
+									th 성별
+									th 전화번호
+									th 생년월일
+									th 브랜치
+									th 소속
+									th 출석률
+									th 비고
+						div.member(style="width:100%; height:350px; overflow:auto")
+							table.scroll.ui.celled.striped.table
+								tbody
+									each member, i in memberList
+										tr
+											td: label(onclick="ProfileBS(#{year}, '#{member.RowKey._}','#{member.branch._}','#{member.attend._}','#{member.birthYear._}','#{member.birthMonth._}','#{member.birthDay._}','#{member.gender._}','#{member.phone._}','#{member.attendDesc._}','#{member.tension ? member.tension._}', '#{member.photo ? member.photo._}'") #{member.RowKey._}
+											td #{member.birthYear._}
+											td #{member.gender._}
+											td #{member.phone._}
+											td #{parseInt(member.birthYear._) + 1900}년 #{member.birthMonth._}월 #{member.birthDay._}일															
+											td #{ member.branch ? member.branch._ : '없음'}
+											td #{ member.part ? member.part._ : '없음'}
+											td #{ member.attend ? member.attend._ + '출석' : '없음'}
+											td #{ member.attendDesc ? member.attendDesc._ : '없음'}
+						table.ui.celled.striped.table
+							tfoot
+								tr
+									th(colspan="9") 
+										div.ui.borderless.small.right.floated.pagination.menu
+											a.item(href="/members?") <i class="child icon"></i> all
+											a.item(href="/members?attendValue=1") <i class="frown icon"></i> bad
+											a.item(href="/members?attendValue=2") <i class="meh icon"></i> well
+											a.item(href="/members?attendValue=3") <i class="smile icon"></i> good
+											a.item(href="/members?attendValue=4") <i class="thumbs outline up icon"></i> perfect
