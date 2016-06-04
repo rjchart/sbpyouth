@@ -5,6 +5,7 @@ var util = require('util');
 var sbp_time = require('../models/sbp-time');
 
 var tableService = azure.createTableService(storageAccount, accessKey);
+var entGen = azure.TableUtilities.entityGenerator;
 
 function FormatNumberLength(num, length) {
     var r = "" + num;
@@ -12,6 +13,62 @@ function FormatNumberLength(num, length) {
         r = "0" + r;
     }
     return r;
+}
+
+function TensionToString(value) {
+    if (!value)
+        value = 0;
+    value = parseInt(value);
+    var returnString;
+    switch (value) {
+        case 0:
+            returnString = '과묵함';
+            break;
+        case 1:
+            returnString = '내성적임';
+            break;
+        case 2:
+            returnString = '일반적임';
+            break;
+        case 3:
+            returnString = '사교적임';
+            break;
+        case 4:
+            returnString = '매우 활발함';
+            break;
+        default:
+            returnString = '잘 모름';
+            break;
+    }
+    return returnString;
+}
+
+module.exports.AttendToString = function AttendToString(value) {
+    if (!value)
+        value = 0;
+    value = parseInt(value);
+    var returnString;
+    switch (value) {
+        case 0:
+            returnString = '안 나옴';
+            break;
+        case 1:
+            returnString = '가끔 나옴';
+            break;
+        case 2:
+            returnString = '종종 나옴';
+            break;
+        case 3:
+            returnString = '잘 나옴';
+            break;
+        case 4:
+            returnString = '매주 나옴';
+            break;
+        default:
+            returnString = '잘 모름';
+            break;
+    }
+    return returnString;
 }
 
 function CombineList(listA, listB) {
@@ -92,7 +149,9 @@ module.exports.getMemberWithName = function (name, next) {
             getData.phone = (entries[0].phone != null) ? entries[0].phone._ : null;
             getData.attendDesc = (entries[0].attendDesc != null) ? entries[0].attendDesc._ : null;
             getData.tension = (entries[0].tension != null) ? entries[0].tension._ : null;
+            getData.tensionString = TensionToString(getData.tension); 
             getData.year = (entries[0].PartitionKey != null) ? entries[0].PartitionKey._ : null;
+            getData.part = (entries[0].part != null) ? entries[0].part._ : null;
             getData.photo = (entries[0].photo != null) ? entries[0].photo._ : null;
             return next(getData);
         }    
@@ -129,10 +188,108 @@ module.exports.getMembersWithYear = function (year, next) {
                     });
 
                     memberList = CombineList(blList, memberList)[1];
+                    memberList.forEach(function (item, index) {
+                        item.birthMonth = {"_": FormatNumberLength((item.birthMonth != null) ? item.birthMonth._ : 0, 2)};
+                        item.birthDay = {"_": FormatNumberLength((item.birthDay != null) ? item.birthDay._ : 0, 2)};
+                        var getTension = (item.tension != null) ? item.tension._ : null;
+                        item.tensionString = {"_": TensionToString(getTension)};
+                        var getAttend = (item.attend != null) ? item.attend._ : null;
+                        item.attendString = {"_": exports.AttendToString(getAttend)};
+                    });
                     return next(memberList);
                 }
             });
         }
     });
+}
+
+module.exports.MemberSave = function(fields) {
+	var response = fields['res'];
+	var tableService = fields['table'];
+
+	var urlString = fields['urlString'];
+	var age = 2016 - fields['PartitionKey'];
+	console.log("member save: " + urlString);
+	var maxCount = 2;
+	var count = 0;
+    var year = parseInt(fields['PartitionKey']) - 1900;
+	var entity = {
+		PartitionKey: entGen.String(year.toString()),
+		RowKey: entGen.String(fields['RowKey']),
+		gender: entGen.String(fields['gender']),
+		phone: entGen.String(fields['phone']),
+		birthYear: entGen.Int32(year),
+		birthMonth: entGen.Int32(fields['birthMonth']),
+		birthDay: entGen.Int32(fields['birthDay']),
+		attendDesc: entGen.String(fields['attendDesc']),
+		tension: entGen.Int32(fields['tension'])
+	};
+	if (urlString) {
+		entity.photo = entGen.String(urlString);
+    }
+    
+    var saved = entity;
+    
+	// 데이터베이스에 entity를 추가합니다.
+	tableService.insertOrMergeEntity('members', entity, function(error, result, res) {
+		if (!error) {
+			console.log("member done");
+			count++;
+			if (count >= maxCount)
+				response.send({result:true,
+                    field:saved});
+		}
+		else {
+			count++;
+			console.log("error in member save");
+			if (count >= maxCount)
+				response.send({result:true,
+                    field:saved});
+		}
+	});
+
+	var yearData = fields['year'].replace('-2','.5');
+	var entity2 = {
+		PartitionKey: entGen.String(fields['year']),
+		RowKey: entGen.String(fields['RowKey']),
+		branch: entGen.String(fields['branch']),
+		birthYear: entGen.Int32(year),
+		age: entGen.Int32(age),
+		attend: entGen.Int32(fields['attend']),
+		part: entGen.String(fields['part']),
+		branchYear: entGen.String(yearData)
+	};
+    
+    for (var key in entity2) {
+        // saved[key] = {"_":, fields[key]};
+        if (key == "PartitionKey")
+            saved["year"] = entity2[key];
+        else
+            saved[key] = entity2[key];
+    }
+    saved["attendString"] = entGen.String(fields['attendString']);
+    saved["tensionString"] = entGen.String(TensionToString(fields['tension']));
+    if (fields["photo"] != null)
+        saved["photo"] = entGen.String(fields["photo"]);
+    else
+        saved["photo"] = entGen.String("");
+
+	// 데이터베이스에 entity를 추가합니다.
+	tableService.mergeEntity('branchlog', entity2, function(error, result, res) {
+		if (!error) {
+			console.log("branch done");
+			count++;
+			if (count >= maxCount)
+				response.send({result:true,
+                    field:saved});
+		}
+		else {
+			count++;
+			console.log("error in branchlog save");
+			if (count >= maxCount)
+				response.send({result:true,
+                    field:saved});
+		}
+	});
 }
 

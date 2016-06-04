@@ -1,0 +1,73 @@
+form#uploadForm(action="/profile_edit/#{name}", enctype="multipart/form-data", method="post")
+    div.ui.card
+        input(type="hidden", name="PartitionKey", value="#{birthYear}")
+        input(type="hidden", name="RowKey", value="#{name}")
+        input(type="hidden", name="year", value="#{year}")
+        label.image.outImg(style="background-color:#e5e5e5", for="uploadInput")
+            if (photo)
+                img#updateImage.fitImg(src="#{photo}") 
+                input(type="hidden", name="photo", value="#{photo}")
+            else
+                img#updateImage.fitImg(src="/public/img/image.png")
+        div.content
+            a.header #{name}
+            div.meta
+                span.date #{birthYear}.#{birthMonth}.#{birthDay}
+            input(type="hidden", name="birthYear", value="#{birthYear}")
+            input(type="hidden", name="birthMonth", value="#{birthMonth}")
+            input(type="hidden", name="birthDay", value="#{birthDay}")
+            table.ui.small.table
+                tr 
+                    td 성별
+                    td
+                        div.ui.input.focus
+                            input(type="text", name="gender", value="#{gender}" style="max-width:130px; max-height:30px")
+                tr 
+                    td 브랜치
+                    td 
+                        div.ui.input.focus
+                            input(type="text", name="branch", value="#{branch}", style="max-width:130px; max-height:30px")
+                tr 
+                    td 전화번호
+                    td 
+                        div.ui.input.focus
+                            input(type="text", name="phone", value="#{phone}", style="max-width:130px; max-height:30px")
+                tr 
+                    td 출석빈도
+                    td.center.aligned: div.ui.selection.dropdown(style="min-width:100px;")
+                        input(type="hidden", name="attend", value="#{attend}")
+                        i.dropdown.icon
+                        div.text #{attendString}
+                        div.menu
+                            div.item(data-value="0", style="min-width:100px; max-height:30px") 안 나옴
+                            div.item(data-value="1", style="min-width:100px; max-height:30px") 가끔 나옴
+                            div.item(data-value="2", style="min-width:100px; max-height:30px") 종종 나옴
+                            div.item(data-value="3", style="min-width:100px; max-height:30px") 잘 나옴
+                            div.item(data-value="4", style="min-width:100px; max-height:30px") 매주 나옴
+                        
+                tr 
+                    td 성격
+                    td.center.aligned: div.ui.selection.dropdown(style="min-width:100px;")
+                        input(type="hidden", name="tension", value="#{tension}")
+                        i.dropdown.icon
+                        div.text #{tensionString}
+                        div.menu
+                            div.item(data-value="0", style="min-width:100px; max-height:30px") 과묵함
+                            div.item(data-value="1", style="min-width:100px; max-height:30px") 내성적임
+                            div.item(data-value="2", style="min-width:100px; max-height:30px") 일반적임
+                            div.item(data-value="3", style="min-width:100px; max-height:30px") 사교적임
+                            div.item(data-value="4", style="min-width:100px; max-height:30px") 매우 활발함
+                tr 
+                    td 비고사항
+                    td 
+                        div.ui.input.focus
+                            input(type="text", name="attendDesc", value="#{attendDesc}", style="max-width:130px; max-height:30px")
+                tr 
+                    td 소속
+                    td 
+                        div.ui.input.focus
+                            input(type="text", name="part", value="#{part}", style="max-width:130px; max-height:30px")
+        div.ui.bottom.attached.button(onclick="UploadSubmit()")
+            i.write.icon 
+            |Edit  
+    input#uploadInput.filebox.upload(type="file", name="upload", accept="image/*", onchange="ReadURL(this)")

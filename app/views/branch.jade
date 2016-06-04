@@ -8,19 +8,30 @@ block script
 				branch: branch,
 				attend: attend
 			}
-
-			$.ajax({
-				url: "/branch_profile",
-				type: "post",
-				data: data,
-				dataType: "json",
-				success: function(data) {
-					document.getElementById("profileData").innerHTML = data.message;
-				},
-				error: function(request) {
-					alert("실패");
-				}
-			});
+			var formData = new FormData();
+			for (var key in data) {
+				var value = data[key];
+				formData.append(key, value);
+			}
+			var xhttp = new XMLHttpRequest();
+			xhttp.open("POST", "branch_profile", true);
+			xhttp.send(JSON.stringify(data));
+			xhttp.onreadystatechange = function() {
+				document.getElementById('profileData').innerHTML = xhttp.responseText;
+			}
+			
+			//- $.ajax({
+			//- 	url: "/branch_profile",
+			//- 	type: "post",
+			//- 	data: data,
+			//- 	dataType: "json",
+			//- 	success: function(data) {
+			//- 		document.getElementById("profileData").innerHTML = data.message;
+			//- 	},
+			//- 	error: function(request) {
+			//- 		alert("실패");
+			//- 	}
+			//- });
 		}
 		
 block header_item02
@@ -109,33 +120,5 @@ block content
 												label#profile(onclick="ProfileBS('#{item[i].RowKey._}','#{year}','#{item[i].branch._}','#{item[i].attend._}')") #{item[i].RowKey._}
 									td
 								- }
-			div.four.wide.column
-				div#profileData.ui.card
-					div.image.outImg(style="background-color:#e5e5e5")
-						img.fitImg(src="/public/img/image.png")
-					div.content
-						a.header 선택사항 없음
-						div.meta
-							span.date 0000.00.00
-						table.ui.small.table
-							tr 
-								td 성별
-								td 
-							tr 
-								td 브랜치
-								td 
-							tr 
-								td 전화번호
-								td 
-							tr 
-								td 출석빈도
-								td 
-							tr 
-								td 성격
-								td 
-							tr 
-								td 비고사항
-								td 
-							
-							
-						
+			div#profileData.four.wide.column
+				include profile

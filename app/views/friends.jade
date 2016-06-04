@@ -1,41 +1,131 @@
 extends layout
 block script
+	script(type="text/javascript", src="javascript/ejs_production.js")
+	script(type="text/javascript", src="javascript/templates.js")
+	script(type="text/javascript", src="javascript/runtime.js")
 	script.
 
-		function ProfileBS(year, name, branch, attend, bYear, bMonth, bDay, gender, phone, attendDesc, tension, photo) {
+		function ProfileBS(year, name, branch, attendString, attend, bYear, bMonth, bDay, gender, phone, attendDesc, tension, tensionString, part, photo) {
+			
+			//- var div = document.createElement("div");
+			//- div.innerHTML = html;
+			//- document.body.appendChild(div);
+			
 			var getData = {};
-			getData.birthYear = bYear;
+			getData.birthYear = parseInt(bYear) + 1900;
 			getData.birthMonth = bMonth;
 			getData.birthDay = bDay;
 			getData.branch = branch;
 			getData.name = name;
+			getData.attendString = attendString;
 			getData.attend = attend;
 			getData.gender = gender;
 			getData.phone = phone;
 			getData.attendDesc = attendDesc;
 			getData.tension = tension;
+			getData.tensionString = tensionString;
 			getData.year = year;
-			getData.photo = photo;
+			getData.part = part;
+			getData.photo = (photo != 0) ? photo : null;
 			console.log(getData);
-			var html = new EJS({url: 'profile_template.html'}).render(getData);
-			console.log(html);
+			//- var html = new EJS({url: 'app/views/profile_template.html'}).render(getData);
+			var html = window.profile_edit(getData);
+			//- console.log(html);
 			document.getElementById("profileData").innerHTML = html;
+			
+			$(".ui.dropdown").dropdown();
 		}
 		
 		function Display () {
 			var $htable = $('table.scrolled'), $table = $('table.scroll'), 
 			$bodyCells = $table.find('tbody tr:last').children(),
-			$headCells = $htable.find('thead tr').children(), colWidth, colWidth2, theadCols;
+			$headCells = $htable.find('thead tr').children(), colWidth = [], colWidth2, theadCols;
+			
 			$(window).resize(function() {
-				colWidth = $bodyCells.map(function() {
-					return $(this).width();
-				}).get();
+				$bodyCells.map(function(i) {
+					colWidth[i] = this.clientWidth;
+				});
 				$htable.find('thead tr').children().each(function(i, v) {
 					$(v).width(colWidth[i]);
 				});
 			}).resize(); // Trigger resize handler
+			//- setTimeout(function(){
+			//- }, 100);
 		}
 		
+		function addListener(element, eventName, handler) {
+			if (element.attachEvent) {
+				element.attachEvent('on' + eventName, handler);
+			}
+			else if (element.addEventListener) {
+				element.addEventListener(eventName, handler, false);
+			}
+			else {
+				element['on' + eventName] = handler;
+			}
+			element['on' + eventName] = handler;
+		}
+
+		function removeListener(element, eventName, handler) {
+			if (element.detachEvent) {
+				element.detachEvent('on' + eventName, handler);
+			}
+			else if (element.addEventListener) {
+				element.removeEventListener(eventName, handler, false);
+			}
+			else {
+				element['on' + eventName] = null;
+			}
+		}
+		
+		function UploadSubmit () {
+			$('#uploadForm').ajaxSubmit({
+				error: function(xhr) {
+					alert("데이터 갱신에 실패했습니다.");
+				},
+
+				success: function(response) {
+					alert("저장되었습니다.");
+					if (response.field) {
+						var field = response.field;
+						var id = field['RowKey']._;
+						//- var clickpass = "ProfileBS(" + field['year']._ + ", '"
+						//- + field['RowKey']._ + "','" + field['branch']._ + "','" 
+						//- + field['attendString']._ + "','" + field['attend']._ + "','" +
+						//- + field['birthYear']._ + "','" + field['birthMonth']._ + "','" + field['birthDay']._ + "','" 
+						//- + field['gender']._ + "','" + field['phone']._ + "','" + field['attendDesc']._ + "','" 
+						//- + field['tension']._ + "','" + field['tensionString']._ + "','" + field['part']._ + "','" 
+						//- + field['photo']._ + "')";
+						//- var clickpass = ProfileBS(field['year']._, field['RowKey']._, field['branch']._, field['attendString']._, field['attend']._,
+						//-  field['birthYear']._, field['birthMonth']._, field['birthDay']._, field['gender']._, field['phone']._, field['attendDesc']._, 
+						//-  field['tension']._, field['tensionString']._, field['part']._, field['photo']._ );
+						var check = document.getElementById(id);
+						check.onclick = function () {ProfileBS(field['year']._, field['RowKey']._, field['branch']._, field['attendString']._, field['attend']._,
+						 field['birthYear']._, field['birthMonth']._, field['birthDay']._, field['gender']._, field['phone']._, field['attendDesc']._, 
+						 field['tension']._, field['tensionString']._, field['part']._, field['photo']._ );
+						};
+						//- addListener(document.getElementById('check'), 'click', "ProfileBS()");
+					}
+				}
+			});
+		}
+		
+		function ReadURL(input) {
+			var url = input.value;
+			var ext = url.substring(url.lastIndexOf('.') + 1).toLowerCase();
+			if (input.files && input.files[0] && (ext == "gif" || ext == "png" || ext == "jpeg" || ext == "jpg")) {
+				var reader = new FileReader();
+
+				reader.onload = function (e) {
+					$('#updateImage').attr('src', e.target.result);
+				}
+				reader.readAsDataURL(input.files[0]);
+			}
+			else{
+				alert("파일을 올리는데 실패하였습니다.");
+			}
+		}
+
 		window.onload = function () {
 			Display();
 		}
@@ -57,33 +147,31 @@ block content
 					h2.ui.header
 						|#{year}년도 청년부 맴버 리스트
 					div.ui.container
-						table.scrolled.ui.celled.striped.table
+						table.scrolled.ui.line.celled.table(style="width:100%;border-bottom-width: 5px; margin:0")
 							thead
 								tr
 									th 이름
-									th 또래
 									th 성별
 									th 전화번호
 									th 생년월일
 									th 브랜치
 									th 소속
-									th 출석률
+									th 출석
 									th 비고
-						div.member(style="width:100%; height:350px; overflow:auto")
-							table.scroll.ui.celled.striped.table
+						div.member(style="width:100%; height:340px; overflow:auto; margin:0")
+							table.scroll.ui.celled.structured.striped.table
 								tbody
 									each member, i in memberList
 										tr
-											td: label(onclick="ProfileBS(#{year}, '#{member.RowKey._}','#{member.branch._}','#{member.attend._}','#{member.birthYear._}','#{member.birthMonth._}','#{member.birthDay._}','#{member.gender._}','#{member.phone._}','#{member.attendDesc._}','#{member.tension ? member.tension._}', '#{member.photo ? member.photo._}'") #{member.RowKey._}
-											td #{member.birthYear._}
-											td #{member.gender._}
+											td: label(id="#{member.RowKey._}" onclick="ProfileBS(#{year}, '#{member.RowKey._}','#{member.branch._}','#{member.attendString._}','#{member.attend._}','#{member.birthYear._}','#{member.birthMonth._}','#{member.birthDay._}','#{member.gender._}','#{member.phone._}','#{member.attendDesc._}','#{member.tension ? member.tension._ : 0}','#{member.tensionString ? member.tensionString._ : 0}','#{member.part ? member.part._ : 0}', '#{member.photo ? member.photo._ : 0}')") #{member.RowKey._}
+											td #{member.gender?member.gender._: '모름'}
 											td #{member.phone._}
-											td #{parseInt(member.birthYear._) + 1900}년 #{member.birthMonth._}월 #{member.birthDay._}일															
+											td #{parseInt(member.birthYear._) + 1900}.#{member.birthMonth._}.#{member.birthDay._}															
 											td #{ member.branch ? member.branch._ : '없음'}
 											td #{ member.part ? member.part._ : '없음'}
-											td #{ member.attend ? member.attend._ + '출석' : '없음'}
+											td(style="min-width:40px") #{ member.attendString ? member.attendString._  : '없음'}
 											td #{ member.attendDesc ? member.attendDesc._ : '없음'}
-						table.ui.celled.striped.table
+						table.ui.celled.structured.striped.table(style="margin:0;border-up-width: 5px;")
 							tfoot
 								tr
 									th(colspan="9") 
@@ -92,4 +180,7 @@ block content
 											a.item(href="/members?attendValue=1") <i class="frown icon"></i> bad
 											a.item(href="/members?attendValue=2") <i class="meh icon"></i> well
 											a.item(href="/members?attendValue=3") <i class="smile icon"></i> good
-											a.item(href="/members?attendValue=4") <i class="thumbs outline up icon"></i> perfect
+											a.item(href="/members?attendValue=4") <i class="thumbs outline up icon"></i> perfect											
+			div#profileData.four.wide.column
+				include profile
+							

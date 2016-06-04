@@ -1,0 +1,28 @@
+form#uploadForm(action="/profile_edit/#{name}", enctype="multipart/form-data", method="post")
+    div.ui.card
+        div.image.outImg(style="background-color:#e5e5e5")
+            img.fitImg(src="/public/img/image.png")
+        div.content
+            a.header 선택사항 없음
+            div.meta
+                span.date 0000.00.00
+            table.ui.small.table
+                tr 
+                    td 성별
+                    td 
+                tr 
+                    td 브랜치
+                    td 
+                tr 
+                    td 전화번호
+                    td 
+                tr 
+                    td 출석빈도
+                    td 
+                tr 
+                    td 성격
+                    td 
+                tr 
+                    td 비고사항
+                    td 
+    input#uploadInput.filebox.upload(type="file", name="upload", accept="image/*", onchange="ReadURL(this)")

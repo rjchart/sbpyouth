@@ -7,10 +7,18 @@ var sbp_member = require('../models/sbp-member');
 var azure = require('azure-storage');
 var flowpipe = require('flowpipe');
 var jade = require("jade");
+var fs = require('fs');
+var multiparty = require('multiparty');
 
 var accessKey = 'pnOhpX2pEOye58E2gtlU5gVGzUbFVk3GcNYerm4RDuNuzoqsSB06v28oy3EF/wUZo6cUq/SUNdH0AQqek6rg7Q==';
 var storageAccount = 'sbpccyouth';
 var entGen = azure.TableUtilities.entityGenerator;
+
+// Compile the template to a function string
+var jsFunctionString = jade.compileFileClient('app/views/profile_template.jade', {name: "profile_template"});
+var jsFunctionString2 = jade.compileFileClient('app/views/profile_edit.jade', {name: "profile_edit"});
+jsFunctionString += "\n" + jsFunctionString2;
+fs.writeFileSync("javascript/templates.js", jsFunctionString);
 
 module.exports = function (app) {
   app.use('/', router);
@@ -172,19 +180,33 @@ router.get('/branch', function (req, res, next) {
 });
 
 router.post('/branch_profile', function (req, res, next) {
-    var id = req.body.name;
+    req.on('data', function(chunk) {
+        var getget = req;
+        var inputData = JSON.parse(chunk);
+        
+        sbp_member.getMemberWithName(inputData.name, function (getData) {
+            getData.branch = req.body.branch;
+            getData.attend = req.body.attend;
+            getData.attendString = sbp_member.AttendToString(getData.attend);
+            getData.year = req.body.year;
+            res.render('profile_template', getData);
+        });  
+    });
     
-    sbp_member.getMemberWithName(id, function (getData) {
-        getData.branch = req.body.branch;
-        getData.attend = req.body.attend;
-        getData.year = req.body.year;
-        var getHtml = jade.renderFile('app/views/profile_template.jade', getData);
-        res.send({
-            result: true,
-            message: getHtml
-        });
-        // res.render('profile_template', getData);
-    });  
+    // var id = req.body.name;
+    // sbp_member.getMemberWithName(id, function (getData) {
+    //     getData.branch = req.body.branch;
+    //     getData.attend = req.body.attend;
+    //     getData.attendString = sbp_member.AttendToString(getData.attend);
+    //     getData.year = req.body.year;
+        
+    //     var getHtml = jade.renderFile('app/views/profile_template.jade', getData);
+    //     res.send({
+    //         result: true,
+    //         message: getHtml
+    //     });
+        
+    // });  
 });
 
 router.get('/friends', function (req, res, next) {
@@ -200,7 +222,7 @@ router.get('/friends', function (req, res, next) {
             if (item.attend._ >= attendSet)
                 memberList2.push(item);
         });
-
+        
         // 정리된 정보를 건내고 ejs 랜더링 하여 보여줌.
         res.render('friends', 
             {	
@@ -211,3 +233,68 @@ router.get('/friends', function (req, res, next) {
     });
 });
 
+router.post('/profile_edit/:id', function (req, res, next) {
+	var id = req.params.id;
+
+	var tableService = azure.createTableService(storageAccount, accessKey);
+	var blobService = azure.createBlobService(storageAccount, accessKey);
+	var form = new multiparty.Form();
+	var checkMax = 1;
+	var checkCount = 0;
+
+	var fields = [];
+	fields['res'] = res;
+	fields['table'] = tableService;
+    
+    form.on('part', function(part) {
+	    if (!part.filename) {
+	    	// console.log("not file:" + JSON.stringify(part));
+			console.log('none');
+	    }
+	    else {
+			var filename = id + new Date().toISOString() + ".jpg";
+			var size = part.byteCount;
+	    	// console.log("file:" + JSON.stringify(part));
+			var size2 = part.byteCount - part.byteOffset;
+			var name = filename;
+			var container = 'imgcontainer';
+
+	    	console.log("part:" + filename + ", size:" + size + ", size2:" + size2);
+			var urlString = "https://sbpccyouth.blob.core.windows.net/" + container + "/" + filename;
+			fields['urlString'] = urlString;
+			checkMax++;
+
+			blobService.createBlockBlobFromStream(container, filename, part, size, function(error) {
+				if (!error) {
+					console.log("photo upload ok");
+					// res.send({result:true})
+				}
+				else 
+					console.log(error);
+
+				checkCount++;
+				if (checkCount >= checkMax)
+					sbp_member.MemberSave(fields);
+			});
+			return;
+	    }
+	});
+
+	// Close emitted after form parsed 
+	form.on('close', function() {
+		console.log('Upload completed!');
+
+		checkCount++;
+		if (checkCount >= checkMax)
+			sbp_member.MemberSave(fields);
+	});
+
+    form.on('field', function (field, value) {
+        console.log(field);
+        console.log(value);
+        fields[field] = value;
+    });
+
+	form.parse(req);
+
+});
