@@ -14,7 +14,7 @@ var multiparty = require('multiparty');
 // require('../models/oauth.js')(app);
 // var passport = require('passport');
 // var config = require('./oauth.js');
-// var FacebookStrategy = require('passport-facebook').Strategy;
+var FacebookStrategy = require('passport-facebook').Strategy;
 var TwitterStrategy = require('passport-twitter').Strategy;
 // var GithubStrategy = require('passport-github2').Strategy;
 // var GoogleStrategy = require('passport-google-oauth2').Strategy;
@@ -47,6 +47,21 @@ passport.use(new TwitterStrategy({
     return done(null, profile);
 }));
 
+passport.use(new FacebookStrategy({
+  clientID: pkginfo.oauth.facebook.FACEBOOK_APP_ID,
+  clientSecret: pkginfo.oauth.facebook.FACEBOOK_APP_SECRET,
+  callbackURL: pkginfo.oauth.facebook.callbackURL
+},function(accessToken, refreshToken, profile, done) {
+    console.log("profile: " + profile.displayName)
+  //
+  // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+  // req.session.passport 정보를 저장하는 단계이다.
+  // done 메소드에 전달된 정보가 세션에 저장된다.
+  // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+  //
+  return done(null, profile);
+}));
+
 
 
 
@@ -65,13 +80,23 @@ module.exports = function (app) {
 };
 
 router.get('/auth/twitter', passport.authenticate('twitter'));
+router.get('/auth/facebook', passport.authenticate('facebook'));
 //
-  // redirect 실패/성공의 주소를 기입한다.
-  //
+// redirect 실패/성공의 주소를 기입한다.
+//
 router.get('/auth/twitter/callback', passport.authenticate('twitter', {
     successRedirect: '/',
     failureRedirect: '/'
 }));
+
+//
+// redirect 실패/성공의 주소를 기입한다.
+//
+router.get('/auth/facebook/callback', passport.authenticate('facebook', {
+    successRedirect: '/',
+    failureRedirect: '/'
+}));
+
 router.get('/logout', function(req, res){
 //
 // passport 에서 지원하는 logout 메소드이다.
@@ -82,9 +107,15 @@ req.logout();
 });
 
 
+
 router.get('/', function (req, res, next) {
     
-    console.log(req.session);
+    console.log("is Session: " + req.session.id);
+    var session_name;
+    if (req.user) {
+        session_name = req.user.displayName;
+    }
+        
     
     console.log(req.user);
     
@@ -130,7 +161,9 @@ router.get('/', function (req, res, next) {
         var articles = [new Article(), new Article()];
         
         res.render('index', {
+            session_id: req.session.id || {},
             user: req.user || {},
+            name: session_name || {},
             title: '신반포 중앙교회 청년부',
             articles: articles,
             data: result

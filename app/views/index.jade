@@ -6,9 +6,10 @@ block header_item01
 block content
 	//- script(src="/javascript/menu.js")
 	//- div.ui.masthead.vertical.tab.segment
-	a(href="/auth/twitter") twitter login
-	if user.username
-		a(href="/logout") logout #{user.username}
+	a(href="/auth/twitter") twitter login <br/>
+	a(href="/auth/facebook") facebook login <br/>
+	if session_id
+		a(href="/logout") logout #{name}
 	
 	
 	//- div.main.ui.container

@@ -35,6 +35,7 @@
     "npm": "^3.9.3",
     "num2fraction": "^1.2.2",
     "passport": "^0.3.2",
+    "passport-facebook": "^2.1.1",
     "passport-twitter": "^1.0.4",
     "postcss-value-parser": "^3.3.0",
     "semantic-ui": "^2.1.8",
@@ -53,10 +54,15 @@
     "load-grunt-tasks": "^3.2.0"
   },
   "oauth": {
+    "facebook": {
+      "FACEBOOK_APP_ID": "1037234903027559",
+      "FACEBOOK_APP_SECRET": "09ad9c378f560e4c5424797800b41157",
+      "callbackURL": "http://127.0.0.1:3000/auth/facebook/callback"
+    },
     "twitter": {
       "TWITTER_CONSUMER_KEY": "j8glYU7cVi7pPTowNXvny2ST0",
       "TWITTER_CONSUMER_SECRET": "L4nTKgn46K0yyxAGL6dFKnAusyUK3UiecszLkXOXOGef5Ynx2O",
-      "callbackURL": "http://sbpyouth.azurewebsites.net/auth/twitter/callback"
+      "callbackURL": "http://127.0.0.1:3000/auth/twitter/callback"
     }
   }
 }
