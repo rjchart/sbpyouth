@@ -10,10 +10,10 @@ var jade = require("jade");
 var fs = require('fs');
 var multiparty = require('multiparty');
 
-var passport = require('passport');
-var config = require('./oauth.js');
+// var passport = require('passport');
+// var config = require('./oauth.js');
 // var FacebookStrategy = require('passport-facebook').Strategy;
-var TwitterStrategy = require('passport-twitter').Strategy;
+// var TwitterStrategy = require('passport-twitter').Strategy;
 // var GithubStrategy = require('passport-github2').Strategy;
 // var GoogleStrategy = require('passport-google-oauth2').Strategy;
 // var InstagramStrategy = require('passport-instagram').Strategy;
