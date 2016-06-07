@@ -10,13 +10,44 @@ var jade = require("jade");
 var fs = require('fs');
 var multiparty = require('multiparty');
 
+
+// require('../models/oauth.js')(app);
 // var passport = require('passport');
 // var config = require('./oauth.js');
 // var FacebookStrategy = require('passport-facebook').Strategy;
-// var TwitterStrategy = require('passport-twitter').Strategy;
+var TwitterStrategy = require('passport-twitter').Strategy;
 // var GithubStrategy = require('passport-github2').Strategy;
 // var GoogleStrategy = require('passport-google-oauth2').Strategy;
 // var InstagramStrategy = require('passport-instagram').Strategy;
+
+var pkginfo = require('../../package.json');
+var passport = require('passport');
+router.use(passport.initialize());
+router.use(passport.session());
+
+passport.serializeUser(function(user, done) {
+    done(null, user);
+});
+
+passport.deserializeUser(function(obj, done) {
+    done(null, obj);
+});
+
+passport.use(new TwitterStrategy({
+    consumerKey: pkginfo.oauth.twitter.TWITTER_CONSUMER_KEY,
+    consumerSecret: pkginfo.oauth.twitter.TWITTER_CONSUMER_SECRET,
+    callbackURL: pkginfo.oauth.twitter.callbackURL
+}, function(token, tokenSecret, profile, done) {
+    //
+    // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    // req.session.passport 정보를 저장하는 단계이다.
+    // done 메소드에 전달된 정보가 세션에 저장된다.
+    // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    //
+    return done(null, profile);
+}));
+
+
 
 
 var accessKey = 'pnOhpX2pEOye58E2gtlU5gVGzUbFVk3GcNYerm4RDuNuzoqsSB06v28oy3EF/wUZo6cUq/SUNdH0AQqek6rg7Q==';
@@ -33,7 +64,29 @@ module.exports = function (app) {
   app.use('/', router);
 };
 
+router.get('/auth/twitter', passport.authenticate('twitter'));
+//
+  // redirect 실패/성공의 주소를 기입한다.
+  //
+router.get('/auth/twitter/callback', passport.authenticate('twitter', {
+    successRedirect: '/',
+    failureRedirect: '/'
+}));
+router.get('/logout', function(req, res){
+//
+// passport 에서 지원하는 logout 메소드이다.
+// req.session.passport 의 정보를 삭제한다.
+//
+req.logout();
+    res.redirect('/');
+});
+
+
 router.get('/', function (req, res, next) {
+    
+    console.log(req.session);
+    
+    console.log(req.user);
     
     var tableService = azure.createTableService(storageAccount, accessKey);
   
@@ -75,7 +128,9 @@ router.get('/', function (req, res, next) {
     .pipe('showChargeMembers', function (next, result, page) {
         console.log("done");
         var articles = [new Article(), new Article()];
+        
         res.render('index', {
+            user: req.user || {},
             title: '신반포 중앙교회 청년부',
             articles: articles,
             data: result
@@ -307,3 +362,4 @@ router.post('/profile_edit/:id', function (req, res, next) {
 	form.parse(req);
 
 });
+

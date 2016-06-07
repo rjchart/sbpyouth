@@ -50,5 +50,12 @@
     "request": "^2.60.0",
     "time-grunt": "^1.2.1",
     "load-grunt-tasks": "^3.2.0"
+  },
+  "oauth": {
+    "twitter": {
+      "TWITTER_CONSUMER_KEY": "j8glYU7cVi7pPTowNXvny2ST0",
+      "TWITTER_CONSUMER_SECRET": "L4nTKgn46K0yyxAGL6dFKnAusyUK3UiecszLkXOXOGef5Ynx2O",
+      "callbackURL": "http://sbpyouth.azurewebsites.net/auth/twitter/callback"
+    }
   }
 }

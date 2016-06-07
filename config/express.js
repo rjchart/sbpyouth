@@ -12,6 +12,7 @@ var multiparty = require('multiparty');
 var fs = require('fs');
 var ejs = require('ejs');
 var http = require('http');
+var session = require('express-session');
 
 module.exports = function(app, config) {
   var env = process.env.NODE_ENV || 'development';
@@ -29,6 +30,12 @@ module.exports = function(app, config) {
   }));
   app.use(cookieParser());
   app.use(compress());
+  app.use(session({
+    key    : 'sid',
+    secret : 'secret',
+    resave: true,
+    saveUninitialized: true
+  }));
   app.use(express.static(config.root + '/public'));
 
   /* custom code */
