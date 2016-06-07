@@ -10,6 +10,15 @@ var jade = require("jade");
 var fs = require('fs');
 var multiparty = require('multiparty');
 
+var passport = require('passport');
+var config = require('./oauth.js');
+// var FacebookStrategy = require('passport-facebook').Strategy;
+var TwitterStrategy = require('passport-twitter').Strategy;
+// var GithubStrategy = require('passport-github2').Strategy;
+// var GoogleStrategy = require('passport-google-oauth2').Strategy;
+// var InstagramStrategy = require('passport-instagram').Strategy;
+
+
 var accessKey = 'pnOhpX2pEOye58E2gtlU5gVGzUbFVk3GcNYerm4RDuNuzoqsSB06v28oy3EF/wUZo6cUq/SUNdH0AQqek6rg7Q==';
 var storageAccount = 'sbpccyouth';
 var entGen = azure.TableUtilities.entityGenerator;

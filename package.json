@@ -33,6 +33,8 @@
     "normalize-range": "^0.1.2",
     "npm": "^3.9.3",
     "num2fraction": "^1.2.2",
+    "passport": "^0.3.2",
+    "passport-twitter": "^1.0.4",
     "postcss-value-parser": "^3.3.0",
     "semantic-ui": "^2.1.8",
     "serve-favicon": "^2.3.0",

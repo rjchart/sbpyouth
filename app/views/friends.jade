@@ -100,10 +100,25 @@ block script
 						//-  field['birthYear']._, field['birthMonth']._, field['birthDay']._, field['gender']._, field['phone']._, field['attendDesc']._, 
 						//-  field['tension']._, field['tensionString']._, field['part']._, field['photo']._ );
 						var check = document.getElementById(id);
-						check.onclick = function () {ProfileBS(field['year']._, field['RowKey']._, field['branch']._, field['attendString']._, field['attend']._,
+						var first = check.children[0].children[0];
+						var gender = check.children[1];
+						var phone = check.children[2];
+						var birth = check.children[3];
+						var branch = check.children[4];
+						var part = check.children[5];
+						var attend = check.children[6];
+						var desc = check.children[7];
+						first.onclick = function () {ProfileBS(field['year']._, field['RowKey']._, field['branch']._, field['attendString']._, field['attend']._,
 						 field['birthYear']._, field['birthMonth']._, field['birthDay']._, field['gender']._, field['phone']._, field['attendDesc']._, 
 						 field['tension']._, field['tensionString']._, field['part']._, field['photo']._ );
 						};
+						gender.innerHTML = field['gender']._;
+						phone.innerHTML = field['phone']._;
+						birth.innerHTML = (field['birthYear']._+1900)+"."+field['birthMonth']._+"."+field['birthDay']._;
+						branch.innerHTML = field['branch']._;
+						part.innerHTML = field['part']._;
+						attend.innerHTML = field['attendString']._;
+						desc.innerHTML = field['attendDesc']._;
 						//- addListener(document.getElementById('check'), 'click', "ProfileBS()");
 					}
 				}
@@ -162,25 +177,29 @@ block content
 							table.scroll.ui.celled.structured.striped.table
 								tbody
 									each member, i in memberList
-										tr
-											td: label(id="#{member.RowKey._}" onclick="ProfileBS(#{year}, '#{member.RowKey._}','#{member.branch._}','#{member.attendString._}','#{member.attend._}','#{member.birthYear._}','#{member.birthMonth._}','#{member.birthDay._}','#{member.gender._}','#{member.phone._}','#{member.attendDesc._}','#{member.tension ? member.tension._ : 0}','#{member.tensionString ? member.tensionString._ : 0}','#{member.part ? member.part._ : 0}', '#{member.photo ? member.photo._ : 0}')") #{member.RowKey._}
-											td #{member.gender?member.gender._: '모름'}
-											td #{member.phone._}
-											td #{parseInt(member.birthYear._) + 1900}.#{member.birthMonth._}.#{member.birthDay._}															
-											td #{ member.branch ? member.branch._ : '없음'}
-											td #{ member.part ? member.part._ : '없음'}
-											td(style="min-width:40px") #{ member.attendString ? member.attendString._  : '없음'}
-											td #{ member.attendDesc ? member.attendDesc._ : '없음'}
+										tr(id="#{member.RowKey._}")
+											td.name: label(onclick="ProfileBS(#{year}, '#{member.RowKey._}','#{member.branch._}','#{member.attendString._}','#{member.attend._}','#{member.birthYear._}','#{member.birthMonth._}','#{member.birthDay._}','#{member.gender._}','#{member.phone._}','#{member.attendDesc._}','#{member.tension ? member.tension._ : 0}','#{member.tensionString ? member.tensionString._ : 0}','#{member.part ? member.part._ : 0}', '#{member.photo ? member.photo._ : 0}')") #{member.RowKey._}
+											td.gender #{member.gender?member.gender._: '모름'}
+											td.phone #{member.phone._}
+											td.birth #{parseInt(member.birthYear._) + 1900}.#{member.birthMonth._}.#{member.birthDay._}															
+											td.branch #{ member.branch ? member.branch._ : '없음'}
+											td.part #{ member.part ? member.part._ : '없음'}
+											td.attend(style="min-width:40px") #{ member.attendString ? member.attendString._  : '없음'}
+											td.desc #{ member.attendDesc ? member.attendDesc._ : '없음'}
 						table.ui.celled.structured.striped.table(style="margin:0;border-up-width: 5px;")
 							tfoot
 								tr
 									th(colspan="9") 
-										div.ui.borderless.small.right.floated.pagination.menu
+										div.ui.borderless.small.left.floated.pagination.menu
 											a.item(href="/members?") <i class="child icon"></i> all
 											a.item(href="/members?attendValue=1") <i class="frown icon"></i> bad
 											a.item(href="/members?attendValue=2") <i class="meh icon"></i> well
 											a.item(href="/members?attendValue=3") <i class="smile icon"></i> good
-											a.item(href="/members?attendValue=4") <i class="thumbs outline up icon"></i> perfect											
+											a.item(href="/members?attendValue=4") <i class="thumbs outline up icon"></i> perfect
+										
+										div.ui.right.floated.small.primary.labeled.icon.button
+											i.user.icon 
+											|Add User											
 			div#profileData.four.wide.column
 				include profile
 							

@@ -183,6 +183,8 @@ module.exports.getMembersWithYear = function (year, next) {
                     var blTestString = JSON.stringify(result.entries);
                     var blList = JSON.parse(blTestString);
                     memberList.forEach(function (item, index) {
+                        if (item.birthYear._ == "87")
+                            console.log(item.RowKey._);
                         item.branch = {"_": "없음"};
                         item.attend = {"_": 0};
                     });
@@ -213,8 +215,11 @@ module.exports.MemberSave = function(fields) {
 	var maxCount = 2;
 	var count = 0;
     var year = parseInt(fields['PartitionKey']) - 1900;
+    var ttore = year;
+    if (parseInt(fields['birthMonth']) < 3)
+        ttore--;
 	var entity = {
-		PartitionKey: entGen.String(year.toString()),
+		PartitionKey: entGen.String(ttore.toString()),
 		RowKey: entGen.String(fields['RowKey']),
 		gender: entGen.String(fields['gender']),
 		phone: entGen.String(fields['phone']),
@@ -267,7 +272,7 @@ module.exports.MemberSave = function(fields) {
         else
             saved[key] = entity2[key];
     }
-    saved["attendString"] = entGen.String(fields['attendString']);
+    saved["attendString"] = entGen.String(exports.AttendToString(fields['attend']));
     saved["tensionString"] = entGen.String(TensionToString(fields['tension']));
     if (fields["photo"] != null)
         saved["photo"] = entGen.String(fields["photo"]);
