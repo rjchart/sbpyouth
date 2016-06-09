@@ -7,6 +7,15 @@ var sbp_time = require('../models/sbp-time');
 var tableService = azure.createTableService(storageAccount, accessKey);
 var entGen = azure.TableUtilities.entityGenerator;
 
+function RemoveEntityGen (entity) {
+    for (var key in entity) {
+        var valueOfKey = entity[key];
+        if (typeof valueOfKey == "object")
+            entity[key] = valueOfKey._;
+    }
+    
+}
+
 function FormatNumberLength(num, length) {
     var r = "" + num;
     while (r.length < length) {
@@ -124,7 +133,7 @@ function CombineList(listA, listB) {
 	return [listA, listB];
 }
 
-module.exports.getMemberWithName = function (name, next) {
+module.exports.GetMemberWithName = function (name, next) {
     var query = new azure.TableQuery()
     .top(1)
     .where('RowKey eq ?', name.toString());
@@ -153,7 +162,66 @@ module.exports.getMemberWithName = function (name, next) {
             getData.year = (entries[0].PartitionKey != null) ? entries[0].PartitionKey._ : null;
             getData.part = (entries[0].part != null) ? entries[0].part._ : null;
             getData.photo = (entries[0].photo != null) ? entries[0].photo._ : null;
-            return next(getData);
+            return next(null, getData);
+        }    
+    });
+}
+
+module.exports.GetMemberAndLogWithName = function (name, next) {
+    var query = new azure.TableQuery()
+    .top(1)
+    .where('RowKey eq ?', name.toString());
+
+    // 데이터베이스 쿼리를 실행합니다.
+    tableService.queryEntities('members', query, null, function entitiesQueried(error, result) {
+        if (!error) {
+            
+            var testString = JSON.stringify(result.entries);
+            var entries = JSON.parse(testString);
+            // response.send(entries[0].RowKey._);
+            var year = parseInt((entries[0].birthYear != null) ? entries[0].birthYear._ : 0);
+            year += 1900; 
+            var month = FormatNumberLength((entries[0].birthMonth != null) ? entries[0].birthMonth._ : 0, 2);
+            var day = FormatNumberLength((entries[0].birthDay != null) ? entries[0].birthDay._ : 0, 2);
+            
+            var getData = {};
+            getData.birthYear = year;
+            getData.birthMonth = month;
+            getData.birthDay = day
+            getData.name = (entries[0].RowKey != null) ? entries[0].RowKey._ : null;
+            getData.gender = (entries[0].gender != null) ? entries[0].gender._ : null;
+            getData.phone = (entries[0].phone != null) ? entries[0].phone._ : null;
+            getData.attendDesc = (entries[0].attendDesc != null) ? entries[0].attendDesc._ : null;
+            getData.tension = (entries[0].tension != null) ? entries[0].tension._ : null;
+            getData.tensionString = TensionToString(getData.tension); 
+            getData.year = (entries[0].PartitionKey != null) ? entries[0].PartitionKey._ : null;
+            getData.part = (entries[0].part != null) ? entries[0].part._ : null;
+            getData.photo = (entries[0].photo != null) ? entries[0].photo._ : null;
+            
+            var getYear = sbp_time.getYear();
+            var logQeury = new azure.TableQuery()
+            .top(10)
+            .where('RowKey eq ?', name.toString());
+            tableService.queryEntities('branchlog', logQeury, null, function (error, log) {
+                if (!error) {
+                    // var logString = JSON.stringify(log.entries);
+                    // var logResult = JSON.parse(logString);
+                    for (var logKey in log.entries) {
+                        var entry = log.entries[logKey];
+                        RemoveEntityGen(entry);
+                        if (entry.PartitionKey == getYear) {
+                            for (var key in entry) {
+                                if (key == 'PartitionKey' || key == 'RowKey' || key == 'birthYear' || key == 'attendDesc')
+                                    continue;
+                                getData[key] = entry[key];   
+                            }
+                        }
+                    }
+                    getData.log = log.entries
+                    return next(null, getData);        
+                }
+            });
+            
         }    
     });
 }

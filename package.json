@@ -36,6 +36,10 @@
     "num2fraction": "^1.2.2",
     "passport": "^0.3.2",
     "passport-facebook": "^2.1.1",
+    "passport-google-oauth": "^1.0.0",
+    "passport-google-oauth2": "^0.1.6",
+    "passport-instagram": "^1.0.0",
+    "passport-kakao": "0.0.3",
     "passport-twitter": "^1.0.4",
     "postcss-value-parser": "^3.3.0",
     "semantic-ui": "^2.1.8",
@@ -59,10 +63,24 @@
       "FACEBOOK_APP_SECRET": "09ad9c378f560e4c5424797800b41157",
       "callbackURL": "http://127.0.0.1:3000/auth/facebook/callback"
     },
+    "google": {
+      "GOOGLE_APP_ID": "662531686357-14rdeao9t6neh6h5t15foj6cqtrrc6pd.apps.googleusercontent.com",
+      "GOOGLE_APP_SECRET": "L0sNbOpLmAQSSj9bXwxu0Cvs",
+      "callbackURL": "http://127.0.0.1:3000/auth/google/callback"
+    },
     "twitter": {
       "TWITTER_CONSUMER_KEY": "j8glYU7cVi7pPTowNXvny2ST0",
       "TWITTER_CONSUMER_SECRET": "L4nTKgn46K0yyxAGL6dFKnAusyUK3UiecszLkXOXOGef5Ynx2O",
       "callbackURL": "http://127.0.0.1:3000/auth/twitter/callback"
+    },
+    "instagram": {
+      "INSTAGRAM_CLIENT_ID": "0af795c0e8b04640846afb3d95403d51",
+      "INSTAGRAM_CLIENT_SECRET": "9345554764e84b15bbd90e4318f87c5e",
+      "callbackURL": "http://127.0.0.1:3000/auth/instagram/callback"
+    },
+    "kakao": {
+      "KAKAO_CLIENT_ID": "3220fb23f4da8a401da3ab94c219f848",
+      "callbackURL": "http://127.0.0.1:3000/auth/kakao/callback"
     }
   }
 }

@@ -10,61 +10,6 @@ var jade = require("jade");
 var fs = require('fs');
 var multiparty = require('multiparty');
 
-
-// require('../models/oauth.js')(app);
-// var passport = require('passport');
-// var config = require('./oauth.js');
-var FacebookStrategy = require('passport-facebook').Strategy;
-var TwitterStrategy = require('passport-twitter').Strategy;
-// var GithubStrategy = require('passport-github2').Strategy;
-// var GoogleStrategy = require('passport-google-oauth2').Strategy;
-// var InstagramStrategy = require('passport-instagram').Strategy;
-
-var pkginfo = require('../../package.json');
-var passport = require('passport');
-router.use(passport.initialize());
-router.use(passport.session());
-
-passport.serializeUser(function(user, done) {
-    done(null, user);
-});
-
-passport.deserializeUser(function(obj, done) {
-    done(null, obj);
-});
-
-passport.use(new TwitterStrategy({
-    consumerKey: pkginfo.oauth.twitter.TWITTER_CONSUMER_KEY,
-    consumerSecret: pkginfo.oauth.twitter.TWITTER_CONSUMER_SECRET,
-    callbackURL: pkginfo.oauth.twitter.callbackURL
-}, function(token, tokenSecret, profile, done) {
-    //
-    // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    // req.session.passport 정보를 저장하는 단계이다.
-    // done 메소드에 전달된 정보가 세션에 저장된다.
-    // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    //
-    return done(null, profile);
-}));
-
-passport.use(new FacebookStrategy({
-  clientID: pkginfo.oauth.facebook.FACEBOOK_APP_ID,
-  clientSecret: pkginfo.oauth.facebook.FACEBOOK_APP_SECRET,
-  callbackURL: pkginfo.oauth.facebook.callbackURL
-},function(accessToken, refreshToken, profile, done) {
-    console.log("profile: " + profile.displayName)
-  //
-  // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-  // req.session.passport 정보를 저장하는 단계이다.
-  // done 메소드에 전달된 정보가 세션에 저장된다.
-  // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-  //
-  return done(null, profile);
-}));
-
-
-
-
 var accessKey = 'pnOhpX2pEOye58E2gtlU5gVGzUbFVk3GcNYerm4RDuNuzoqsSB06v28oy3EF/wUZo6cUq/SUNdH0AQqek6rg7Q==';
 var storageAccount = 'sbpccyouth';
 var entGen = azure.TableUtilities.entityGenerator;
@@ -78,34 +23,6 @@ fs.writeFileSync("javascript/templates.js", jsFunctionString);
 module.exports = function (app) {
   app.use('/', router);
 };
-
-router.get('/auth/twitter', passport.authenticate('twitter'));
-router.get('/auth/facebook', passport.authenticate('facebook'));
-//
-// redirect 실패/성공의 주소를 기입한다.
-//
-router.get('/auth/twitter/callback', passport.authenticate('twitter', {
-    successRedirect: '/',
-    failureRedirect: '/'
-}));
-
-//
-// redirect 실패/성공의 주소를 기입한다.
-//
-router.get('/auth/facebook/callback', passport.authenticate('facebook', {
-    successRedirect: '/',
-    failureRedirect: '/'
-}));
-
-router.get('/logout', function(req, res){
-//
-// passport 에서 지원하는 logout 메소드이다.
-// req.session.passport 의 정보를 삭제한다.
-//
-req.logout();
-    res.redirect('/');
-});
-
 
 
 router.get('/', function (req, res, next) {
@@ -281,29 +198,16 @@ router.post('/branch_profile', function (req, res, next) {
         var getget = req;
         var inputData = JSON.parse(chunk);
         
-        sbp_member.getMemberWithName(inputData.name, function (getData) {
-            getData.branch = req.body.branch;
-            getData.attend = req.body.attend;
-            getData.attendString = sbp_member.AttendToString(getData.attend);
-            getData.year = req.body.year;
-            res.render('profile_template', getData);
+        sbp_member.GetMemberWithName(inputData.name, function (error, getData) {
+            if (!error) {
+                getData.branch = req.body.branch;
+                getData.attend = req.body.attend;
+                getData.attendString = sbp_member.AttendToString(getData.attend);
+                getData.year = req.body.year;
+                res.render('profile_template', getData);
+            }
         });  
     });
-    
-    // var id = req.body.name;
-    // sbp_member.getMemberWithName(id, function (getData) {
-    //     getData.branch = req.body.branch;
-    //     getData.attend = req.body.attend;
-    //     getData.attendString = sbp_member.AttendToString(getData.attend);
-    //     getData.year = req.body.year;
-        
-    //     var getHtml = jade.renderFile('app/views/profile_template.jade', getData);
-    //     res.send({
-    //         result: true,
-    //         message: getHtml
-    //     });
-        
-    // });  
 });
 
 router.get('/friends', function (req, res, next) {

@@ -76,4 +76,16 @@ html(lang='en')
               a.item(href="/friends")
                 i.child.icon 
                 |Friends
+            div.right.menu
+              div.item
+                div.ui.icon.input
+                  input(type="text" placeholder="Search...")
+                  i.search.link.icon
+              block header_setting
+                a.ui.item(href="/setting")
+                  i.settings.icon  
+                  |Setting
+              a.ui.item
+                i.sign.out.icon  
+                |Logout
     block content

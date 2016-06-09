@@ -1,0 +1,76 @@
+extends layout  
+block header_setting
+    a.ui.item.active(href="/setting")
+        i.settings.icon  
+        |Setting
+block content
+    div.ui.secondary.pointing.menu
+        div.ui.container
+            a.active.item 내 프로필
+            a.item 설정
+    div.main.ui.container
+        div.two.column.grid
+            div.column
+                div.ui.raised.segment
+                    h2.ui.header
+                        i.settings.icon
+                        div.content 
+                            |Profile
+                            div.sub.header 현재 청년부 정보를 보여줍니다.
+                    div.ui.grid
+                        div.four.wide.streched.column
+                            div.ui.card
+                                div.image.outImg(style="background-color:#e5e5e5")
+                                    if (photo)
+                                        img.fitImg(src="#{photo}")
+                                    else
+                                        img.fitImg(src="/public/img/image.png")
+                        div.twelve.wide.streched.column
+                            div.ui.container
+                                h3.ui.header
+                                    div.content
+                                    if !link
+                                        |#{name}
+                                    else 
+                                        |#{link.name}   
+                                        div.sub.header #{link.part}: #{link.birthYear}.#{link.birthMonth}.#{link.birthDay}
+                                    div.ui.mini.relaxed.celled.list
+                                        div.item
+                                            i.big.heterosexual.middle.aligned.icon
+                                            div.content
+                                                div.header 성별
+                                                    div.description(style="color:gray")
+                                                        if link 
+                                                            |#{link.gender}
+                                                        else
+                                                            |알수없음
+                                        div.item
+                                            i.big.phone.middle.aligned.icon
+                                            div.content
+                                                div.header 전화번호
+                                                    div.description(style="color:gray")
+                                                        if link 
+                                                            |#{link.phone}
+                                                        else
+                                                            |알수없음
+                                        div.item
+                                            i.big.building.middle.aligned.icon
+                                            div.content
+                                                div.header 사는 곳
+                                                    div.description(style="color:gray") 이수
+                                        div.item
+                                            i.big.tag.middle.aligned.icon
+                                            div.content
+                                                div.header 브랜치
+                                                    div.description(style="color:gray")
+                                                        if link 
+                                                            |#{link.branch}
+                                                        else
+                                                            |알수없음
+                                        div.item
+                                            i.big.sitemap.middle.aligned.icon
+                                            div.content
+                                                div.header 사역 부서
+                                                    div.description(style="color:gray") 유년부
+                            
+                        
