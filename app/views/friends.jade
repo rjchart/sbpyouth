@@ -13,7 +13,7 @@ block script
 			//- document.body.appendChild(div);
 			
 			var getData = {};
-			getData.birthYear = parseInt(bYear) + 1900;
+			getData.birthYear = bYear;
 			getData.birthMonth = bMonth;
 			getData.birthDay = bDay;
 			getData.branch = branch;
@@ -91,7 +91,7 @@ block script
 					alert("저장되었습니다.");
 					if (response.field) {
 						var field = response.field;
-						var id = field['RowKey']._;
+						var id = field['RowKey'];
 						var check = document.getElementById(id);
 						var first = check.children[0].children[0];
 						var gender = check.children[1];
@@ -101,17 +101,17 @@ block script
 						var part = check.children[5];
 						var attend = check.children[6];
 						var desc = check.children[7];
-						first.onclick = function () {ProfileBS(field['year']._, field['RowKey']._, field['branch']._, field['attendString']._, field['attend']._,
-						 field['birthYear']._, field['birthMonth']._, field['birthDay']._, field['gender']._, field['phone']._, field['attendDesc']._, 
-						 field['tension']._, field['tensionString']._, field['part']._, field['photo']._ );
+						first.onclick = function () {ProfileBS(field['year'], field['RowKey'], field['branch'], field['attendString'], field['attend'],
+						 field['birthYear'], field['birthMonth'], field['birthDay'], field['gender'], field['phone'], field['attendDesc'], 
+						 field['tension'], field['tensionString'], field['part'], field['photo'] );
 						};
-						gender.innerHTML = field['gender']._;
-						phone.innerHTML = field['phone']._;
-						birth.innerHTML = (field['birthYear']._+1900)+"."+field['birthMonth']._+"."+field['birthDay']._;
-						branch.innerHTML = field['branch']._;
-						part.innerHTML = field['part']._;
-						attend.innerHTML = field['attendString']._;
-						desc.innerHTML = field['attendDesc']._;
+						gender.innerHTML = field['gender'];
+						phone.innerHTML = field['phone'];
+						birth.innerHTML = (field['birthYear']+1900)+"."+field['birthMonth']+"."+field['birthDay'];
+						branch.innerHTML = field['branch'];
+						part.innerHTML = field['part'];
+						attend.innerHTML = field['attendString'];
+						desc.innerHTML = field['attendDesc'];
 						//- addListener(document.getElementById('check'), 'click', "ProfileBS()");
 					}
 				}
@@ -194,6 +194,33 @@ block script
 			}
 		}
 	
+		function AddMemberButton() {
+			$('.ui.modal')
+				.modal({
+					closable 	: false,
+					onDeny 		: function () {
+						//- window.alert('Wait not yet!');
+						PlusAddMember();
+						return false;
+					},
+					onApprove 	: function () {
+						var $getAdd = $('#addMember');
+						$('#addMember').ajaxSubmit({
+							error: function (xhr) {
+								alert('등록 실패했습니다.');
+							},
+							success: function (response) {
+								alert('등록 성공했습니다.');
+							}
+						});
+						//- window.alert('Approved!');
+					}
+				});
+			$('.ui.modal')
+				.modal('show');
+				
+		}
+			
 block header_item03
 	a.main.item.active(href="/friends")
 		i.child.icon 
@@ -208,6 +235,9 @@ block content
 			div.ui.right.small.menu.buttons
 				button.ui.blue.item.active(onclick="SubMenuEditClicked(false)") show
 				button.ui.blue.item(onclick="SubMenuEditClicked(true)") edit
+			div.ui.right.floated.small.primary.labeled.icon.button(onclick="AddMemberButton()")
+				i.user.icon 
+				|Add Friend	
 	div.main.ui.container(onload="Display()")
 		div.ui.grid
 			div.twelve.wide.streched.column
@@ -230,15 +260,15 @@ block content
 							table.scroll.ui.celled.structured.striped.table
 								tbody
 									each member, i in memberList
-										tr.bMember(id="#{member.RowKey._}" class="#{member.birthYear._}")
-											td.name: label(onclick="ProfileBS(#{year}, '#{member.RowKey._}','#{member.branch._}','#{member.attendString._}','#{member.attend._}','#{member.birthYear._}','#{member.birthMonth._}','#{member.birthDay._}','#{member.gender._}','#{member.phone._}','#{member.attendDesc._}','#{member.tension ? member.tension._ : 0}','#{member.tensionString ? member.tensionString._ : 0}','#{member.part ? member.part._ : 0}', '#{member.photo ? member.photo._ : 0}')") #{member.RowKey._}
-											td.gender #{member.gender?member.gender._: '모름'}
-											td.phone #{member.phone._}
-											td.birth #{parseInt(member.birthYear._) + 1900}.#{member.birthMonth._}.#{member.birthDay._}															
-											td.branch #{ member.branch ? member.branch._ : '없음'}
-											td.part #{ member.part ? member.part._ : '없음'}
-											td.attend(style="min-width:40px") #{ member.attendString ? member.attendString._  : '없음'}
-											td.desc #{ member.attendDesc ? member.attendDesc._ : '없음'}
+										tr.bMember(id="#{member.RowKey}" class="#{member.birthYear}")
+											td.name: label(onclick="ProfileBS(#{year}, '#{member.RowKey}','#{member.branch}','#{member.attendString}','#{member.attend}','#{member.birthYear}','#{member.birthMonth}','#{member.birthDay}','#{member.gender}','#{member.phone}','#{member.attendDesc}','#{member.tension ? member.tension : 0}','#{member.tensionString ? member.tensionString : 0}','#{member.part ? member.part : 0}', '#{member.photo ? member.photo : 0}')") #{member.RowKey}
+											td.gender #{member.gender?member.gender: '모름'}
+											td.phone #{member.phone}
+											td.birth #{member.birthYear}.#{member.birthMonth}.#{member.birthDay}															
+											td.branch #{ member.branch ? member.branch : '없음'}
+											td.part #{ member.part ? member.part : '없음'}
+											td.attend(style="min-width:40px") #{ member.attendString ? member.attendString  : '없음'}
+											td.desc #{ member.attendDesc ? member.attendDesc : ''}
 						table.ui.celled.structured.striped.table(style="margin:0;border-up-width: 5px;")
 							tfoot
 								tr
@@ -249,10 +279,44 @@ block content
 											a.item(href="/members?attendValue=2") <i class="meh icon"></i> well
 											a.item(href="/members?attendValue=3") <i class="smile icon"></i> good
 											a.item(href="/members?attendValue=4") <i class="thumbs outline up icon"></i> perfect
-										
-										div.ui.right.floated.small.primary.labeled.icon.button
-											i.user.icon 
-											|Add User											
+																				
 			div#profileData.four.wide.column
 				include profile
-							
+	block modal_content
+		div.ui.modal
+			i.close.icon 
+			div.header Add Friend 
+			div.ui.content
+				form#addMember.ui.fluid.form(action="/addCharge" method="post")
+					div.eight.fields
+						div.field
+							label 이름
+							input(name="add_name[0]", placeholder="이름", type="text")
+						div.field
+							label 성별
+							input(name="add_chargeName[0]", placeholder="성별", type="text")
+						div.field
+							label 전화번호
+							input(name="add_chargeGroup[0]", placeholder="소속", type="text")
+						div.field
+							label 출생년도
+							input(name="add_chargeYear[0]", placeholder="년도", type="text")
+						div.field
+							label 출생 월
+							input(name="add_chargeYear[0]", placeholder="월", type="text")
+						div.field
+							label 출생 날짜
+							input(name="add_chargeYear[0]", placeholder="일", type="text")
+						div.field
+							label 성격
+							input(name="add_chargeYear[0]", placeholder="성격", type="text")
+						div.field
+							label 출석빈도
+							input(name="add_chargeYear[0]", placeholder="출석빈도", type="text")
+			div.actions 
+				div.ui.black.deny.button
+					i.plus.center.icon
+					|등록 맴버 추가
+				div.ui.positive.right.labeled.icon.button 등록
+					i.checkmark.icon
+						

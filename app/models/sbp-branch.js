@@ -176,3 +176,70 @@ module.exports.makeOtherMember = function(branchData, members) {
 	});
 	return branchArray;
 }
+
+module.exports.GetTable = function (branchLogs, attendValue) {
+	var getBSList = [];
+	branchLogs.forEach (function (item, index) {
+		if (item.charge == "bs")
+			getBSList.push(item);
+	});
+	
+	var maxLength = {one: 0, two: 0, arm: 0, out: 0};
+	getBSList.forEach (function (item, index) {
+		var getTable = exports.GetBranchTable(item, branchLogs, attendValue);
+		item.one = getTable.one;
+		item.two = getTable.two;
+		item.arm = getTable.arm;
+		item.out = getTable.out;
+		if (maxLength.one < getTable.one.length) maxLength.one = getTable.one.length;
+		if (maxLength.two < getTable.two.length) maxLength.two = getTable.two.length;
+		if (maxLength.arm < getTable.arm.length) maxLength.arm = getTable.arm.length;
+		if (maxLength.out < getTable.out.length) maxLength.out = getTable.out.length;
+	});
+	var returnValue = { 
+			bsList: getBSList,
+			maxLength: maxLength
+		} 
+	return returnValue;
+}
+
+module.exports.GetBranchTable = function(bsMember, members, attendValue) {
+	if (!attendValue) attendValue = 0;
+	var oneList = [];
+	var twoList = [];
+	var armList = [];
+	var outList = [];
+	var removeList = [];
+	var branchTable = {
+		one: oneList,
+		two: twoList,
+		arm: armList,
+		out: outList
+	};
+	members.forEach (function (item, index) {
+		var attendOk = false;
+		if (attendValue == 0 || (item.attend && item.attend >= attendValue)) {
+			attendOk = true;
+		}
+
+		if (attendOk && item.branch == bsMember.branch && item.RowKey != bsMember.RowKey) {
+			if (item.part == "청2부")
+				twoList.push(item);
+			else if (item.part == "청1부")
+				oneList.push(item);
+			else if (item.part == "군대")
+				armList.push(item);
+			else
+				outList.push(item);
+			removeList.push(item);
+		}
+	});
+	
+	removeList.forEach(function (item, index) {
+		var getID = members.indexOf(item);
+		if (getID >= 0)
+			members.splice(getID,1);
+	});
+	return branchTable;
+}
+

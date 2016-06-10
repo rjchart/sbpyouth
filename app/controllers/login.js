@@ -52,7 +52,8 @@ passport.use(new FacebookStrategy({
                 var entity = result;
                 profile.entity = entity;
                 if (result.linkP != null && result.linkP != '') {
-                    sbp_member.GetMemberAndLogWithName(result.linkR, function (error, getMember) {
+                    sbp_member.GetMemberAndLogWithName(result.linkR, function (error, final) {
+                        var getMember = final[0];
                         if (!error) {
                             entity.link = getMember;
                         }

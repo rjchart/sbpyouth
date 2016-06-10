@@ -112,93 +112,16 @@ router.get('/branch', function (req, res, next) {
         year = sbp_time.getYear();
 	if (!attendSet)
 		attendSet = 0;  
+    
+    var getTable = sbp_member.GetBranchMembers(year, function (error, result) {
+        if (!error) {
+            result.year = year;
+            res.render('branch', result);        
+        }
+        else 
+            console.log(error);
+    }, attendSet);
   
-    flowpipe.init( function(next) {
-        var page = 1;
-        next(null, page);
-    })
-    .pipe('getBranchMembers', function (next, page) {
-
-        /*****
-            Branch의 개수 만큼 데이터를 가져오기 위해서 임원 중 BS 데이터를 가져온다.
-        *****/
-        // 브랜치에서 BS의 데이터를 가져오는 쿼리 생성.
-        var branchQuery = new azure.TableQuery()
-        .where('PartitionKey eq ?', year.toString());
-
-        // 데이터베이스 쿼리를 실행.
-        tableService.queryEntities('branchlog', branchQuery, null, function entitiesQueried(error, result) {
-            if (!error) {
-                next(null, result.entries, page);
-            }
-            else {
-                console.log("err: " + error);
-                next(error);   
-            }
-        });
-        console.log("done!!");
-    })
-    .pipe('makeBranchTables', function (next, entries, page) {
-        // 가져온 데이터를 읽어들일 수 있도록 수정한다.
-        var blTestString = JSON.stringify(entries);
-        var blList = JSON.parse(blTestString);
-        var bsList = [];
-        
-        blList.forEach (function (item, index) {
-            if (item.charge._ == 'bs')
-                bsList.push(item);
-        });
-
-        var branchTable = [];
-        var maxLength = 0;
-        var maxYoungLength = 0, maxArmy = 0, maxOther = 0;
-        var branchYoungTable = [];
-        var armyTable = [], otherTable = [];
-
-        /***
-            청년부 정보를 브랜치별로 정리한다.
-        ***/
-        bsList.forEach (function (item, index) {
-            var branchName = item.branch._;
-            var getList = sbp_branch.getOldBM(item, blList, attendSet);
-            var getYoungList = sbp_branch.getYoungBM(item, blList, attendSet);
-            var armyList = sbp_branch.getArmyBM(item, blList);
-            var otherList = sbp_branch.getOtherBM(item, blList);
-
-            if (maxLength < getList.length) maxLength = getList.length;
-            if (maxYoungLength < getYoungList.length) maxYoungLength = getYoungList.length;
-            if (maxArmy < armyList.length) maxArmy = armyList.length;
-            if (maxOther < otherList.length) maxOther = otherList.length;
-
-            branchTable.push(getList);
-            branchYoungTable.push(getYoungList);
-            armyTable.push(armyList);
-            otherTable.push(otherList);
-        });
-
-        var etcList = sbp_branch.getEtcOldMember(blList,attendSet);
-        branchTable.push(etcList);
-
-        var etcList2 = sbp_branch.getEtcYoungMember(blList,attendSet);
-        branchYoungTable.push(etcList2);
-
-        res.render('branch', {
-            bsList: bsList,
-            blList: blList,
-            maxNumber: maxLength,
-            maxYoungNumber: maxYoungLength,
-            branchTable: branchTable,
-            branchYoungTable: branchYoungTable,
-            armyTable: armyTable,
-            otherTable: otherTable,
-            maxArmy: maxArmy,
-            maxOther: maxOther,
-            year: year
-        });        
-
-    })
-    .end ();
-
 });
 
 router.post('/branch_profile', function (req, res, next) {
@@ -208,6 +131,7 @@ router.post('/branch_profile', function (req, res, next) {
         
         sbp_member.GetMemberWithName(inputData.name, function (error, getData) {
             if (!error) {
+                getData.name = inputData.name;
                 getData.branch = inputData.branch; // req.body.branch
                 getData.attend = inputData.attend; // req.body.attend
                 getData.attendString = sbp_member.AttendToString(getData.attend);
@@ -225,20 +149,24 @@ router.get('/friends', function (req, res, next) {
     if (!attendSet)
         attendSet = 0;
     
-    sbp_member.getMembersWithYear(year, function (memberList) {
-        var memberList2 = [];
-        memberList.forEach(function (item, index) {
-            if (item.attend._ >= attendSet)
-                memberList2.push(item);
-        });
-        
-        // 정리된 정보를 건내고 ejs 랜더링 하여 보여줌.
-        res.render('friends', 
-            {	
-                memberList: memberList2,
-                year: year
-            }
-        );
+    sbp_member.GetMembersWithYear(year, function (error, memberList) {
+        if (!error) {
+            var memberList2 = [];
+            memberList.forEach(function (item, index) {
+                if (item.attend >= attendSet)
+                    memberList2.push(item);
+            });
+            
+            // 정리된 정보를 건내고 ejs 랜더링 하여 보여줌.
+            res.render('friends', 
+                {	
+                    memberList: memberList2,
+                    year: year
+                }
+            );
+        }
+        else 
+            res.send('error: cannot find friends list: ' + error);
     });
 });
 
@@ -306,34 +234,6 @@ router.post('/profile_edit/:id', function (req, res, next) {
 
 	form.parse(req);
 
-});
-
-router.get('/addCharge', function (req, res, next) {
-    var add_name = req.body.add_name;
-    var add_chargeName = req.body.add_chargeName;
-    var add_chargeGroup = req.body.add_chargeGroup;
-    var add_chargeYear = req.body.add_chargeYear;
-    // var year = req.query.year;
-    var year = sbp_time.getYear();
-	var attendSet = req.query.attendValue;
-    // if (!attendSet)
-    //     attendSet = 0;
-    
-    // sbp_member.getMembersWithYear(year, function (memberList) {
-    //     var memberList2 = [];
-    //     memberList.forEach(function (item, index) {
-    //         if (item.attend._ >= attendSet)
-    //             memberList2.push(item);
-    //     });
-        
-    //     // 정리된 정보를 건내고 ejs 랜더링 하여 보여줌.
-    //     res.render('friends', 
-    //         {	
-    //             memberList: memberList2,
-    //             year: year
-    //         }
-    //     );
-    // });
 });
 
 router.post('/addCharge', function (req, res, next) {

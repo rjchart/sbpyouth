@@ -45,7 +45,7 @@ block content
 		div.ui.container
 			a.active.sub.item 전체 브랜치 현황
 			- bsList.forEach( function(item,index) {
-				a.sub.item #{item.branch._}
+				a.sub.item #{item.branch}
 			- });
 	div.main.ui.container
 		div.ui.grid
@@ -59,15 +59,14 @@ block content
 								tr
 									th 브랜치
 									- bsList.forEach( function(item,index) {
-									th #{item.branch._}	
+									th #{item.branch}	
 									- });
-									th 기타
 							tfoot
 								tr
-									th(colspan="#{bsList.length+2}") 
+									th(colspan="#{bsList.length+1}") 
 										div.ui.borderless.small.right.floated.pagination.menu
 											a.item(href="/branch?year=#{year}") <i class="child icon"></i> all
-											a.item(href="/branch?year=#{year}&attendValue=1") <i class="frown icon"></i> bad
+											a.item(href="/branch?year=#{year}&attendValue=1") <i class="frown icon"></i> not bad
 											a.item(href="/branch?year=#{year}&attendValue=2") <i class="meh icon"></i> well
 											a.item(href="/branch?year=#{year}&attendValue=3") <i class="smile icon"></i> good
 											a.item(href="/branch?year=#{year}&attendValue=4") <i class="thumbs outline up icon"></i> perfect
@@ -75,48 +74,47 @@ block content
 								tr
 									td: div.ui.ribbon.label 브랜치장
 									each item in bsList
-										td: label#profile(onclick="ProfileBS('#{item.RowKey._}','#{year}','#{item.branch._}','#{item.attend._}')") #{item.RowKey._}
-									td 없음
-								- for(var i = 0; i < maxNumber; i++) {
+										td: label#profile(onclick="ProfileBS('#{item.RowKey}','#{year}','#{item.branch}','#{item.attend}')") #{item.RowKey}
+								- for(var i = 0; i < maxLength.two; i++) {
 								tr 
 									if i == 0
-										td(rowspan="#{maxNumber}")
+										td(rowspan="#{maxLength.two}")
 											div.ui.ribbon.label 청 2부
-									each item in branchTable
+									each item in bsList
 										td 
-											if item.length > i
-												label#profile(onclick="ProfileBS('#{item[i].RowKey._}','#{year}','#{item[i].branch._}','#{item[i].attend._}')") #{item[i].RowKey._}
+											if item.two.length > i
+												label#profile(onclick="ProfileBS('#{item.two[i].RowKey}','#{year}','#{item.two[i].branch}','#{item.two[i].attend}')") #{item.two[i].RowKey}
 								- }
-								- for(var i = 0; i < maxYoungNumber; i++) {
+								- for(var i = 0; i < maxLength.one; i++) {
 								tr 
 									if i == 0
-										td(rowspan="#{maxYoungNumber}") 
+										td(rowspan="#{maxLength.one}") 
 											div.ui.ribbon.label 청 1부
-									each item in branchYoungTable
+									each item in bsList
 										td
-											if item.length > i 
-												label#profile(onclick="ProfileBS('#{item[i].RowKey._}','#{year}','#{item[i].branch._}','#{item[i].attend._}')") #{item[i].RowKey._}
+											if item.one.length > i 
+												label#profile(onclick="ProfileBS('#{item.one[i].RowKey}','#{year}','#{item.one[i].branch}','#{item.one[i].attend}')") #{item.one[i].RowKey}
 								- }
-								- for(var i = 0; i < maxArmy; i++) {
+								- for(var i = 0; i < maxLength.arm; i++) {
 								tr 
 									if i == 0
-										td(rowspan="#{maxArmy}") 
+										td(rowspan="#{maxLength.arm}") 
 											div.ui.ribbon.label 군입대자
-									each item in armyTable
+									each item in bsList
 										td
-											if item.length > i 
-												label#profile(onclick="ProfileBS('#{item[i].RowKey._}','#{year}','#{item[i].branch._}','#{item[i].attend._}')") #{item[i].RowKey._}
+											if item.arm.length > i 
+												label#profile(onclick="ProfileBS('#{item.arm[i].RowKey}','#{year}','#{item.arm[i].branch}','#{item.arm[i].attend}')") #{item.arm[i].RowKey}
 									td
 								- }
-								- for(var i = 0; i < maxOther; i++) {
+								- for(var i = 0; i < maxLength.out; i++) {
 								tr 
 									if i == 0
-										td(rowspan="#{maxOther}") 
+										td(rowspan="#{maxLength.out}") 
 											div.ui.ribbon.label 유학자 및 지방근무자
-									each item in otherTable
+									each item in bsList
 										td
-											if item.length > i 
-												label#profile(onclick="ProfileBS('#{item[i].RowKey._}','#{year}','#{item[i].branch._}','#{item[i].attend._}')") #{item[i].RowKey._}
+											if item.out.length > i 
+												label#profile(onclick="ProfileBS('#{item.out[i].RowKey}','#{year}','#{item.out[i].branch}','#{item.out[i].attend}')") #{item.out[i].RowKey}
 									td
 								- }
 			div#profileData.four.wide.column
