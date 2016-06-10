@@ -4,7 +4,8 @@ block script
 	script(type="text/javascript", src="javascript/templates.js")
 	script(type="text/javascript", src="javascript/runtime.js")
 	script.
-
+		var isEditable = false;
+		var ttoleValue = 85;
 		function ProfileBS(year, name, branch, attendString, attend, bYear, bMonth, bDay, gender, phone, attendDesc, tension, tensionString, part, photo) {
 			
 			//- var div = document.createElement("div");
@@ -27,9 +28,13 @@ block script
 			getData.year = year;
 			getData.part = part;
 			getData.photo = (photo != 0) ? photo : null;
-			console.log(getData);
+			//- console.log(getData);
 			//- var html = new EJS({url: 'app/views/profile_template.html'}).render(getData);
-			var html = window.profile_edit(getData);
+			var html;
+			if (!isEditable)
+				html = window.profile_template(getData);
+			else
+				html = window.profile_edit(getData);
 			//- console.log(html);
 			document.getElementById("profileData").innerHTML = html;
 			
@@ -38,19 +43,17 @@ block script
 		
 		function Display () {
 			var $htable = $('table.scrolled'), $table = $('table.scroll'), 
-			$bodyCells = $table.find('tbody tr:last').children(),
-			$headCells = $htable.find('thead tr').children(), colWidth = [], colWidth2, theadCols;
+			$bodyCells = $table.find('tbody tr.bMember:last').children(),
+			$headCells = $htable.find('thead tr').children(), colWidth = [];
 			
 			$(window).resize(function() {
 				$bodyCells.map(function(i) {
 					colWidth[i] = this.clientWidth;
 				});
-				$htable.find('thead tr').children().each(function(i, v) {
+				$headCells.each(function(i, v) {
 					$(v).width(colWidth[i]);
 				});
 			}).resize(); // Trigger resize handler
-			//- setTimeout(function(){
-			//- }, 100);
 		}
 		
 		function addListener(element, eventName, handler) {
@@ -89,16 +92,6 @@ block script
 					if (response.field) {
 						var field = response.field;
 						var id = field['RowKey']._;
-						//- var clickpass = "ProfileBS(" + field['year']._ + ", '"
-						//- + field['RowKey']._ + "','" + field['branch']._ + "','" 
-						//- + field['attendString']._ + "','" + field['attend']._ + "','" +
-						//- + field['birthYear']._ + "','" + field['birthMonth']._ + "','" + field['birthDay']._ + "','" 
-						//- + field['gender']._ + "','" + field['phone']._ + "','" + field['attendDesc']._ + "','" 
-						//- + field['tension']._ + "','" + field['tensionString']._ + "','" + field['part']._ + "','" 
-						//- + field['photo']._ + "')";
-						//- var clickpass = ProfileBS(field['year']._, field['RowKey']._, field['branch']._, field['attendString']._, field['attend']._,
-						//-  field['birthYear']._, field['birthMonth']._, field['birthDay']._, field['gender']._, field['phone']._, field['attendDesc']._, 
-						//-  field['tension']._, field['tensionString']._, field['part']._, field['photo']._ );
 						var check = document.getElementById(id);
 						var first = check.children[0].children[0];
 						var gender = check.children[1];
@@ -144,17 +137,77 @@ block script
 		window.onload = function () {
 			Display();
 		}
+		
+		function SubMenuFriendClicked (index) {
+			var date = new Date();
+			var year = date.getYear();
+			console.log("sub");
+			var $table = $('table.scroll tbody tr');
+			if (index == 0) {
+				$table.show();
+				$table.addClass('bMember');
+			}
+			if (index == 1) {
+				$table.hide();
+				$table.removeClass('bMember');
+				for (i = 26; i < 40; i++) {
+					var getTtole = year - i;
+					var setValue = '.' + getTtole;
+					$(setValue).show();
+					$(setValue).addClass('bMember');
+				}
+			}
+			if (index == 2) {
+				$table.hide();
+				$table.removeClass('bMember');
+				for (i = 19; i < 26; i++) {
+					var getTtole = year - i;
+					var setValue = '.' + getTtole;
+					$(setValue).show();
+					$(setValue).addClass('bMember');
+				}
+			}
+			if (index == 3) {
+				$table.hide();
+				$table.removeClass('bMember');
+				[-1,0,1].forEach (function (item) {
+					var getTtole = parseInt(ttoleValue) + item;
+					var setValue = '.' + getTtole;
+					$(setValue).show();
+					$(setValue).addClass('bMember');
+					
+				})
+			}
+			
+			setTimeout(function(){
+				Display();
+			}, 100);
+		}
+		
+		function SubMenuEditClicked (isEdit) {
+			console.log("sub");
+			if (!isEdit) {
+				isEditable = false;
+			}
+			if (isEdit) {
+				isEditable = true;
+			}
+		}
 	
 block header_item03
-	a.item.active(href="/friends")
+	a.main.item.active(href="/friends")
 		i.child.icon 
 		|Friends
 block content
 	div.ui.secondary.pointing.menu
 		div.ui.container
-			a.active.item 전체 맴버 현황
-			a.item 부장 집사
-			a.item 임원
+			a.active.sub.item(onclick="SubMenuFriendClicked(0)") 전체 맴버 현황
+			a.sub.item(onclick="SubMenuFriendClicked(1)") 청2부 맴버
+			a.sub.item(onclick="SubMenuFriendClicked(2)") 청1부 맴버
+			a.sub.item(onclick="SubMenuFriendClicked(3)") 또래 친구들
+			div.ui.right.small.menu.buttons
+				button.ui.blue.item.active(onclick="SubMenuEditClicked(false)") show
+				button.ui.blue.item(onclick="SubMenuEditClicked(true)") edit
 	div.main.ui.container(onload="Display()")
 		div.ui.grid
 			div.twelve.wide.streched.column
@@ -165,19 +218,19 @@ block content
 						table.scrolled.ui.line.celled.table(style="width:100%;border-bottom-width: 5px; margin:0")
 							thead
 								tr
-									th 이름
-									th 성별
-									th 전화번호
-									th 생년월일
-									th 브랜치
-									th 소속
-									th 출석
-									th 비고
+									th.name 이름
+									th.gender 성별
+									th.phone 전화번호
+									th.birth 생년월일
+									th.branch 브랜치
+									th.part 소속
+									th.attend 출석
+									th.desc 비고
 						div.member(style="width:100%; height:340px; overflow:auto; margin:0")
 							table.scroll.ui.celled.structured.striped.table
 								tbody
 									each member, i in memberList
-										tr(id="#{member.RowKey._}")
+										tr.bMember(id="#{member.RowKey._}" class="#{member.birthYear._}")
 											td.name: label(onclick="ProfileBS(#{year}, '#{member.RowKey._}','#{member.branch._}','#{member.attendString._}','#{member.attend._}','#{member.birthYear._}','#{member.birthMonth._}','#{member.birthDay._}','#{member.gender._}','#{member.phone._}','#{member.attendDesc._}','#{member.tension ? member.tension._ : 0}','#{member.tensionString ? member.tensionString._ : 0}','#{member.part ? member.part._ : 0}', '#{member.photo ? member.photo._ : 0}')") #{member.RowKey._}
 											td.gender #{member.gender?member.gender._: '모름'}
 											td.phone #{member.phone._}

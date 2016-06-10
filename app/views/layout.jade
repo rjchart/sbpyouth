@@ -8,10 +8,11 @@ html(lang='en')
       link(rel='stylesheet' type='text/css' href='/css/style.css')
       link(rel='stylesheet' type='text/css' href='/javascript/dist/semantic.min.css')
     block js
-      script(src='/javascript/jquery.min.js')
-      script(src="http://code.jquery.com/jquery-1.7.js")
-      script(src="http://malsup.github.com/jquery.form.js") 
-      script(src='/javascript/dist/semantic.min.js')
+      script(src='/javascript/jquery-1.12.4.min.js')
+      script(src="http://malsup.github.com/jquery.form.js")
+      //- script(src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js")
+      //- script(src="http://malsup.github.com/jquery.form.js") 
+      script(src='/javascript/dist/semantic.js')
       script(src='/javascript/main.js')
       //- script(src="/javascript/docs.js")
 
@@ -65,15 +66,15 @@ html(lang='en')
               | <p> <span style="color:olive"> &nbsp;&nbsp; 대한예수교장로회 </span><br/>
               | &nbsp; 신반포 중앙교회 청년부 </p>
             block header_item01
-              a.item(href="/")
+              a.main.item(href="/")
                 i.home.icon
                 |Home  
             block header_item02
-              a.item(href="/branch")
+              a.main.item(href="/branch")
                 i.grid.layout.icon 
                 |Branchs
             block header_item03
-              a.item(href="/friends")
+              a.main.item(href="/friends")
                 i.child.icon 
                 |Friends
             div.right.menu
@@ -82,10 +83,10 @@ html(lang='en')
                   input(type="text" placeholder="Search...")
                   i.search.link.icon
               block header_setting
-                a.ui.item(href="/setting")
+                a.ui.main.item(href="/setting")
                   i.settings.icon  
                   |Setting
-              a.ui.item
+              a.ui.main.item
                 i.sign.out.icon  
                 |Logout
     block content

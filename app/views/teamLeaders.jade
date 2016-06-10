@@ -1,0 +1,32 @@
+extends index
+block sub_item04
+    a.active.sub.item(href="/teamleader") 팀장
+block sub_content
+    div.main.ui.container
+        div.ui.segment
+            h3.ui.dividing.header 팀장 명단
+                div.sub.header 신반포 중앙교회 청년부의 사역, 찬양, 다과, 새가족 환영 등의 일을 분담하여 맡으며 매년 사역에 따라 팀의 구성이 바뀐다.
+            div.ui.accordion
+                each chargeName, i in order
+                    if datas[chargeName]
+                        if (i == 0)
+                            div.active.title
+                                div.ui.blue.tag.label
+                                    i.dropdown.icon 
+                                    |#{chargeName}
+                                strong &nbsp;&nbsp;&nbsp;&nbsp;#{datas[chargeName].name}
+                            div.active.content
+                                p(style="color:gray") 청년부의 모든 일에 참여하며 지시를 내리고 참여를 북돋우는 역할을 한다. 매주 (혹은 격주) 토요일 회의를 주도하고 청년부의 일에 항상 앞장선다.
+                                - var data = datas[chargeName]; 
+                                include big_profile_template
+                        else
+                            div.title
+                                div.ui.blue.tag.label
+                                    i.dropdown.icon 
+                                    |#{chargeName}
+                                strong &nbsp;&nbsp;&nbsp;&nbsp;#{datas[chargeName].name}
+                            div.content
+                                p(style="color:gray") 청년부의 모든 일에 참여하며 지시를 내리고 참여를 북돋우는 역할을 한다. 매주 (혹은 격주) 토요일 회의를 주도하고 청년부의 일에 항상 앞장선다.
+                                - var data = datas[chargeName]; 
+                                include big_profile_template
+                        

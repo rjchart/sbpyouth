@@ -13,7 +13,19 @@ function RemoveEntityGen (entity) {
         if (typeof valueOfKey == "object")
             entity[key] = valueOfKey._;
     }
-    
+}
+
+function SetBirthFormat (data) {
+    var year = parseInt(data.birthYear);
+    var cur_year = new Date().getYear();
+    if (cur_year - year >= 26)
+        data.part = '청2부';
+    else 
+        data.part = '청1부';
+    year += 1900; 
+    data.birthYear = year.toString();
+    data.birthMonth = FormatNumberLength(data.birthMonth, 2);
+    data.birthDay = FormatNumberLength(data.birthDay, 2);
 }
 
 function FormatNumberLength(num, length) {
@@ -175,28 +187,10 @@ module.exports.GetMemberAndLogWithName = function (name, next) {
     // 데이터베이스 쿼리를 실행합니다.
     tableService.queryEntities('members', query, null, function entitiesQueried(error, result) {
         if (!error) {
-            
-            var testString = JSON.stringify(result.entries);
-            var entries = JSON.parse(testString);
-            // response.send(entries[0].RowKey._);
-            var year = parseInt((entries[0].birthYear != null) ? entries[0].birthYear._ : 0);
-            year += 1900; 
-            var month = FormatNumberLength((entries[0].birthMonth != null) ? entries[0].birthMonth._ : 0, 2);
-            var day = FormatNumberLength((entries[0].birthDay != null) ? entries[0].birthDay._ : 0, 2);
-            
-            var getData = {};
-            getData.birthYear = year;
-            getData.birthMonth = month;
-            getData.birthDay = day
-            getData.name = (entries[0].RowKey != null) ? entries[0].RowKey._ : null;
-            getData.gender = (entries[0].gender != null) ? entries[0].gender._ : null;
-            getData.phone = (entries[0].phone != null) ? entries[0].phone._ : null;
-            getData.attendDesc = (entries[0].attendDesc != null) ? entries[0].attendDesc._ : null;
-            getData.tension = (entries[0].tension != null) ? entries[0].tension._ : null;
+            RemoveEntityGen(result.entries[0]);
+            var getData = result.entries[0];
+            SetBirthFormat(getData);
             getData.tensionString = TensionToString(getData.tension); 
-            getData.year = (entries[0].PartitionKey != null) ? entries[0].PartitionKey._ : null;
-            getData.part = (entries[0].part != null) ? entries[0].part._ : null;
-            getData.photo = (entries[0].photo != null) ? entries[0].photo._ : null;
             
             var getYear = sbp_time.getYear();
             var logQeury = new azure.TableQuery()
@@ -204,8 +198,6 @@ module.exports.GetMemberAndLogWithName = function (name, next) {
             .where('RowKey eq ?', name.toString());
             tableService.queryEntities('branchlog', logQeury, null, function (error, log) {
                 if (!error) {
-                    // var logString = JSON.stringify(log.entries);
-                    // var logResult = JSON.parse(logString);
                     for (var logKey in log.entries) {
                         var entry = log.entries[logKey];
                         RemoveEntityGen(entry);
@@ -220,6 +212,55 @@ module.exports.GetMemberAndLogWithName = function (name, next) {
                     getData.log = log.entries
                     return next(null, getData);        
                 }
+            });
+            
+        }    
+    });
+}
+
+module.exports.GetMembersAndLogWithNames = function (names, next) {
+    var memberString = names.join(" or ");
+    var memberQuery = new azure.TableQuery()
+    .where(memberString);
+
+    // 데이터베이스 쿼리를 실행합니다.
+    tableService.queryEntities('members', memberQuery, null, function (error, result) {
+        if (!error) {
+            for (var key in result.entries) {
+                var data = result.entries[key];
+                RemoveEntityGen(data);
+            } 
+            
+            var getYear = sbp_time.getYear();
+            var logQeury = new azure.TableQuery()
+            .where(memberString);
+            
+            tableService.queryEntities('branchlog', logQeury, null, function (error, log) {
+                if (!error) {
+                    for (var logKey in log.entries) {
+                        var entry = log.entries[logKey];
+                        RemoveEntityGen(entry);
+                        var memberData;
+                        for (var key in result.entries) {
+                            var data = result.entries[key];
+                            
+                            if (entry.PartitionKey == getYear && entry.RowKey == data.RowKey) {
+                                for (var key in entry) {
+                                    if (key == 'PartitionKey' || key == 'RowKey' || key == 'birthYear' || key == 'attendDesc')
+                                        continue;
+                                    data[key] = entry[key];   
+                                }
+                                SetBirthFormat(data);
+                                data.tensionString = TensionToString(data);
+                            }
+                        }
+                    }
+                    
+                    // getData.log = log.entries
+                    return next(null, result.entries);        
+                }
+                else 
+                    return next(error);
             });
             
         }    
@@ -366,3 +407,85 @@ module.exports.MemberSave = function(fields) {
 	});
 }
 
+module.exports.GetCurrentMemberWithGroup = function (group, next) {
+    var getDate = new Date();
+    var year = getDate.getFullYear().toString();
+    
+    exports.GetMemberWithGroup(year, group, next);
+}
+
+module.exports.GetMemberWithGroup = function (year, group, next) {
+    
+    var query = new azure.TableQuery()
+    .where('PartitionKey eq ? and chargeGroup eq ?', year, group);
+
+    // 데이터베이스 쿼리를 실행합니다.
+    tableService.queryEntities('saveData', query, null, function (error, result) {
+        if (!error) {
+            // var testString = JSON.stringify(result.entries);
+            // var entries = JSON.parse(testString);
+            var members = [];
+            for (var index in result.entries) {
+                var data = result.entries[index];
+                RemoveEntityGen(data);
+                members.push("RowKey eq '" + data.data + "'");
+            }
+            module.exports.GetMembersAndLogWithNames(members, function (error2, result2) {
+                if (!error2) {
+                    for (var index in result2) {
+                        var data = result2[index];
+                        for (var j in result.entries) {
+                            var data2 = result.entries[j];
+                            if (data2.data == data.RowKey) {
+                                for (var key in data2) {
+                                    if (key == "data")
+                                        data['name'] = data2[key];
+                                    else
+                                        data[key] = data2[key];
+                                }
+                            }
+                        }
+                    }
+                    next(null, result2);
+                }
+                else
+                    next(error);
+            });
+            // var memberString = members.join(" or ");
+            // var memberQuery = new azure.TableQuery()
+            // .where(memberString);
+            // // 데이터베이스 쿼리를 실행합니다.
+            // tableService.queryEntities('members', memberQuery, null, function (error2, result2) {
+            //     if (!error2) {
+            //         for (var index in result2.entries) {
+            //             var data = result2.entries[index];
+            //             RemoveEntityGen(data);
+            //             for (var j in result.entries) {
+            //                 var data2 = result.entries[j];
+            //                 if (data2.data == data.RowKey) {
+            //                     for (var key in data2) {
+            //                         if (key == "data")
+            //                             data['name'] = data2[key];
+            //                         else
+            //                             data[key] = data2[key];
+            //                     }
+            //                 }
+            //             }
+            //             SetBirthFormat(data);
+            //         }
+                    
+                    
+            //         next(null, result2.entries);
+            //     }
+            //     else
+            //         next(error);
+            // });
+            
+        }
+        else {
+            console.log("error:" + error);
+            next(error);
+        }
+            
+    });
+}

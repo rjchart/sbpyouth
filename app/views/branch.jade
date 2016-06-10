@@ -35,7 +35,7 @@ block script
 		}
 		
 block header_item02
-	a.item.active(href="/branch")
+	a.main.item.active(href="/branch")
 		i.grid.layout.icon
 		|Branchs
 block content
@@ -43,11 +43,10 @@ block content
 	//- div.ui.masthead.vertical.tab.segment
 	div.ui.secondary.pointing.menu
 		div.ui.container
-			a.active.item 전체 브랜치 현황
-			a.item 부장 집사
-			a.item 임원
-			a.item 팀장
-			a.item 브랜치 리더
+			a.active.sub.item 전체 브랜치 현황
+			- bsList.forEach( function(item,index) {
+				a.sub.item #{item.branch._}
+			- });
 	div.main.ui.container
 		div.ui.grid
 			div.twelve.wide.streched.column

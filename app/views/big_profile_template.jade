@@ -1,0 +1,46 @@
+
+div.ui.raised.segment
+    div.ui.grid
+        div.four.wide.streched.column
+            div.ui.card
+                div.image.outImg(style="background-color:#e5e5e5")
+                    if (data.photo)
+                        img.fitImg(src="#{data.photo}")
+                    else
+                        img.fitImg(src="/public/img/image.png")
+        div.twelve.wide.streched.column
+            div.ui.container
+                h3.ui.header
+                    div.content
+                        |#{data.name}   
+                        div.sub.header #{data.birthYear}.#{data.birthMonth}.#{data.birthDay}
+                    div.ui.mini.relaxed.celled.list
+                        div.item
+                            i.big.heterosexual.middle.aligned.icon
+                            div.content
+                                div.header 성별
+                                    div.description(style="color:gray")
+                                        |#{data.gender}
+                        div.item
+                            i.big.phone.middle.aligned.icon
+                            div.content
+                                div.header 전화번호
+                                    div.description(style="color:gray")
+                                        |#{data.phone}
+                        div.item
+                            i.big.building.middle.aligned.icon
+                            div.content
+                                div.header 사는 곳
+                                    div.description(style="color:gray") 알수없음
+                        div.item
+                            i.big.tag.middle.aligned.icon
+                            div.content
+                                div.header 브랜치
+                                    div.description(style="color:gray")
+                                        |#{data.branch}
+                        div.item
+                            i.big.sitemap.middle.aligned.icon
+                            div.content
+                                div.header 소속
+                                    div.description(style="color:gray") 
+                                        |#{data.part}

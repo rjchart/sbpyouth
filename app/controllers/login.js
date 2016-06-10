@@ -29,7 +29,7 @@ router.use(passport.session());
 var accessKey = 'pnOhpX2pEOye58E2gtlU5gVGzUbFVk3GcNYerm4RDuNuzoqsSB06v28oy3EF/wUZo6cUq/SUNdH0AQqek6rg7Q==';
 var storageAccount = 'sbpccyouth';
 var entGen = azure.TableUtilities.entityGenerator;
-var redirectURL = "/auth/login"
+var redirectURL = "../setting"
 
 
 passport.serializeUser(function(user, done) {
@@ -224,6 +224,9 @@ router.get('/kakao/callback', passport.authenticate('kakao', {
     }
 );
 
+router.get('/setting', function (req, res) {
+    res.redirect('../setting');
+})
 
 router.get('/logout', function(req, res){
 //
