@@ -115,44 +115,44 @@ block content
 	div.ui.secondary.pointing.menu
 		div.ui.container
 			block sub_item01
-				a.sub.item(href="/") 청년부 목사
+				a.sub.item(href="/") 청년부 지도자
 			block sub_item02
-				a.sub.item(href="/") 부장 집사
+				a.sub.item(href="/deacons") 부장 집사
 			block sub_item03
-				a.sub.item(href="/") 임원
+				a.sub.item(href="/executives") 임원
 			block sub_item04
 				a.sub.item(href="/teamleader") 팀장
 			block sub_item05
 				a.sub.item(href="/branchleader") 브랜치 리더
-			block sub_item06
-				a.sub.item(href="/") 그외 사역자
+			//- block sub_item06
+			//- 	a.sub.item(href="/") 그외 사역자
 			div.ui.right.small.menu
 				button.ui.blue.primary.labeled.icon.button(onclick="AddMemberButton()")
 					i.user.icon 
 					|Add Member
 	block sub_content
 	block modal_content
-	div.ui.modal
-		i.close.icon 
-		div.header Add Member 
-		div.ui.content
-			form#addMember.ui.fluid.form(action="/addCharge" method="post")
-				div.four.fields
-					div.field
-						label 이름
-						input(name="add_name[0]", placeholder="이름", type="text")
-					div.field
-						label 직책
-						input(name="add_chargeName[0]", placeholder="직책", type="text")
-					div.field
-						label 소속
-						input(name="add_chargeGroup[0]", placeholder="소속", type="text")
-					div.field
-						label 년도
-						input(name="add_chargeYear[0]", placeholder="년도", type="text")
-		div.actions 
-			div.ui.black.deny.button
-				i.plus.center.icon
-				|등록 맴버 추가
-			div.ui.positive.right.labeled.icon.button 등록
-				i.checkmark.icon
+		div.ui.modal
+			i.close.icon 
+			div.header Add Member 
+			div.ui.content
+				form#addMember.ui.fluid.form(action="/addCharge" method="post")
+					div.four.fields
+						div.field
+							label 이름
+							input(name="add_name[0]", placeholder="이름", type="text")
+						div.field
+							label 직책
+							input(name="add_chargeName[0]", placeholder="직책", type="text")
+						div.field
+							label 소속
+							input(name="add_chargeGroup[0]", placeholder="소속", type="text")
+						div.field
+							label 년도
+							input(name="add_chargeYear[0]", placeholder="년도", type="text")
+			div.actions 
+				div.ui.black.deny.button
+					i.plus.center.icon
+					|등록 맴버 추가
+				div.ui.positive.right.labeled.icon.button 등록
+					i.checkmark.icon

@@ -1,11 +1,11 @@
 extends index
-block sub_item03
-    a.active.sub.item(href="/executives") 임원
+block sub_item01
+    a.active.sub.item(href="/") 청년부 지도자
 block sub_content
     div.main.ui.container
         div.ui.segment
-            h3.ui.dividing.header 임원단
-                div.sub.header 신반포 중앙교회 청년부 전반적인 일을 맡고 있으며 매주 토요일 회의를 통해 청년부의 할일을 계획하고 정리한다.
+            h3.ui.dividing.header 청년부 지도자
+                div.sub.header 신반포 중앙교회 청년부의 지도를 맡고 계시는 목사님 및 전도사님
             div.ui.accordion
                 each chargeName, i in order
                     if datas[chargeName]

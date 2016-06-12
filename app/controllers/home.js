@@ -20,7 +20,14 @@ var jsFunctionString = jade.compileFileClient('app/views/profile_template.jade',
 var jsFunctionString2 = jade.compileFileClient('app/views/profile_edit.jade', {name: "profile_edit"});
 var jsFunctionString3 = jade.compileFileClient('app/views/addMember_template.jade', {name: "addMember_template"});
 var jsFunctionString4 = jade.compileFileClient('app/views/addMember_second.jade', {name: "addMember_second"});
-jsFunctionString += "\n" + jsFunctionString2 + "\n" + jsFunctionString3 + "\n" + jsFunctionString4;
+var jsFunctionString5 = jade.compileFileClient('app/views/addPerson_template.jade', {name: "addPerson_template"});
+var jsFunctionString6 = jade.compileFileClient('app/views/addPerson_second.jade', {name: "addPerson_second"});
+var jsFunctionString7 = jade.compileFileClient('app/views/addBranch_template.jade', {name: "addBranch_template"});
+var jsFunctionString8 = jade.compileFileClient('app/views/addBranch_second.jade', {name: "addBranch_second"});
+var jsFunctionString9 = jade.compileFileClient('app/views/addNameBS_template.jade', {name: "addNameBS_template"});
+jsFunctionString += "\n" + jsFunctionString2 + "\n" + jsFunctionString3 + "\n"
+ + jsFunctionString4 + "\n" + jsFunctionString5 + "\n" + jsFunctionString6 + "\n" 
+ + jsFunctionString7 + "\n" + jsFunctionString8 + "\n" + jsFunctionString9;
 fs.writeFileSync("javascript/templates.js", jsFunctionString);
 
 module.exports = function (app) {
@@ -29,6 +36,50 @@ module.exports = function (app) {
 
 
 router.get('/', function (req, res, next) {
+    
+    var tableService = azure.createTableService(storageAccount, accessKey);
+    sbp_member.GetCurrentMemberWithGroup('교회', function (error, result) {
+        if (!error) {
+            var chargeOrder = ['청년부 목사', '청년부 전도사'];
+            var inputData = {};
+            for (var index in result) {
+                var value = result[index];
+                inputData[value.RowKey] = value;
+            }
+            
+            res.render('churchLeader', {
+                title: '신반포 중앙교회 청년부',
+                // articles: articles,
+                order: chargeOrder,
+                datas: inputData
+            });
+        }
+    });
+});
+
+router.get('/deacons', function (req, res, next) {
+    
+    var tableService = azure.createTableService(storageAccount, accessKey);
+    sbp_member.GetCurrentMemberWithGroup('부장 집사', function (error, result) {
+        if (!error) {
+            var chargeOrder = ['청2 부장 집사', '청1 부장 집사'];
+            var inputData = {};
+            for (var index in result) {
+                var value = result[index];
+                inputData[value.RowKey] = value;
+            }
+            
+            res.render('deacons', {
+                title: '신반포 중앙교회 청년부',
+                // articles: articles,
+                order: chargeOrder,
+                datas: inputData
+            });
+        }
+    });
+});
+
+router.get('/executives', function (req, res, next) {
     
     // console.log("is Session: " + req.session.id);
     // var session_name;
@@ -104,23 +155,48 @@ router.get('/branchleader', function (req, res, next) {
 });
 
 router.get('/branch', function (req, res, next) {
-    var tableService = azure.createTableService(storageAccount, accessKey);
-    
     var year = req.query.year;
 	var attendSet = req.query['attendValue'];
-    if (year==null)
-        year = sbp_time.getYear();
 	if (!attendSet)
 		attendSet = 0;  
     
     var getTable = sbp_member.GetBranchMembers(year, function (error, result) {
         if (!error) {
-            result.year = year;
-            res.render('branch', result);        
+            var branchs = [];
+            result.bsList.forEach (function (item) {
+                branchs.push(item.branch);
+            });
+            result.branchTag = JSON.stringify(branchs);
+            res.render('branchTotal', result);
         }
         else 
             console.log(error);
     }, attendSet);
+  
+});
+
+router.get('/branch_segment/:id', function (req, res, next) {
+    var getID = req.params.id;
+    var year = req.query.year;
+    var branchTag = req.query.tag;
+    var branchs = JSON.parse(branchTag);
+    if (year == null || year == '')
+        year = sbp_time.getYear();  
+    
+    var getTable = sbp_member.GetBranchMembersWithBranch(year, getID, function (error, result) {
+        if (!error) {
+            var input = {
+                datas: result,
+                year: year,
+                branchs: branchs,
+                branchTag: branchTag,
+                branch: getID
+            }
+            res.render('branchSeperate', input);        
+        }
+        else 
+            console.log(error);
+    });
   
 });
 
@@ -149,7 +225,7 @@ router.get('/friends', function (req, res, next) {
     if (!attendSet)
         attendSet = 0;
     
-    sbp_member.GetMembersWithYear(year, function (error, memberList) {
+    sbp_member.GetMembersAndLogWithYear(year, function (error, memberList) {
         if (!error) {
             var memberList2 = [];
             memberList.forEach(function (item, index) {
@@ -262,3 +338,125 @@ router.post('/addCharge', function (req, res, next) {
     
 });
 
+
+router.post('/addMember', function (req, res, next) {
+    var keys = ['name', 'gender', 'phone', 'birthYear', 'birthMonth', 'birthDay', 'tension', 'attend'];
+    var body = req.body;
+    
+    var addData = [];
+    for (k = 0; k < body['add_name'].length; k++) {
+        var tmp = {};
+        if (body['add_name'][k] == null || body['add_name'][k] == '')
+            continue;
+            
+        keys.forEach (function(key, index) {
+            var addkey = "add_" + key;
+            tmp[key] = body[addkey][k];
+            var year = parseInt(tmp.birthYear);
+            if (year > 1900)
+                year -= 1900;
+            var partitionKey = year;
+            if (parseInt(tmp.birthMonth) < 3)
+                partitionKey--;
+            tmp.PartitionKey = partitionKey;
+            tmp.RowKey = tmp.name; 
+        }, this);
+        addData.push(tmp);
+    }
+    
+    sbp_member.AddMember(addData, function (error, result) {
+        if (!error) {
+            res.send("ok");
+        }
+    });
+    
+});
+
+router.post('/removeMember', function (req, res) {
+    
+    sbp_member.RemoveMember(req.body, function (error, result) {
+        if (!error) {
+            var data = {
+                result:true
+            }
+            res.send(data);
+        }
+    });
+    
+});
+
+router.post('/addBranch', function (req, res, next) {
+    var keys = ['name', 'year', 'branch', 'attendDesc'];
+    var body = req.body;
+    
+    var addData = [];
+    for (k = 0; k < body['add_name'].length; k++) {
+        var tmp = {};
+        if (body['add_name'][k] == null || body['add_name'][k] == '')
+            continue;
+            
+        keys.forEach (function(key, index) {
+            if (key != 'year' && key != 'name') {
+                var addkey = "add_" + key;
+                tmp[key] = body[addkey][k];   
+            }
+        }, this);
+        tmp.PartitionKey = body.add_year[k];
+        tmp.RowKey = body.add_name[k];
+        tmp.branchYear = body.add_year[k].toString().replace('-2','.5');
+        
+        addData.push(tmp);
+    }
+    
+    sbp_member.AddBranch(addData, function (error, result) {
+        if (!error) {
+            var data = {
+                result:true
+            }
+            res.send(data);
+        }
+    });
+    
+});
+
+router.post('/makeBranch', function (req, res, next) {
+    var bsList = req.body['make_nameBS'];
+    sbp_member.GetMembersAndLogWithYear(null, function (error, members) {
+        if (!error) {
+            // index: 1 -- 간단히 브랜치원이 원하는 BS 싫어하지 않는 BS 정도를 결정하고 나머지 랜덤. 
+            // index: 2 -- 브랜치의 밸런스를 맞추고 팀원들의 행복도를 통해 최적의 브랜치 편성
+            var newList = sbp_branch.MakeNewBranch(members, bsList, 2);
+            newList.year = '2016';
+            console.log("done");
+            res.render('branchTemp', newList);
+        }    
+    });
+    
+    
+    // for (i = 0; i < bsList.length; i++) {
+    //     if (body['add_name'][i] == null || body['add_name'][i] == '')
+    //         continue;
+            
+    //     keys.forEach (function(key, index) {
+    //         if (key != 'year' && key != 'name') {
+    //             var addkey = "add_" + key;
+    //             tmp[key] = body[addkey][i];   
+    //         }
+    //     }, this);
+    //     tmp.PartitionKey = body.add_year[i];
+    //     tmp.RowKey = body.add_name[i];
+    //     tmp.branchYear = body.add_year[i].toString().replace('-2','.5');
+        
+    //     addData.push(tmp);
+    // }
+    
+    // sbp_member.AddBranch(addData, function (error, result) {
+    //     if (!error) {
+    //         var data = {
+    //             result:true
+    //         }
+    //         res.send(data);
+    //     }
+    // });
+    
+});

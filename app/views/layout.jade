@@ -57,7 +57,7 @@ html(lang='en')
           border: 0;
         }
 
-  body
+  body#body
     block header
       div.ui.inverted.menu
           div.ui.container
@@ -78,10 +78,10 @@ html(lang='en')
                 i.child.icon 
                 |Friends
             div.right.menu
-              div.item
-                div.ui.icon.input
-                  input(type="text" placeholder="Search...")
-                  i.search.link.icon
+              //- div.item
+              //-   div.ui.icon.input
+              //-     input(type="text" placeholder="Search...")
+              //-     i.search.link.icon
               block header_setting
                 a.ui.main.item(href="/setting")
                   i.settings.icon  

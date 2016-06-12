@@ -1,0 +1,14 @@
+extends branch
+block sub_item02
+	- branchs.forEach( function(item,index) {
+		if item == branch
+			a.sub.active.item(href="/branch_segment/#{item}?year=#{year}&tag=#{branchTag}") #{item}
+		else
+			a.sub.item(href="/branch_segment/#{item}?year=#{year}&tag=#{branchTag}") #{item}
+	- });
+block sub_content
+	div.ui.container
+		div.ui.three.stackable.cards
+			each data in datas
+				include profile_temp02
+	

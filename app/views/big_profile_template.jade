@@ -28,10 +28,11 @@ div.ui.raised.segment
                                     div.description(style="color:gray")
                                         |#{data.phone}
                         div.item
-                            i.big.building.middle.aligned.icon
+                            i.big.mail.middle.aligned.icon
                             div.content
-                                div.header 사는 곳
-                                    div.description(style="color:gray") 알수없음
+                                div.header 메일
+                                    div.description(style="color:gray") 
+                                        |#{data.mail}
                         div.item
                             i.big.tag.middle.aligned.icon
                             div.content
@@ -39,8 +40,8 @@ div.ui.raised.segment
                                     div.description(style="color:gray")
                                         |#{data.branch}
                         div.item
-                            i.big.sitemap.middle.aligned.icon
+                            i.big.building.middle.aligned.icon
                             div.content
-                                div.header 소속
+                                div.header 거주지
                                     div.description(style="color:gray") 
-                                        |#{data.part}
+                                        |#{data.locate || '알수없음'}

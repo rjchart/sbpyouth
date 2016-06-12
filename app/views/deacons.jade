@@ -1,11 +1,11 @@
 extends index
-block sub_item03
-    a.active.sub.item(href="/executives") 임원
+block sub_item02
+    a.active.sub.item(href="/deacons") 부장 집사
 block sub_content
     div.main.ui.container
         div.ui.segment
-            h3.ui.dividing.header 임원단
-                div.sub.header 신반포 중앙교회 청년부 전반적인 일을 맡고 있으며 매주 토요일 회의를 통해 청년부의 할일을 계획하고 정리한다.
+            h3.ui.dividing.header 부장 집사
+                div.sub.header 신반포 중앙교회 청년부의 멘토이자 뒤에서 이끌어 주시는 집사님들
             div.ui.accordion
                 each chargeName, i in order
                     if datas[chargeName]

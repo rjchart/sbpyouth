@@ -1,38 +1,158 @@
 extends layout
 block script
-	script.
-		function ProfileBS(name, year, branch, attend) {
-			var data = {
-				name: name,
-				year: year,
-				branch: branch,
-				attend: attend
+	block script_part01
+		script(type="text/javascript", src="../javascript/templates.js")
+		script(type="text/javascript", src="../javascript/runtime.js")
+		script.
+			function ProfileBS(name, year, branch, attend) {
+				var data = {
+					name: name,
+					year: year,
+					branch: branch,
+					attend: attend
+				}
+				var formData = new FormData();
+				for (var key in data) {
+					var value = data[key];
+					formData.append(key, value);
+				}
+				var xhttp = new XMLHttpRequest();
+				xhttp.open("POST", "branch_profile", true);
+				xhttp.send(JSON.stringify(data));
+				xhttp.onreadystatechange = function() {
+					document.getElementById('profileData').innerHTML = xhttp.responseText;
+				}
+				
+				//- $.ajax({
+				//- 	url: "/branch_profile",
+				//- 	type: "post",
+				//- 	data: data,
+				//- 	dataType: "json",
+				//- 	success: function(data) {
+				//- 		document.getElementById("profileData").innerHTML = data.message;
+				//- 	},
+				//- 	error: function(request) {
+				//- 		alert("실패");
+				//- 	}
+				//- });
 			}
-			var formData = new FormData();
-			for (var key in data) {
-				var value = data[key];
-				formData.append(key, value);
-			}
-			var xhttp = new XMLHttpRequest();
-			xhttp.open("POST", "branch_profile", true);
-			xhttp.send(JSON.stringify(data));
-			xhttp.onreadystatechange = function() {
-				document.getElementById('profileData').innerHTML = xhttp.responseText;
+			function AddBranchButton() {
+				$('.ui.edit.modal')
+					.modal({
+						closable 	: false,
+						onDeny 		: function () {
+							//- window.alert('Wait not yet!');
+							PlusAddMember();
+							return false;
+						},
+						onApprove 	: function () {
+							var $getAdd = $('#addMember');
+							$('#addMember').ajaxSubmit({
+								error: function (xhr) {
+									alert('등록 실패했습니다.');
+								},
+								success: function (response) {
+									alert('등록 성공했습니다.');
+								}
+							});
+							//- window.alert('Approved!');
+						}
+					});
+				$('.ui.edit.modal')
+					.modal('show');
+					
 			}
 			
-			//- $.ajax({
-			//- 	url: "/branch_profile",
-			//- 	type: "post",
-			//- 	data: data,
-			//- 	dataType: "json",
-			//- 	success: function(data) {
-			//- 		document.getElementById("profileData").innerHTML = data.message;
-			//- 	},
-			//- 	error: function(request) {
-			//- 		alert("실패");
-			//- 	}
-			//- });
-		}
+			var addMemberNumber = 1;
+			function PlusAddMember () {
+				var bmNumber = addMemberNumber;
+				var innerText = "";
+				var lastYear = "";
+				var lastBranch = "";
+				var keys = ['name', 'branch', 'year', 'attendDesc'];
+				for (var i = 0; i < bmNumber; i++) {
+					var getData = {};
+					getData.num = i;
+					keys.forEach (function (key, index) {
+						var keyValue = "add_" + key + "[" + i + "]";
+						getData[key] = document.getElementsByName(keyValue)[0].value;
+					});
+					
+					if (i == 0)
+						innerText += window.addBranch_template(getData);
+					else
+						innerText += window.addBranch_second(getData);
+					
+					lastBranch = getData.branch;
+					lastYear = getData.year;
+				}
+				var empty = { num: bmNumber };
+				keys.forEach (function (key, index) {
+					empty[key] = '';
+				})
+				empty.year = lastYear;
+				empty.branch = lastBranch;
+				
+				document.getElementById("addMember").innerHTML = innerText + window.addBranch_second(empty);
+				$('.ui.edit.modal')
+					.modal('hide');
+				$('.ui.edit.modal')
+					.modal('show');
+				
+				addMemberNumber++;
+				
+			}
+			
+			function MakeBranchButton() {
+				$('.ui.make.modal')
+					.modal({
+						closable 	: false,
+						onDeny 		: function () {
+							//- window.alert('Wait not yet!');
+							PlusMakeBS();
+							return false;
+						},
+						onApprove 	: function () {
+							var $getAdd = $('#makeBranch');
+							$('#makeBranch').submit();
+							//- window.alert('Approved!');
+						}
+					});
+				$('.ui.make.modal')
+					.modal('show');
+					
+			}
+			
+			var makeBSNumber = 8;
+			function PlusMakeBS () {
+				var bsNumber = makeBSNumber;
+				var innerText = "";
+				var keys = ['nameBS'];
+				for (var i = 0; i < bsNumber; i++) {
+					var getData = {};
+					getData.num = i;
+					keys.forEach (function (key, index) {
+						var keyValue = "make_" + key + "[" + i + "]";
+						getData[key] = document.getElementsByName(keyValue)[0].value;
+					});
+					
+					innerText += window.addNameBS_template(getData);
+				}
+				var empty = { 
+					num: bsNumber,
+					nameBS: '' 
+				};
+				
+				document.getElementById("makeFields").innerHTML = innerText + window.addNameBS_template(empty);
+				//- $('.ui.make.modal')
+				//- 	.modal('hide');
+				//- $('.ui.make.modal')
+				//- 	.modal('show');
+				
+				makeBSNumber++;
+				
+			}
+	block script_part02
 		
 block header_item02
 	a.main.item.active(href="/branch")
@@ -43,79 +163,85 @@ block content
 	//- div.ui.masthead.vertical.tab.segment
 	div.ui.secondary.pointing.menu
 		div.ui.container
-			a.active.sub.item 전체 브랜치 현황
-			- bsList.forEach( function(item,index) {
-				a.sub.item #{item.branch}
-			- });
-	div.main.ui.container
-		div.ui.grid
-			div.twelve.wide.streched.column
-				div.ui.segment
-					h2.ui.header
-						|#{year}년도 브랜치 편성
-					div.ui.container
-						table.ui.celled.striped.structured.table
-							thead
-								tr
-									th 브랜치
-									- bsList.forEach( function(item,index) {
-									th #{item.branch}	
-									- });
-							tfoot
-								tr
-									th(colspan="#{bsList.length+1}") 
-										div.ui.borderless.small.right.floated.pagination.menu
-											a.item(href="/branch?year=#{year}") <i class="child icon"></i> all
-											a.item(href="/branch?year=#{year}&attendValue=1") <i class="frown icon"></i> not bad
-											a.item(href="/branch?year=#{year}&attendValue=2") <i class="meh icon"></i> well
-											a.item(href="/branch?year=#{year}&attendValue=3") <i class="smile icon"></i> good
-											a.item(href="/branch?year=#{year}&attendValue=4") <i class="thumbs outline up icon"></i> perfect
-							tbody
-								tr
-									td: div.ui.ribbon.label 브랜치장
-									each item in bsList
-										td: label#profile(onclick="ProfileBS('#{item.RowKey}','#{year}','#{item.branch}','#{item.attend}')") #{item.RowKey}
-								- for(var i = 0; i < maxLength.two; i++) {
-								tr 
-									if i == 0
-										td(rowspan="#{maxLength.two}")
-											div.ui.ribbon.label 청 2부
-									each item in bsList
-										td 
-											if item.two.length > i
-												label#profile(onclick="ProfileBS('#{item.two[i].RowKey}','#{year}','#{item.two[i].branch}','#{item.two[i].attend}')") #{item.two[i].RowKey}
-								- }
-								- for(var i = 0; i < maxLength.one; i++) {
-								tr 
-									if i == 0
-										td(rowspan="#{maxLength.one}") 
-											div.ui.ribbon.label 청 1부
-									each item in bsList
-										td
-											if item.one.length > i 
-												label#profile(onclick="ProfileBS('#{item.one[i].RowKey}','#{year}','#{item.one[i].branch}','#{item.one[i].attend}')") #{item.one[i].RowKey}
-								- }
-								- for(var i = 0; i < maxLength.arm; i++) {
-								tr 
-									if i == 0
-										td(rowspan="#{maxLength.arm}") 
-											div.ui.ribbon.label 군입대자
-									each item in bsList
-										td
-											if item.arm.length > i 
-												label#profile(onclick="ProfileBS('#{item.arm[i].RowKey}','#{year}','#{item.arm[i].branch}','#{item.arm[i].attend}')") #{item.arm[i].RowKey}
-									td
-								- }
-								- for(var i = 0; i < maxLength.out; i++) {
-								tr 
-									if i == 0
-										td(rowspan="#{maxLength.out}") 
-											div.ui.ribbon.label 유학자 및 지방근무자
-									each item in bsList
-										td
-											if item.out.length > i 
-												label#profile(onclick="ProfileBS('#{item.out[i].RowKey}','#{year}','#{item.out[i].branch}','#{item.out[i].attend}')") #{item.out[i].RowKey}
-									td
-								- }
-			div#profileData.four.wide.column
-				include profile
+			block sub_item01
+				a.sub.item(href="/branch") 전체 브랜치 현황
+			block sub_item02
+				- bsList.forEach( function(item,index) {
+					a.sub.item(href="/branch_segment/#{item.branch}?year=#{year}&tag=#{branchTag}") #{item.branch}
+				- });
+			div.ui.right.small.menu
+				button.ui.blue.primary.labeled.icon.button(onclick="AddBranchButton()")
+					i.user.icon 
+					|Edit Branch
+				button.ui.red.button(onclick="MakeBranchButton()")
+					|Make Branch
+	block sub_content
+	block modal_content
+		div.ui.edit.modal
+			i.close.icon 
+			div.header Add Member 
+			div.ui.content
+				form#addMember.ui.fluid.form(action="/addBranch" method="post")
+					div.four.fields
+						div.field
+							label 이름
+							input(name="add_name[0]", placeholder="이름", type="text")
+						div.field
+							label 브랜치
+							input(name="add_branch[0]", placeholder="브랜치", type="text")
+						div.field
+							label 비고
+							input(name="add_attendDesc[0]", placeholder="비고", type="text")
+						div.field
+							label 년도
+							input(name="add_year[0]", placeholder="년도", type="text" value="#{year}")
+			div.actions 
+				div.ui.black.deny.button
+					i.plus.center.icon
+					|등록 맴버 추가
+				div.ui.positive.right.labeled.icon.button 등록
+					i.checkmark.icon
+	block make_content
+		div.ui.make.modal
+			i.close.icon 
+			div.header Make Branch 
+			div.ui.content
+				form#makeBranch.ui.fluid.form(action="/makeBranch" method="post")
+					div.ui.grid#makeFields
+						if bsList == null
+							div.two.wide.column
+								label BS
+								input(name="make_nameBS[0]", placeholder="이름", type="text")
+							div.two.wide.column
+								label BS
+								input(name="make_nameBS[1]", placeholder="이름", type="text")
+							div.two.wide.column
+								label BS
+								input(name="make_nameBS[2]", placeholder="이름", type="text")
+							div.two.wide.column
+								label BS
+								input(name="make_nameBS[3]", placeholder="이름", type="text")
+							div.two.wide.column
+								label BS
+								input(name="make_nameBS[4]", placeholder="이름", type="text")
+							div.two.wide.column
+								label BS
+								input(name="make_nameBS[5]", placeholder="이름", type="text")
+							div.two.wide.column
+								label BS
+								input(name="make_nameBS[6]", placeholder="이름", type="text")
+							div.two.wide.column
+								label BS
+								input(name="make_nameBS[7]", placeholder="이름", type="text")
+						else 
+							- bsList.forEach( function(item,index) {
+							div.two.wide.column
+								label BS
+								input(name="make_nameBS[#{index}]", placeholder= "이름", type="text", value="#{item.RowKey}")
+							- });
+			div.actions 
+				div.ui.black.deny.button
+					i.plus.center.icon
+					|등록 BS 추가
+				div.ui.positive.right.labeled.icon.button 등록
+					i.checkmark.icon

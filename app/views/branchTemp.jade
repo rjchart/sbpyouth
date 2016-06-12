@@ -1,0 +1,54 @@
+extends branch
+block sub_item01
+	a.active.sub.item(href="/branch") 전체 브랜치 현황
+block sub_content
+	div.main.ui.container
+		div.ui.grid
+			div.twelve.wide.streched.column
+				div.ui.segment
+					h2.ui.header
+						|#{year}년도 브랜치 편성
+					div.ui.container
+						table.ui.celled.striped.structured.table
+							thead
+								tr
+									th 브랜치
+									- bsList.forEach( function(item,index) {
+									th #{item.branch}	
+									- });
+							tfoot
+								tr
+									th(colspan="#{bsList.length+1}") 
+										div.ui.borderless.small.right.floated.pagination.menu
+											a.item(href="/branch?year=#{year}") <i class="child icon"></i> all
+											a.item(href="/branch?year=#{year}&attendValue=1") <i class="frown icon"></i> not bad
+											a.item(href="/branch?year=#{year}&attendValue=2") <i class="meh icon"></i> well
+											a.item(href="/branch?year=#{year}&attendValue=3") <i class="smile icon"></i> good
+											a.item(href="/branch?year=#{year}&attendValue=4") <i class="thumbs outline up icon"></i> perfect
+							tbody
+								tr
+									td: div.ui.ribbon.label 브랜치장
+									each item in bsList
+										td: label#profile(onclick="ProfileBS('#{item.RowKey}','#{year}','#{item.branch}','#{item.attend}')") #{item.RowKey}
+								- for(var i = 0; i < maxLength.two; i++) {
+								tr 
+									if i == 0
+										td(rowspan="#{maxLength.two}")
+											div.ui.ribbon.label 청 2부
+									each item in bsList
+										td 
+											if item.two.length > i && item.two[i]
+												label#profile(onclick="ProfileBS('#{item.two[i].RowKey}','#{year}','#{item.two[i].branch}','#{item.two[i].attend}')") #{item.two[i].RowKey}
+								- }
+								- for(var i = 0; i < maxLength.one; i++) {
+								tr 
+									if i == 0
+										td(rowspan="#{maxLength.one}") 
+											div.ui.ribbon.label 청 1부
+									each item in bsList
+										td
+											if item.one.length > i 
+												label#profile(onclick="ProfileBS('#{item.one[i].RowKey}','#{year}','#{item.one[i].branch}','#{item.one[i].attend}')") #{item.one[i].RowKey}
+								- }
+			div#profileData.four.wide.column
+				include profile

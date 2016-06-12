@@ -8,22 +8,40 @@ div.ui.card
         a.header #{name}
         div.meta
             span.date #{birthYear}.#{birthMonth}.#{birthDay}
-        table.ui.small.table
-            tr 
-                td 성별
-                td #{gender}
-            tr 
-                td 브랜치
-                td #{branch}
-            tr 
-                td 전화번호
-                td #{phone}
-            tr 
-                td 출석빈도
-                td #{attendString}
-            tr 
-                td 성격
-                td #{tensionString}
-            tr 
-                td 비고사항
-                td #{attendDesc}
+        div.ui.relaxed.celled.list
+            div.item
+                i.big.heterosexual.middle.aligned.icon
+                div.content
+                    div.header 성별
+                        div.description(style="color:gray")
+                        |#{gender}
+            div.item
+                i.big.phone.middle.aligned.icon
+                div.content
+                    div.header 전화번호
+                        div.description(style="color:gray")
+                        |#{phone}
+            div.item
+                i.big.tag.middle.aligned.icon
+                div.content
+                    div.header 브랜치
+                        div.description(style="color:gray")
+                        |#{branch || ''}
+            div.item
+                i.big.mail.middle.aligned.icon
+                div.content
+                    div.header 메일
+                        div.description(style="color:gray")
+                        |#{mail || ''}
+            div.item
+                i.big.building.middle.aligned.icon
+                div.content
+                    div.header 거주지
+                        div.description(style="color:gray")
+                        |#{locate || ''}
+            div.item
+                i.big.comment.middle.aligned.icon
+                div.content
+                    div.header 비고
+                        div.description(style="color:gray")
+                        |#{attendDesc || ''}

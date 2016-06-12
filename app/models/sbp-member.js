@@ -15,12 +15,25 @@ function RemoveEntityGenList (list) {
     } 
 }
 
-
 function RemoveEntityGen (entity) {
     for (var key in entity) {
         var valueOfKey = entity[key];
         if (typeof valueOfKey == "object")
             entity[key] = valueOfKey._;
+    }
+}
+
+function SetEntityGen (entity) {
+    for (var key in entity) {
+        var value = entity[key];
+        var valueType = typeof value;
+        // console.log(valueType);
+        if (key == "PartitionKey" || key == "RowKey")
+            entity[key] = entGen.String(value.toString());
+        else if (typeof value == "string")
+            entity[key] = entGen.String(value);
+        else if (typeof value == "number")
+            entity[key] = entGen.Int32(value);
     }
 }
 
@@ -108,6 +121,15 @@ function SetTensionAndAttend (data) {
     data.attendString = exports.AttendToString(data.attend);
 }
 
+function MakeQueryWithList (list, key) {
+    var names = [];
+    list.forEach (function (item, index) {
+        names.push(key + " eq '" + item + "'");
+    }) 
+    var memberString = names.join(" or ");
+    return memberString;
+} 
+
 function CombineLogToMember(logList, memberList) {
     for (var memberKey in memberList) {
         var oneMember = memberList[memberKey];
@@ -190,15 +212,28 @@ module.exports.GetMemberWithName = function (name, next) {
     // 데이터베이스 쿼리를 실행합니다.
     tableService.queryEntities('members', query, null, function entitiesQueried(error, result) {
         if (!error) {
-            var testString = JSON.stringify(result.entries);
-            var entries = JSON.parse(testString);
-            
             var getData = result.entries[0];
             RemoveEntityGen(getData);
             SetBirthFormat(getData);
             getData.tensionString = TensionToString(getData.tension); 
             
             return next(null, getData);
+        }    
+    });
+}
+
+module.exports.GetMemberWithQuery = function (queryString, next, top) {
+    var query = new azure.TableQuery();
+    if (top != null && top != '' && top != 0)
+        query.top(top)
+    if (queryString != null && queryString != '')
+        query.where(queryString);
+
+    // 데이터베이스 쿼리를 실행합니다.
+    tableService.queryEntities('members', query, null, function entitiesQueried(error, result) {
+        if (!error) {
+            RemoveEntityGenList(result.entries);     
+            return next(null, result.entries);
         }    
     });
 }
@@ -214,11 +249,11 @@ module.exports.GetMemberAndLogWithName = function (name, next) {
 }
 
 module.exports.GetMembersAndLogWithNames = function (names, next) {
-    var memberString = names.join(" or ");
+    var memberString = MakeQueryWithList(names, 'RowKey');
     exports.GetMembersAndLogWithQueryAndYear(memberString, null, next);
 }
 
-module.exports.GetMembersWithYear = function (year, next) {
+module.exports.GetMembersAndLogWithYear = function (year, next) {
     exports.GetMembersAndLogWithQueryAndYear(null, year, next);
 }
 
@@ -274,13 +309,17 @@ module.exports.MemberSave = function(fields) {
 	var tableService = fields['table'];
 
 	var urlString = fields['urlString'];
-	var age = 2016 - fields['PartitionKey'];
 	console.log("member save: " + urlString);
 	var maxCount = 2;
 	var count = 0;
-    var year = parseInt(fields['PartitionKey']) - 1900;
+    var year = parseInt(fields['birthYear']);
+    if (year > 1900)
+        year -= 1900;
+    var curYear = new Date().getYear();
+	var age = curYear - year + 1;
     var ttore = year;
-    if (parseInt(fields['birthMonth']) < 3)
+    var month = parseInt(fields['birthMonth']);
+    if (year <= 102 && month < 3 && month != 0)
         ttore--;
 	var entity = {
 		PartitionKey: entGen.String(ttore.toString()),
@@ -291,7 +330,9 @@ module.exports.MemberSave = function(fields) {
 		birthMonth: entGen.Int32(fields['birthMonth']),
 		birthDay: entGen.Int32(fields['birthDay']),
 		attendDesc: entGen.String(fields['attendDesc']),
-		tension: entGen.Int32(fields['tension'])
+		tension: entGen.Int32(fields['tension']),
+        mail: entGen.String(fields['mail']),
+        locate: entGen.String(fields['locate'])
 	};
 	if (urlString) {
 		entity.photo = entGen.String(urlString);
@@ -326,7 +367,10 @@ module.exports.MemberSave = function(fields) {
 		age: entGen.Int32(age),
 		attend: entGen.Int32(fields['attend']),
 		part: entGen.String(fields['part']),
-		branchYear: entGen.String(yearData)
+		branchYear: entGen.String(yearData),
+        charge: entGen.String(fields['charge']),
+		attendDesc: entGen.String(fields['attendDesc']),
+        service: entGen.String(fields['service'])
 	};
     
     for (var key in entity2) {
@@ -338,13 +382,14 @@ module.exports.MemberSave = function(fields) {
     }
     saved["attendString"] = entGen.String(exports.AttendToString(fields['attend']));
     saved["tensionString"] = entGen.String(TensionToString(fields['tension']));
-    if (fields["photo"] != null)
-        saved["photo"] = entGen.String(fields["photo"]);
+    if (fields["urlString"] != null)
+        saved["photo"] = entGen.String(fields["urlString"]);
     else
         saved["photo"] = entGen.String("");
-
+    
+    RemoveEntityGen(saved);
 	// 데이터베이스에 entity를 추가합니다.
-	tableService.mergeEntity('branchlog', entity2, function(error, result, res) {
+	tableService.insertOrMergeEntity('branchlog', entity2, function(error, result) {
 		if (!error) {
 			console.log("branch done");
 			count++;
@@ -383,7 +428,7 @@ module.exports.GetMemberWithGroup = function (year, group, next) {
             for (var index in result.entries) {
                 var data = result.entries[index];
                 RemoveEntityGen(data);
-                members.push("RowKey eq '" + data.data + "'");
+                members.push(data.data);
             }
             module.exports.GetMembersAndLogWithNames(members, function (error2, result2) {
                 if (!error2) {
@@ -419,7 +464,7 @@ module.exports.GetMemberWithGroup = function (year, group, next) {
 ****                            Just Branch Log                              ****
 ****                                                                         ***/
 
-module.exports.GetBranchMembers = function (year, next, attendValue, branchName) {
+module.exports.GetBranchMembers = function (year, next, attendValue) {
     if (year == null || year == '' || year == 0)
         year = sbp_time.getYear();
     var query = new azure.TableQuery()
@@ -429,6 +474,7 @@ module.exports.GetBranchMembers = function (year, next, attendValue, branchName)
         if (!error) {
             RemoveEntityGenList(log.entries);
             var getTable = sbp_branch.GetTable(log.entries, attendValue);
+            getTable.year = year;
             // getData.log = log.entries
             return next(null, getTable);
         }
@@ -436,4 +482,141 @@ module.exports.GetBranchMembers = function (year, next, attendValue, branchName)
             return next(error);
         }
     });
+}
+
+function SetBranchSort (branch) {
+    branch = branch.sort(function(a,b){
+        var aa = a.birthYear;
+        var bb = b.birthYear;
+        
+        if (a.charge == 'bs') return -1;
+        if (b.charge == 'bs') return 1;
+        if (aa < bb) return -1;
+        if (aa > bb) return 1;
+        return 0;
+    });
+}
+
+module.exports.GetBranchMembersWithBranch = function (year, branch, next) {
+    if (year == null || year == '' || year == 0)
+        year = sbp_time.getYear();
+    var query = new azure.TableQuery()
+        .where("PartitionKey eq ? and branch eq ?", year.toString(), branch);
+    
+    tableService.queryEntities('branchlog', query, null, function (error, log) {
+        if (!error) {
+            RemoveEntityGenList(log.entries);
+            var names = [];
+            log.entries.forEach (function (item, index) {
+                item.name = item.RowKey;
+                names.push(item.RowKey);
+            });
+            var queryString = MakeQueryWithList(names, 'RowKey');
+            exports.GetMemberWithQuery (queryString, function (error2, member) {
+                if (!error2) {
+                    CombineLogToMember(log.entries, member);
+                    SetBranchSort(member);
+                    return next(null, member);
+                } 
+                else {
+                    console.log("get member data failed: " + error2);    
+                    return next(error);
+                }
+            });
+        }
+        else {
+            return next(error);
+        }
+    });
+    
+}
+
+module.exports.AddMember = function (addData, next) {
+    var maxLength = addData.length;
+    var count = 0;
+    addData.forEach(function(data, index) {
+        SetEntityGen(data);
+        // 데이터베이스에 entity를 추가합니다.
+        tableService.insertOrMergeEntity('members', data, function(error, result) {
+            count++;
+            if (!error) {
+                if (count >= maxLength)
+                    next(null, result);
+            }
+            else {
+                console.log("error in member save:" + error);
+                next(error);
+                // if (count >= maxCount)
+                //     response.send({result:true,
+                //         field:saved});
+            }
+        });
+
+    });
+    
+}
+
+module.exports.RemoveMember = function (data, next) {
+    var year = parseInt(data.PartitionKey);
+    var month = parseInt(data.month);
+    if (year > 1900)
+        year -= 1900;
+    if (102 > year && 3 > month)
+        year--;
+    data.PartitionKey = year; 
+    SetEntityGen(data);
+    tableService.deleteEntity('members', data, function(error, result) {
+        if (!error) {
+            next(null, result);
+        }
+        else {
+            console.log("error in member delete:" + error);
+            next(error);
+        }
+    });
+}
+
+module.exports.AddBranch = function (addData, next) {
+    var maxLength = addData.length;
+    var count = 0;
+    addData.forEach(function(data, index) {
+        exports.GetMemberWithName(data.RowKey, function (error, result) {
+            if (!error) {
+                data.age = data.PartitionKey - result.birthYear + 1;
+                data.attend = result.attend;
+                data.birthYear = result.birthYear - 1900;
+                if (data.age >= 27)
+                    data.part = "청2부";
+                else     
+                    data.part = "청1부";
+                if (data.attendDesc == "bs" || data.attendDesc == "BS") {
+                    data.charge = 'bs';
+                    data.attendDesc = '';
+                }
+                else
+                    data.charge = 'bm';
+                    
+                SetEntityGen(data);
+                // 데이터베이스에 entity를 추가합니다.
+                tableService.insertOrMergeEntity('branchlog', data, function(error, result) {
+                    count++;
+                    if (!error) {
+                        if (count >= maxLength)
+                            next(null, result);
+                    }
+                    else {
+                        console.log("error in member save:" + error);
+                        next(error);
+                    }
+                }); 
+            } 
+            else {
+                count++;
+                console.log("error in branch save:" + error);
+                next(error);
+            }
+        });
+
+    });
+    
 }

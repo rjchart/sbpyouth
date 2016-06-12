@@ -1,0 +1,29 @@
+div.ui.card
+    div.image.outImg(style="background-color:#e5e5e5")
+        if (photo)
+            img.fitImg(src="#{photo}")
+        else
+            img.fitImg(src="/public/img/image.png")
+    div.content
+        a.header #{name}
+        div.meta
+            span.date #{birthYear}.#{birthMonth}.#{birthDay}
+        table.ui.small.table
+            tr 
+                td 성별
+                td #{gender}
+            tr 
+                td 브랜치
+                td #{branch}
+            tr 
+                td 전화번호
+                td #{phone}
+            tr 
+                td 출석빈도
+                td #{attendString}
+            tr 
+                td 성격
+                td #{tensionString}
+            tr 
+                td 비고사항
+                td #{attendDesc || ''}

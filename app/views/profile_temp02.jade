@@ -1,61 +1,53 @@
-//- form#uploadForm(action="/profile_edit/#{name}", enctype="multipart/form-data", method="post")
 div.ui.card
     div.image.outImg(style="background-color:#e5e5e5")
-        img.fitImg(src="/public/img/image.png")
+        if (data.photo)
+            img.fitImg(src="#{data.photo}")
+        else
+            img.fitImg(src="/public/img/image.png")
+        if (data.charge == 'bs')
+            div.ui.big.red.ribbon.label
+                    //- i.flag.icon 
+                    |BS
+        //- div.ui.red.left.corner.label
+        //-     i.icon BS
     div.content
-        a.header 선택사항 없음
+        a.header #{data.name}
         div.meta
-            span.date 0000.00.00
+            span.date #{data.birthYear}.#{data.birthMonth}.#{data.birthDay}
         div.ui.relaxed.celled.list
             div.item
                 i.big.heterosexual.middle.aligned.icon
                 div.content
                     div.header 성별
                         div.description(style="color:gray")
+                        |#{data.gender}
             div.item
                 i.big.phone.middle.aligned.icon
                 div.content
                     div.header 전화번호
                         div.description(style="color:gray")
+                        |#{data.phone}
             div.item
                 i.big.tag.middle.aligned.icon
                 div.content
                     div.header 브랜치
                         div.description(style="color:gray")
+                        |#{data.branch || ''}
             div.item
                 i.big.mail.middle.aligned.icon
                 div.content
                     div.header 메일
-                        div.description(style="color:gray") 
+                        div.description(style="color:gray")
+                        |#{data.mail || ''}
             div.item
                 i.big.building.middle.aligned.icon
                 div.content
                     div.header 거주지
                         div.description(style="color:gray")
+                        |#{data.locate || ''}
             div.item
                 i.big.comment.middle.aligned.icon
                 div.content
                     div.header 비고
                         div.description(style="color:gray")
-            
-            
-        //- table.ui.small.table
-        //-     tr 
-        //-         td 성별
-        //-         td 
-        //-     tr 
-        //-         td 브랜치
-        //-         td 
-        //-     tr 
-        //-         td 전화번호
-        //-         td 
-        //-     tr 
-        //-         td 메일
-        //-         td 
-        //-     tr 
-        //-         td 거주지
-        //-         td 
-        //-     tr 
-        //-         td 비고사항
-        //-         td 
-//- input#uploadInput.filebox.upload(type="file", name="upload", accept="image/*", onchange="ReadURL(this)")
+                        |#{data.attendDesc || ''}

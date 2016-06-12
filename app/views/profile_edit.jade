@@ -3,6 +3,7 @@ form#uploadForm(action="/profile_edit/#{name}", enctype="multipart/form-data", m
         input(type="hidden", name="PartitionKey", value="#{birthYear}")
         input(type="hidden", name="RowKey", value="#{name}")
         input(type="hidden", name="year", value="#{year}")
+        input(type="hidden", name="charge", value="#{charge}")
         label.image.outImg(style="background-color:#e5e5e5", for="uploadInput")
             if (photo)
                 img#updateImage.fitImg(src="#{photo}") 
@@ -13,9 +14,6 @@ form#uploadForm(action="/profile_edit/#{name}", enctype="multipart/form-data", m
             a.header #{name}
             div.meta
                 span.date #{birthYear}.#{birthMonth}.#{birthDay}
-            input(type="hidden", name="birthYear", value="#{birthYear}")
-            input(type="hidden", name="birthMonth", value="#{birthMonth}")
-            input(type="hidden", name="birthDay", value="#{birthDay}")
             table.ui.small.table
                 tr 
                     td 성별
@@ -32,6 +30,11 @@ form#uploadForm(action="/profile_edit/#{name}", enctype="multipart/form-data", m
                     td 
                         div.ui.input.focus
                             input(type="text", name="phone", value="#{phone}", style="max-width:130px; max-height:30px")
+                tr 
+                    td 이메일
+                    td 
+                        div.ui.input.focus
+                            input(type="text", name="mail", value="#{mail || ''}", style="max-width:130px; max-height:30px")
                 tr 
                     td 출석빈도
                     td.center.aligned: div.ui.selection.dropdown(style="min-width:100px;")
@@ -67,7 +70,37 @@ form#uploadForm(action="/profile_edit/#{name}", enctype="multipart/form-data", m
                     td 
                         div.ui.input.focus
                             input(type="text", name="part", value="#{part}", style="max-width:130px; max-height:30px")
-        div.ui.bottom.attached.button(onclick="UploadSubmit()")
-            i.write.icon 
-            |Edit  
+                tr 
+                    td 봉사 부서
+                    td 
+                        div.ui.input.focus
+                            input(type="text", name="service", value="#{service || ''}", style="max-width:130px; max-height:30px")
+                tr 
+                    td 거주지
+                    td 
+                        div.ui.input.focus
+                            input(type="text", name="locate", value="#{locate || ''}", style="max-width:130px; max-height:30px")
+                tr 
+                    td 출생년도
+                    td 
+                        div.ui.input.focus
+                            input(type="text", name="birthYear", value="#{birthYear || ''}", style="max-width:130px; max-height:30px")
+                tr 
+                    td 출생월
+                    td 
+                        div.ui.input.focus
+                            input(type="text", name="birthMonth", value="#{birthMonth || ''}", style="max-width:130px; max-height:30px")
+                tr 
+                    td 출생일
+                    td 
+                        div.ui.input.focus
+                            input(type="text", name="birthDay", value="#{birthDay || ''}", style="max-width:130px; max-height:30px")
+        div.ui.two.bottom.attached.buttons
+            div.ui.red.button(onclick="DeleteMember(#{birthYear},#{birthMonth},'#{name}')")
+                i.remove.icon 
+                |Delete
+            div.ui.button(onclick="UploadSubmit()")
+                i.write.icon 
+                |Edit
+        input(type="submit" hidden)  
     input#uploadInput.filebox.upload(type="file", name="upload", accept="image/*", onchange="ReadURL(this)")
