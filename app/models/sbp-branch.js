@@ -480,14 +480,17 @@ function SetHappinessTwoMember(member, member2, tmp) {
 	if (tmp2.order < -10 || tmp2.happy < -10 || tmp.order < -10 || tmp.happy < -10)
 		tmp.isOk = false;
 		
-	if (tmp2.order < 0)
-		tmp2.state = 'warning';
-	else if (tmp2.happy > 0)
+	if (member2.attend >= 3)
 		tmp2.state = 'positive';
-	else if (tmp2.happy == 0)
+	else if (member2.attend <= 1)
+		tmp2.state = 'disabled';
+	// else if (tmp2.happy > 0)
+	// 	tmp2.state = 'positive';
+	else if (tmp2.order < 0)
+		tmp2.state = 'warning';
+	else
 		tmp2.state = '';
-	if (tmp2.happy < 0)
-		tmp2.state = 'negative';
+		
 
 	return tmp2;
 }
@@ -538,17 +541,17 @@ function CheckBMHappiness(member, bs) {
 		}
 	});
 	
-	if (member.happy < 0)
-		member.state = 'negative';
-	else if (member.happy == 0)
-		member.state = '';
-	else
+	if (member.attend >= 3)
 		member.state = 'positive';
-	
-	if (member.order < 0)
+	else if (member.attend <= 1)
+		member.state = 'disabled';
+	// else if (member.happy > 0)
+	// 	member.state = 'positive';
+	else if (member.order < 0)
 		member.state = 'warning';
 	else
 		member.state = '';
+	
 	
 	return true;
 }
@@ -872,12 +875,12 @@ module.exports.MakeNewBranch = function (members, bsList, type) {
 			newBSList.forEach( function (bs, index) {
 				bs.two.splice(0,1);
 				// delete bs.two[0];
-				if (bs.pow < powerAver * .6) {
+				if (bs.pow < powerAver * .85) {
 					isPowAverBad = true 
 					return true;
 				}
 
-				if (bs.pow > powerAver * 1.4) {
+				if (bs.pow > powerAver * 1.15) {
 					isPowAverBad = true 
 					return true;
 				}

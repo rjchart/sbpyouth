@@ -5,6 +5,7 @@ var sbp_time = require('../models/sbp-time');
 var sbp_branch = require('../models/sbp-branch');
 var sbp_member = require('../models/sbp-member');
 var sbp_data = require('../models/sbp-data');
+var pkginfo = require('../../package.json');
 var azure = require('azure-storage');
 var flowpipe = require('flowpipe');
 var jade = require("jade");
@@ -25,9 +26,10 @@ var jsFunctionString6 = jade.compileFileClient('app/views/addPerson_second.jade'
 var jsFunctionString7 = jade.compileFileClient('app/views/addBranch_template.jade', {name: "addBranch_template"});
 var jsFunctionString8 = jade.compileFileClient('app/views/addBranch_second.jade', {name: "addBranch_second"});
 var jsFunctionString9 = jade.compileFileClient('app/views/addNameBS_template.jade', {name: "addNameBS_template"});
+var jsFunctionString10 = jade.compileFileClient('app/views/detailProfile_template.jade', {name: "detailProfile_template"});
 jsFunctionString += "\n" + jsFunctionString2 + "\n" + jsFunctionString3 + "\n"
  + jsFunctionString4 + "\n" + jsFunctionString5 + "\n" + jsFunctionString6 + "\n" 
- + jsFunctionString7 + "\n" + jsFunctionString8 + "\n" + jsFunctionString9;
+ + jsFunctionString7 + "\n" + jsFunctionString8 + "\n" + jsFunctionString9 + "\n" + jsFunctionString10;
 fs.writeFileSync("javascript/templates.js", jsFunctionString);
 
 module.exports = function (app) {
@@ -216,6 +218,27 @@ router.post('/branch_profile', function (req, res, next) {
             }
         });  
     });
+});
+
+router.post('/friend_profile', function (req, res, next) {
+    // var getData = {};
+    // var getget = req;
+    // var inputData = JSON.parse(chunk);
+    
+    sbp_member.GetMemberWithName(req.body.name, function (error, getData) {
+        if (!error) {
+            getData.name = req.body.name;
+            getData.branch = req.body.branch; // req.body.branch
+            getData.attend = req.body.attend; // req.body.attend
+            getData.attendString = sbp_member.AttendToString(req.body.attend);
+            getData.haters = getData.haters ? JSON.parse(getData.haters) : [];
+            getData.hopers = getData.hopers ? JSON.parse(getData.hopers) : [];
+            getData.friends = getData.friends ? JSON.parse(getData.friends) : [];
+            getData.families = getData.families ? JSON.parse(getData.families) : [];
+            getData.year = req.body.year;
+            res.send(getData);
+        }
+    });  
 });
 
 router.get('/friends', function (req, res, next) {
@@ -426,7 +449,8 @@ router.post('/makeBranch', function (req, res, next) {
             // index: 1 -- 간단히 브랜치원이 원하는 BS 싫어하지 않는 BS 정도를 결정하고 나머지 랜덤. 
             // index: 2 -- 브랜치의 밸런스를 맞추고 팀원들의 행복도를 통해 최적의 브랜치 편성
             var newList = sbp_branch.MakeNewBranch(members, bsList, 2);
-            newList.year = '2016';
+            // newList.year = '2016';
+            newList.year = pkginfo['sbp-data'].year;
             console.log("done");
             res.render('branchTemp', newList);
         }    

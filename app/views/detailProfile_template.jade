@@ -1,0 +1,93 @@
+h4.ui.header 
+    | 싫어하는 사람 리스트
+div.ui.relaxed.celled.list
+    div.item
+        div.ui.grid
+            each hater, index in haters
+                div.four.wide.column
+                    div.right.floated.content
+                        div.ui.mini.button Delete
+                    i.large.ban.middle.aligned.icon
+                    | #{hater}
+    div.item
+        div.content
+            div.ui.grid
+                div.three.wide.column
+                    div.ui.mini.input.focus
+                        input(type="text", placeholder="이름")
+                div.three.wide.column
+                    div.ui.mini.input.focus
+                        input(type="text", placeholder="이름")
+                div.three.wide.column
+                    div.ui.mini.input.focus
+                        input(type="text", placeholder="이름")
+                div.three.wide.column
+                    div.ui.mini.input.focus
+                        input(type="text", placeholder="이름")
+                div.one.wide.column
+                div.three.wide.column
+                    div.ui.mini.button
+                        i.large.add.user.middle.aligned.icon 
+                        |Add
+h4.ui.header 
+    | 친한 사람 리스트
+div.ui.relaxed.celled.list
+    div.item
+        div.ui.grid
+            each friend, index in friends
+                div.four.wide.column
+                    div.right.floated.content
+                        div.ui.mini.button Delete
+                    i.large.retweet.middle.aligned.icon
+                    | #{friend}
+    div.item
+        div.content
+            div.ui.grid
+                div.three.wide.column
+                    div.ui.mini.input.focus
+                        input(type="text", placeholder="이름")
+                div.three.wide.column
+                    div.ui.mini.input.focus
+                        input(type="text", placeholder="이름")
+                div.three.wide.column
+                    div.ui.mini.input.focus
+                        input(type="text", placeholder="이름")
+                div.three.wide.column
+                    div.ui.mini.input.focus
+                        input(type="text", placeholder="이름")
+                div.one.wide.column
+                div.three.wide.column
+                    div.ui.mini.button
+                        i.large.add.user.middle.aligned.icon 
+                        |Add
+h4.ui.header 
+    | 묶어줄 사람 리스트
+div.ui.relaxed.celled.list
+    div.item
+        div.ui.grid
+            each hoper, index in hopers
+                div.four.wide.column
+                    div.right.floated.content
+                        div.ui.mini.button Delete
+                    i.large.compress.middle.aligned.icon
+                    | #{hoper}
+    div.item
+        div.content
+            div.ui.grid
+                div.three.wide.column
+                    div.ui.mini.input.focus
+                        input(type="text", placeholder="이름")
+                div.three.wide.column
+                    div.ui.mini.input.focus
+                        input(type="text", placeholder="이름")
+                div.three.wide.column
+                    div.ui.mini.input.focus
+                        input(type="text", placeholder="이름")
+                div.three.wide.column
+                    div.ui.mini.input.focus
+                        input(type="text", placeholder="이름")
+                div.one.wide.column
+                div.three.wide.column
+                    div.ui.mini.button
+                        i.large.add.user.middle.aligned.icon 
+                        |Add

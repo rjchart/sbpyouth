@@ -7,7 +7,7 @@ block sub_content
 			div.twelve.wide.streched.column
 				div.ui.segment
 					h2.ui.header
-						|#{year}년도 브랜치 편성
+						|#{year}년도 다음 학기 임시 생성 브랜치 편성
 					div.ui.container
 						table.ui.celled.striped.structured.table
 							thead
@@ -50,5 +50,12 @@ block sub_content
 											if item.one.length > i 
 												label#profile(onclick="ProfileBS('#{item.one[i].RowKey}','#{year}','#{item.one[i].branch}','#{item.one[i].attend}')") #{item.one[i].RowKey}
 								- }
+								tr
+									td: div.ui.ribbon.label 벨런스표
+									each item in bsList
+										td 
+											label #{item.pow} 
+									
+								
 			div#profileData.four.wide.column
 				include profile

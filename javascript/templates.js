@@ -79,3 +79,79 @@ var jade_interp;
 ;var locals_for_with = (locals || {});(function (nameBS, num) {
 buf.push("<div class=\"two wide column\"><label>BS</label><input" + (jade.attr("name", "make_nameBS[" + (num) + "]", true, false)) + " placeholder=\"이름\" type=\"text\"" + (jade.attr("value", "" + (nameBS) + "", true, false)) + "/></div>");}.call(this,"nameBS" in locals_for_with?locals_for_with.nameBS:typeof nameBS!=="undefined"?nameBS:undefined,"num" in locals_for_with?locals_for_with.num:typeof num!=="undefined"?num:undefined));;return buf.join("");
 }
+function detailProfile_template(locals) {
+var buf = [];
+var jade_mixins = {};
+var jade_interp;
+;var locals_for_with = (locals || {});(function (friends, haters, hopers, undefined) {
+buf.push("<h4 class=\"ui header\"> \n싫어하는 사람 리스트</h4><div class=\"ui relaxed celled list\"><div class=\"item\"><div class=\"ui grid\">");
+// iterate haters
+;(function(){
+  var $$obj = haters;
+  if ('number' == typeof $$obj.length) {
+
+    for (var index = 0, $$l = $$obj.length; index < $$l; index++) {
+      var hater = $$obj[index];
+
+buf.push("<div class=\"four wide column\"><div class=\"right floated content\"><div class=\"ui mini button\">Delete</div></div><i class=\"large ban middle aligned icon\"></i>" + (jade.escape((jade_interp = hater) == null ? '' : jade_interp)) + "</div>");
+    }
+
+  } else {
+    var $$l = 0;
+    for (var index in $$obj) {
+      $$l++;      var hater = $$obj[index];
+
+buf.push("<div class=\"four wide column\"><div class=\"right floated content\"><div class=\"ui mini button\">Delete</div></div><i class=\"large ban middle aligned icon\"></i>" + (jade.escape((jade_interp = hater) == null ? '' : jade_interp)) + "</div>");
+    }
+
+  }
+}).call(this);
+
+buf.push("</div></div><div class=\"item\"><div class=\"content\"><div class=\"ui grid\"><div class=\"three wide column\"><div class=\"ui mini input focus\"><input type=\"text\" placeholder=\"이름\"/></div></div><div class=\"three wide column\"><div class=\"ui mini input focus\"><input type=\"text\" placeholder=\"이름\"/></div></div><div class=\"three wide column\"><div class=\"ui mini input focus\"><input type=\"text\" placeholder=\"이름\"/></div></div><div class=\"three wide column\"><div class=\"ui mini input focus\"><input type=\"text\" placeholder=\"이름\"/></div></div><div class=\"one wide column\"></div><div class=\"three wide column\"><div class=\"ui mini button\"><i class=\"large add user middle aligned icon\"> </i>Add</div></div></div></div></div></div><h4 class=\"ui header\"> \n친한 사람 리스트</h4><div class=\"ui relaxed celled list\"><div class=\"item\"><div class=\"ui grid\">");
+// iterate friends
+;(function(){
+  var $$obj = friends;
+  if ('number' == typeof $$obj.length) {
+
+    for (var index = 0, $$l = $$obj.length; index < $$l; index++) {
+      var friend = $$obj[index];
+
+buf.push("<div class=\"four wide column\"><div class=\"right floated content\"><div class=\"ui mini button\">Delete</div></div><i class=\"large retweet middle aligned icon\"></i>" + (jade.escape((jade_interp = friend) == null ? '' : jade_interp)) + "</div>");
+    }
+
+  } else {
+    var $$l = 0;
+    for (var index in $$obj) {
+      $$l++;      var friend = $$obj[index];
+
+buf.push("<div class=\"four wide column\"><div class=\"right floated content\"><div class=\"ui mini button\">Delete</div></div><i class=\"large retweet middle aligned icon\"></i>" + (jade.escape((jade_interp = friend) == null ? '' : jade_interp)) + "</div>");
+    }
+
+  }
+}).call(this);
+
+buf.push("</div></div><div class=\"item\"><div class=\"content\"><div class=\"ui grid\"><div class=\"three wide column\"><div class=\"ui mini input focus\"><input type=\"text\" placeholder=\"이름\"/></div></div><div class=\"three wide column\"><div class=\"ui mini input focus\"><input type=\"text\" placeholder=\"이름\"/></div></div><div class=\"three wide column\"><div class=\"ui mini input focus\"><input type=\"text\" placeholder=\"이름\"/></div></div><div class=\"three wide column\"><div class=\"ui mini input focus\"><input type=\"text\" placeholder=\"이름\"/></div></div><div class=\"one wide column\"></div><div class=\"three wide column\"><div class=\"ui mini button\"><i class=\"large add user middle aligned icon\"> </i>Add</div></div></div></div></div></div><h4 class=\"ui header\"> \n묶어줄 사람 리스트</h4><div class=\"ui relaxed celled list\"><div class=\"item\"><div class=\"ui grid\">");
+// iterate hopers
+;(function(){
+  var $$obj = hopers;
+  if ('number' == typeof $$obj.length) {
+
+    for (var index = 0, $$l = $$obj.length; index < $$l; index++) {
+      var hoper = $$obj[index];
+
+buf.push("<div class=\"four wide column\"><div class=\"right floated content\"><div class=\"ui mini button\">Delete</div></div><i class=\"large compress middle aligned icon\"></i>" + (jade.escape((jade_interp = hoper) == null ? '' : jade_interp)) + "</div>");
+    }
+
+  } else {
+    var $$l = 0;
+    for (var index in $$obj) {
+      $$l++;      var hoper = $$obj[index];
+
+buf.push("<div class=\"four wide column\"><div class=\"right floated content\"><div class=\"ui mini button\">Delete</div></div><i class=\"large compress middle aligned icon\"></i>" + (jade.escape((jade_interp = hoper) == null ? '' : jade_interp)) + "</div>");
+    }
+
+  }
+}).call(this);
+
+buf.push("</div></div><div class=\"item\"><div class=\"content\"><div class=\"ui grid\"><div class=\"three wide column\"><div class=\"ui mini input focus\"><input type=\"text\" placeholder=\"이름\"/></div></div><div class=\"three wide column\"><div class=\"ui mini input focus\"><input type=\"text\" placeholder=\"이름\"/></div></div><div class=\"three wide column\"><div class=\"ui mini input focus\"><input type=\"text\" placeholder=\"이름\"/></div></div><div class=\"three wide column\"><div class=\"ui mini input focus\"><input type=\"text\" placeholder=\"이름\"/></div></div><div class=\"one wide column\"></div><div class=\"three wide column\"><div class=\"ui mini button\"><i class=\"large add user middle aligned icon\"> </i>Add</div></div></div></div></div></div>");}.call(this,"friends" in locals_for_with?locals_for_with.friends:typeof friends!=="undefined"?friends:undefined,"haters" in locals_for_with?locals_for_with.haters:typeof haters!=="undefined"?haters:undefined,"hopers" in locals_for_with?locals_for_with.hopers:typeof hopers!=="undefined"?hopers:undefined,"undefined" in locals_for_with?locals_for_with.undefined:typeof undefined!=="undefined"?undefined:undefined));;return buf.join("");
+}

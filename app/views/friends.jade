@@ -6,46 +6,78 @@ block script
 	script.
 		var isEditable = false;
 		var ttoleValue = 1985;
-		function ProfileBS(year, name, partition, branch, attendString, attend, bYear, bMonth, bDay, gender, phone, attendDesc, tension, tensionString, part, photo, charge, mail, locate, service) {
+		function ProfileBS(name, year, branch, attend) {
+			var data = {
+				name: name,
+				year: year,
+				branch: branch,
+				attend: attend
+			}
 			
-			//- var div = document.createElement("div");
-			//- div.innerHTML = html;
-			//- document.body.appendChild(div);
-			
-			var getData = {};
-			getData.PartitionKey = partition;
-			getData.birthYear = bYear;
-			getData.birthMonth = bMonth;
-			getData.birthDay = bDay;
-			getData.branch = branch;
-			getData.name = name;
-			getData.attendString = attendString;
-			getData.attend = attend;
-			getData.gender = gender;
-			getData.phone = phone;
-			getData.attendDesc = attendDesc;
-			getData.tension = tension;
-			getData.tensionString = tensionString;
-			getData.year = year;
-			getData.part = part;
-			getData.photo = (photo != 0) ? photo : null;
-			getData.charge = charge || 'bm';
-			getData.mail = mail || '';
-			getData.locate = locate || '';
-			getData.service = service || '';
-			
-			//- console.log(getData);
-			//- var html = new EJS({url: 'app/views/profile_template.html'}).render(getData);
-			var html;
-			if (!isEditable)
-				html = window.profile_template(getData);
-			else
-				html = window.profile_edit(getData);
-			//- console.log(html);
-			document.getElementById("profileData").innerHTML = html;
-			
-			$(".ui.dropdown").dropdown();
+			$.ajax({
+				url: "/friend_profile",
+				type: "post",
+				data: data,
+				dataType: "json",
+				success: function(data) {
+					var html;
+					if (!isEditable)
+						html = window.profile_template(data);
+					else
+						html = window.profile_edit(data);
+					document.getElementById("profileData").innerHTML = html;
+
+					if (isEditable) {
+						var detail = window.detailProfile_template(data);
+						document.getElementById("DetailProfile").innerHTML = detail;
+					}
+					
+					$(".ui.dropdown").dropdown();
+				},
+				error: function(request) {
+					alert("실패");
+				}
+			});
 		}
+
+		//- function ProfileBS(year, name, partition, branch, attendString, attend, bYear, bMonth, bDay, gender, phone, attendDesc, tension, tensionString, part, photo, charge, mail, locate, service) {
+			
+		//- 	//- var div = document.createElement("div");
+		//- 	//- div.innerHTML = html;
+		//- 	//- document.body.appendChild(div);
+			
+		//- 	var getData = {};
+		//- 	getData.PartitionKey = partition;
+		//- 	getData.birthYear = bYear;
+		//- 	getData.birthMonth = bMonth;
+		//- 	getData.birthDay = bDay;
+		//- 	getData.branch = branch;
+		//- 	getData.name = name;
+		//- 	getData.attendString = attendString;
+		//- 	getData.attend = attend;
+		//- 	getData.gender = gender;
+		//- 	getData.phone = phone;
+		//- 	getData.attendDesc = attendDesc;
+		//- 	getData.tension = tension;
+		//- 	getData.tensionString = tensionString;
+		//- 	getData.year = year;
+		//- 	getData.part = part;
+		//- 	getData.photo = (photo != 0) ? photo : null;
+		//- 	getData.charge = charge || 'bm';
+		//- 	getData.mail = mail || '';
+		//- 	getData.locate = locate || '';
+		//- 	getData.service = service || '';
+			
+		//- 	var html;
+		//- 	if (!isEditable)
+		//- 		html = window.profile_template(getData);
+		//- 	else
+		//- 		html = window.profile_edit(getData);
+		//- 	//- console.log(html);
+		//- 	document.getElementById("profileData").innerHTML = html;
+			
+		//- 	$(".ui.dropdown").dropdown();
+		//- }
 		
 		function Display () {
 			var $htable = $('table.scrolled'), $table = $('table.scroll'), 
@@ -390,7 +422,8 @@ block content
 								tbody
 									each member, i in memberList
 										tr.bMember(id="#{member.RowKey}" class="#{member.birthYear} #{parseInt(member.birthYear) - 1900} #{member.gender} #{member.part} #{member.branch} #{parseInt(member.birthMonth)} #{member.attendDesc}  #{member.attendString}")
-											td.name: label(style="width:70px", onclick="ProfileBS(#{year}, '#{member.RowKey}', '#{member.PartitionKey}','#{member.branch || ''}','#{member.attendString}','#{member.attend}','#{member.birthYear}','#{member.birthMonth}','#{member.birthDay}','#{member.gender}','#{member.phone}','#{member.attendDesc || ''}','#{member.tension || 0}','#{member.tensionString || 0}','#{member.part || 0}', '#{member.photo || 0}', '#{member.charge || 'bm'}', '#{member.mail || ''}', '#{member.locate || ''}', '#{member.service || ''}')") #{member.RowKey}
+											td.name: label(style="width:70px", onclick="ProfileBS('#{member.RowKey}', #{year}, '#{member.branch || ''}', '#{member.attend}')") #{member.RowKey}
+											//- td.name: label(style="width:70px", onclick="ProfileBS(#{year}, '#{member.RowKey}', '#{member.PartitionKey}','#{member.branch || ''}','#{member.attendString}','#{member.attend}','#{member.birthYear}','#{member.birthMonth}','#{member.birthDay}','#{member.gender}','#{member.phone}','#{member.attendDesc || ''}','#{member.tension || 0}','#{member.tensionString || 0}','#{member.part || 0}', '#{member.photo || 0}', '#{member.charge || 'bm'}', '#{member.mail || ''}', '#{member.locate || ''}', '#{member.service || ''}')") #{member.RowKey}
 											td.gender(style="width:55px") #{member.gender || '모름'}
 											td.phone(style="width:147px") #{member.phone}
 											td.birth(style="width:112px") #{member.birthYear}.#{member.birthMonth}.#{member.birthDay}															
@@ -407,6 +440,8 @@ block content
 											div.ui.right.icon.input.menu
 												input#typeSearch(type="text" placeholder="Search...")
 												i.search.link.icon(onclick="TypeSearch()")
+				div#DetailProfile.ui.segment
+						
 																				
 			div#profileData.five.wide.column
 				include profile
