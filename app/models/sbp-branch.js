@@ -272,9 +272,11 @@ function SetBasicComponent(item) {
 	item['hopers'] = GetList(item, 'hopers');
 	item['families'] = GetList(item, 'families');
 
-	item['happy'] = 100;
-	item['order'] = 50;
+	item['happy'] = 0;
+	item['order'] = 0;
 	item['important'] = 0;
+	item.countSameOld = 0;
+	item.countSameYear = 0;
 	item.oldbranch = item.branch;
 
 	var powerValue = 0;
@@ -346,7 +348,8 @@ function SetMemberIsOK(item) {
 		var attendDesc = item.attendDesc; 
 		if (attendDesc != '유학' && attendDesc != '직장' && attendDesc != '군대'
 		 && attendDesc != '결혼' && attendDesc != '전도사' && attendDesc != '목사' 
-		 && attendDesc != '부장 집사' && attendDesc != '제외' && item.attend != 0)
+		 && attendDesc != '부장 집사' && attendDesc != '제외' && attendDesc != '장기결석' 
+		 && attendDesc != '타교회' && item.attend != 0)
 			isOK = true;
 		if (item.age > 40)
 			isOK = false;
@@ -401,20 +404,23 @@ function RemoveOldBranchHateBS(notHateBSList, member) {
 	// }
 }
 
-function SetHappinessTwoMember(member, member2, values) {
-	var happyValue = values[0];
-	var order = values[1];
-	var sameOldBranchCount = values[2];
-	var sameYearBranchCount = values[3];
-
+function SetHappinessTwoMember(member, member2, tmp) {
+	var tmp2 = {};
+	tmp2.happy = member2.happy;
+	tmp2.order = member2.order;
+	tmp2.countSameOld = member2.countSameOld;
+	tmp2.countSameYear = member2.countSameYear;
+		
 	console.log(member.RowKey + ":" + member2.RowKey);
 
 	var isFriend = member.friends.some(function(item, index3, array) {
 		if (item == member2.RowKey)
 			return true;
 	});
-	if (isFriend)
-		happyValue += 10;
+	if (isFriend) {
+		tmp.happy += 10;
+		tmp2.happy += 10;
+	}
 
 	var isHater = member.haters.some(function(item, index3, array) {
 		if (item == member2.RowKey)
@@ -422,8 +428,9 @@ function SetHappinessTwoMember(member, member2, values) {
 	});
 	
 	if (isHater) {
-		console.log(member.RowKey + "hates " + member2.RowKey);
-		happyValue -= 50;
+		console.log(member.RowKey + " hates " + member2.RowKey);
+		tmp.happy -= 50;
+		tmp2.order -= 20;
 	}
 
 	var isFamily = member.families.some(function(item, index3, array) {
@@ -431,71 +438,117 @@ function SetHappinessTwoMember(member, member2, values) {
 			return true;
 	});
 	if (isFamily) {
-		console.log(member.RowKey + ", " + member2.RowKey + "are families");
-		order -=40;
+		console.log(member.RowKey + ", " + member2.RowKey + " are family");
+		tmp.order -= 20;
+		tmp2.order -= 20;
 	}
 
 	var isHater2 = member2.haters.some(function(item, index3, array) {
 		if (item == member.RowKey) 
 			return true;
 	});
+	
 	if (isHater2) {
-		console.log(member.RowKey + "is hater from " + member2.RowKey);
-		order -= 20;
+		console.log(member.RowKey + " is hater from " + member2.RowKey);
+		tmp.order -= 20;
+		tmp2.happy -= 50;
 	}
 
 	if (member.oldbranch == member2.oldbranch) {
-		console.log(member.RowKey + ", " + member2.RowKey + "are same old branch");
-		sameOldBranchCount++;
-		if (sameOldBranchCount > 1)
-			order -= 2.1 * member2.attend;
+		tmp.countSameOld++;
+		tmp2.countSameOld++;
+		console.log(member.RowKey + ", " + member2.RowKey + " are same old branch: " + tmp.countSameOld + ", " + tmp2.countSameOld);
+		var degree = 1 * Math.min(member2.attend, member.attend);
+		if (tmp.countSameOld > 1)
+			tmp.order -= degree;
+		if (tmp2.countSameOld > 1)
+			tmp2.order -= degree;
 	}
 
 	if (member.yearbranch && member.yearbranch == member2.yearbranch) {
-		console.log(member.RowKey + ", " + member2.RowKey + "are same year branch");
-		sameYearBranchCount++;
-		if (sameYearBranchCount > 2)
-			order -= 1.2 * member2.attend;
+
+		tmp.countSameYear++;
+		tmp2.countSameYear++;
+		console.log(member.RowKey + ", " + member2.RowKey + " are same year branch");
+		var degree = 1.2 * Math.min(member2.attend, member.attend);
+		if (tmp.countSameYear > 2)
+			tmp.order -= degree;
+		if (tmp2.countSameYear > 2)
+			tmp2.order -= degree;
 	}
 	
-	values[0] = happyValue;
-	values[1] = order;
-	values[2] = sameOldBranchCount;
-	values[3] = sameYearBranchCount;
+	if (tmp2.order < -10 || tmp2.happy < -10 || tmp.order < -10 || tmp.happy < -10)
+		tmp.isOk = false;
+		
+	if (tmp2.order < 0)
+		tmp2.state = 'warning';
+	else if (tmp2.happy > 0)
+		tmp2.state = 'positive';
+	else if (tmp2.happy == 0)
+		tmp2.state = '';
+	if (tmp2.happy < 0)
+		tmp2.state = 'negative';
+
+	return tmp2;
 }
 
 function CheckBMHappiness(member, bs) {
-
-	var happyValue = 100;
-	var order = 50;	
-	var sameOldBranchCount = 0;
-	var sameYearBranchCount = 0;
-	var values = [happyValue, order, sameOldBranchCount, sameYearBranchCount];
-
+	var tmp = {}
+	tmp.happy = member.happy;
+	tmp.order = member.order;
+	tmp.countSameOld = member.countSameOld;
+	tmp.countSameYear = member.countSameYear;
+	tmp.isOk = true;
+	
+	tmpfriendList = [];
 	console.log("length:" + bs.one.length + ", " + bs.two.length);
-	bs.two.forEach(function (member2, index) {
-		SetHappinessTwoMember(member, member2, values);
-
-		// member['happy'] = entGen.Int32(happyValue);
-		// if (member.power)
-		// 	branchPower += member.power._;
+	var isOk = true;
+	isOk = bs.two.every(function (member2, index) {
+		var tmp2 = SetHappinessTwoMember(member, member2, tmp, tmp2);
+		tmp2.youth = 'two';
+		tmp2.friendIndex = index;
+		tmpfriendList.push(tmp2);
+		return tmp.isOk
 	});
-
-	bs.one.forEach(function (member2, index) {
-		SetHappinessTwoMember(member, member2, values);
-
-		// member['happy'] = entGen.Int32(happyValue);
-		// if (member.power)
-		// 	branchPower += member.power._;
-	});
-
-	if (values[0] < 90)
-		return false;
-	else if (values[1] < 40)
+	if (!isOk) 
 		return false;
 
-	member.happy = values[0];
-	member.order = values[1];
+	isOk = bs.one.every(function (member2, index) {
+		var tmp2 = SetHappinessTwoMember(member, member2, tmp, tmp2);
+		tmp2.youth = 'one';
+		tmp2.friendIndex = index;
+		tmpfriendList.push(tmp2);
+		return tmp.isOk
+	});
+	if (!isOk) 
+		return false;
+	
+	// if (tmp.happy < -10) 
+	// 	return false;
+	// else if (tmp.order < -10)
+	// 	return false;
+	
+	for (var key in tmp) {
+		member[key] = tmp[key];
+	}
+	
+	tmpfriendList.forEach(function (friend) {
+		for (var key in friend) {
+			bs[friend.youth][friend.friendIndex][key] = friend[key];
+		}
+	});
+	
+	if (member.happy < 0)
+		member.state = 'negative';
+	else if (member.happy == 0)
+		member.state = '';
+	else
+		member.state = 'positive';
+	
+	if (member.order < 0)
+		member.state = 'warning';
+	else
+		member.state = '';
 	
 	return true;
 }
@@ -529,7 +582,14 @@ function GetIndexOfBM(bsList, member) {
 	}
 	else {
 		var isVeryVeryNotGood = false;
+		var countcount = 0;
 		while (1) {
+			countcount++;
+			if (countcount > 8) {
+				console.log("countcount: not very good");
+				isVeryVeryNotGood = true;
+				break;
+			}
 			var randomNumberFromNotHateList = randomIntInc(0,notHateBSList.length-1);
 			// console.log("member check:" + member.RowKey._ + "(" + member.oldbranch._ +")");
 			// console.log("index check:" + JSON.stringify(notHateBSList[randomNumberFromNotHateList]));
@@ -753,6 +813,12 @@ module.exports.MakeNewBranch = function (members, bsList, type) {
 		var powerAver = powerSum / bsList.length;
 
 		while (1) {
+			members.forEach(function(member) {
+				member.happy = 0;
+				member.order = 0;
+				member.countSameOld = 0;
+				member.countSameYear = 0;
+			});
 			console.log("pow:" + powerAver);
 			var newMembers = members.slice(0);
 			var branchList = {}, youngList = {}, pow = {};

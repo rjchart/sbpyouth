@@ -1,6 +1,6 @@
 extends branch
-block sub_item01
-	a.active.sub.item(href="/branch") 전체 브랜치 현황
+block sub_item02
+	a.active.sub.item 임시 생성 브랜치
 block sub_content
 	div.main.ui.container
 		div.ui.grid
@@ -36,7 +36,7 @@ block sub_content
 										td(rowspan="#{maxLength.two}")
 											div.ui.ribbon.label 청 2부
 									each item in bsList
-										td 
+										td(class="#{item.two.length > i && item.two[i] ? item.two[i].state : ''}")
 											if item.two.length > i && item.two[i]
 												label#profile(onclick="ProfileBS('#{item.two[i].RowKey}','#{year}','#{item.two[i].branch}','#{item.two[i].attend}')") #{item.two[i].RowKey}
 								- }
@@ -46,7 +46,7 @@ block sub_content
 										td(rowspan="#{maxLength.one}") 
 											div.ui.ribbon.label 청 1부
 									each item in bsList
-										td
+										td(class="#{item.one.length > i && item.one[i] ? item.one[i].state : ''}")
 											if item.one.length > i 
 												label#profile(onclick="ProfileBS('#{item.one[i].RowKey}','#{year}','#{item.one[i].branch}','#{item.one[i].attend}')") #{item.one[i].RowKey}
 								- }

@@ -1,6 +1,6 @@
 form#uploadForm(action="/profile_edit/#{name}", enctype="multipart/form-data", method="post")
     div.ui.card
-        input(type="hidden", name="PartitionKey", value="#{birthYear}")
+        input(type="hidden", name="PartitionKey", value="#{PartitionKey}")
         input(type="hidden", name="RowKey", value="#{name}")
         input(type="hidden", name="year", value="#{year}")
         input(type="hidden", name="charge", value="#{charge}")
@@ -11,6 +11,10 @@ form#uploadForm(action="/profile_edit/#{name}", enctype="multipart/form-data", m
             else
                 img#updateImage.fitImg(src="/public/img/image.png")
         div.content
+            a.ui.big.red.ribbon.label(onclick="UploadSubmit()") 
+                |edit
+            br
+            br
             a.header #{name}
             div.meta
                 span.date #{birthYear}.#{birthMonth}.#{birthDay}
@@ -96,7 +100,7 @@ form#uploadForm(action="/profile_edit/#{name}", enctype="multipart/form-data", m
                         div.ui.input.focus
                             input(type="text", name="birthDay", value="#{birthDay || ''}", style="max-width:130px; max-height:30px")
         div.ui.two.bottom.attached.buttons
-            div.ui.red.button(onclick="DeleteMember(#{birthYear},#{birthMonth},'#{name}')")
+            div.ui.red.button(onclick="DeleteMember(#{PartitionKey},'#{name}')")
                 i.remove.icon 
                 |Delete
             div.ui.button(onclick="UploadSubmit()")

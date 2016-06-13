@@ -6,13 +6,14 @@ block script
 	script.
 		var isEditable = false;
 		var ttoleValue = 1985;
-		function ProfileBS(year, name, branch, attendString, attend, bYear, bMonth, bDay, gender, phone, attendDesc, tension, tensionString, part, photo, charge, mail, locate, service) {
+		function ProfileBS(year, name, partition, branch, attendString, attend, bYear, bMonth, bDay, gender, phone, attendDesc, tension, tensionString, part, photo, charge, mail, locate, service) {
 			
 			//- var div = document.createElement("div");
 			//- div.innerHTML = html;
 			//- document.body.appendChild(div);
 			
 			var getData = {};
+			getData.PartitionKey = partition;
 			getData.birthYear = bYear;
 			getData.birthMonth = bMonth;
 			getData.birthDay = bDay;
@@ -106,7 +107,7 @@ block script
 						var part = check.children[5];
 						var attend = check.children[6];
 						var desc = check.children[7];
-						first.onclick = function () {ProfileBS(field['year'], field['RowKey'], field['branch'], field['attendString'], field['attend'],
+						first.onclick = function () {ProfileBS(field['year'], field['RowKey'], field['PartitionKey'], field['branch'], field['attendString'], field['attend'],
 						 field['birthYear'], field['birthMonth'], field['birthDay'], field['gender'], field['phone'], field['attendDesc'], 
 						 field['tension'], field['tensionString'], field['part'], field['photo'] ,field['charge'] ,field['mail'] ,field['locate'] ,field['service'] );
 						};
@@ -330,11 +331,10 @@ block script
 			});
 		});
 		
-		function DeleteMember(year, month, name) {
+		function DeleteMember(year, name) {
 			var data = {
 				PartitionKey: year,
-				RowKey: name,
-				month: month
+				RowKey: name
 			}
 			$.ajax({
 				url: "/removeMember",
@@ -390,7 +390,7 @@ block content
 								tbody
 									each member, i in memberList
 										tr.bMember(id="#{member.RowKey}" class="#{member.birthYear} #{parseInt(member.birthYear) - 1900} #{member.gender} #{member.part} #{member.branch} #{parseInt(member.birthMonth)} #{member.attendDesc}  #{member.attendString}")
-											td.name: label(style="width:70px", onclick="ProfileBS(#{year}, '#{member.RowKey}','#{member.branch || ''}','#{member.attendString}','#{member.attend}','#{member.birthYear}','#{member.birthMonth}','#{member.birthDay}','#{member.gender}','#{member.phone}','#{member.attendDesc || ''}','#{member.tension || 0}','#{member.tensionString || 0}','#{member.part || 0}', '#{member.photo || 0}', '#{member.charge || 'bm'}', '#{member.mail || ''}', '#{member.locate || ''}', '#{member.service || ''}')") #{member.RowKey}
+											td.name: label(style="width:70px", onclick="ProfileBS(#{year}, '#{member.RowKey}', '#{member.PartitionKey}','#{member.branch || ''}','#{member.attendString}','#{member.attend}','#{member.birthYear}','#{member.birthMonth}','#{member.birthDay}','#{member.gender}','#{member.phone}','#{member.attendDesc || ''}','#{member.tension || 0}','#{member.tensionString || 0}','#{member.part || 0}', '#{member.photo || 0}', '#{member.charge || 'bm'}', '#{member.mail || ''}', '#{member.locate || ''}', '#{member.service || ''}')") #{member.RowKey}
 											td.gender(style="width:55px") #{member.gender || '모름'}
 											td.phone(style="width:147px") #{member.phone}
 											td.birth(style="width:112px") #{member.birthYear}.#{member.birthMonth}.#{member.birthDay}															

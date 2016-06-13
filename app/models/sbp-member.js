@@ -322,7 +322,7 @@ module.exports.MemberSave = function(fields) {
     if (year <= 102 && month < 3 && month != 0)
         ttore--;
 	var entity = {
-		PartitionKey: entGen.String(ttore.toString()),
+		PartitionKey: entGen.String(fields['PartitionKey']),
 		RowKey: entGen.String(fields['RowKey']),
 		gender: entGen.String(fields['gender']),
 		phone: entGen.String(fields['phone']),
@@ -558,11 +558,11 @@ module.exports.AddMember = function (addData, next) {
 
 module.exports.RemoveMember = function (data, next) {
     var year = parseInt(data.PartitionKey);
-    var month = parseInt(data.month);
+    // var month = parseInt(data.month);
     if (year > 1900)
         year -= 1900;
-    if (102 > year && 3 > month)
-        year--;
+    // if (102 > year && 3 > month)
+    //     year--;
     data.PartitionKey = year; 
     SetEntityGen(data);
     tableService.deleteEntity('members', data, function(error, result) {
