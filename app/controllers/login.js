@@ -57,7 +57,14 @@ passport.use(new FacebookStrategy({
                         if (!error) {
                             entity.link = getMember;
                         }
-                        console.log(result);  
+                        console.log(result);
+                        var addPhoto = {
+                            PartitionKey: getMember.PartitionKey,
+                            RowKey: getMember.RowKey,
+                            userPhoto: profile.photos[0].value
+                        }
+                        sbp_member.SaveMember(addPhoto, function (error, reult) {});
+
                         return done(null, profile);
                     });
                 }

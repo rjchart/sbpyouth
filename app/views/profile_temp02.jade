@@ -1,6 +1,8 @@
 div.ui.card
     div.image.outImg(style="background-color:#e5e5e5")
-        if (data.photo)
+        if (data.usingPhoto == 'true')
+            img.fitImg(src="#{data.userPhoto||''}")
+        else if (data.photo)
             img.fitImg(src="#{data.photo}")
         else
             img.fitImg(src="/public/img/image.png")

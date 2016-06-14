@@ -38,6 +38,8 @@ function SetEntityGen (entity) {
 }
 
 function SetBirthFormat (data) {
+    if (!data)
+        return;
     var year = parseInt(data.birthYear);
     var cur_year = new Date().getYear();
     if (cur_year - year >= 26)
@@ -201,6 +203,19 @@ function CombineList(listA, listB) {
 	return [listA, listB];
 }
 
+function SetFriendsWithList (memberList) {
+    memberList.forEach(function(member) {
+        SetFriendsWithObject(member);
+    });
+};
+
+function SetFriendsWithObject (member) {
+    var changeList = ['friends', 'haters', 'hopers', 'families'];
+    changeList.forEach(function(key) {
+        member[key] = member[key] ? JSON.parse(member[key]) : [];
+    });
+};
+
 /*-------------------------------Just Member -----------------------------------
 -------------------------------------------------------------------------------*/
 
@@ -215,7 +230,8 @@ module.exports.GetMemberWithName = function (name, next) {
             var getData = result.entries[0];
             RemoveEntityGen(getData);
             SetBirthFormat(getData);
-            getData.tensionString = TensionToString(getData.tension); 
+            getData.tensionString = TensionToString(getData.tension);
+            SetFriendsWithObject(getData); 
             
             return next(null, getData);
         }    
@@ -282,7 +298,7 @@ module.exports.GetMembersAndLogWithQueryAndYear = function (query, year, next, t
                 if (!error) {
                     RemoveEntityGenList(log.entries);
                     CombineLogToMember(log.entries, member.entries);
-                    
+                    SetFriendsWithList(member.entries);
                     // getData.log = log.entries
                     return next(null, member.entries);        
                 }
@@ -460,6 +476,21 @@ module.exports.GetMemberWithGroup = function (year, group, next) {
     });
 }
 
+module.exports.SaveMember = function (member, next) {
+    if (member.birthYear && member.birthYear > 1900)
+        member.birthYear = member.birthYear - 1900; 
+    SetEntityGen(member);
+
+	tableService.insertOrMergeEntity('members', member, function(error, result) {
+		if (!error) {
+            next(null, result);
+		}
+		else {
+            next(error);
+		}
+	});
+}
+
 /***                                                                         ****
 ****                            Just Branch Log                              ****
 ****                                                                         ***/
@@ -619,4 +650,155 @@ module.exports.AddBranch = function (addData, next) {
 
     });
     
+}
+
+module.exports.GetRelations = function (member, relationKey, next) {
+
+    var query = new azure.TableQuery();
+    query.where('PartitionKey eq ? and relation eq ?', member, relationKey);
+    tableService.queryEntities('friends', query, null, function (error, relations) {
+        if (!error) {
+            RemoveEntityGenList(relations.entries);
+            return next(null, relations.entries);
+        }
+        else {
+            return next(error);
+        }
+    });
+}
+
+module.exports.DeleteRelation = function (name, target, next) {
+	var entity = {
+		PartitionKey: entGen.String(name),
+		RowKey: entGen.String(target)
+	};
+
+	// 데이터베이스에 entity를 추가합니다.
+	tableService.deleteEntity('friends', entity, function(error, result, res) {
+		if (!error) {
+            next(null, result);
+		}
+        else 
+            next(error);
+	});	
+}
+
+module.exports.AddRelations = function (name, target, relation, next) {
+    if (target == null || target.length == 0)
+        next(null, 'done');
+
+    var batch = new azure.TableBatch();
+    target.forEach (function (item) {
+        var entity = {
+            PartitionKey: entGen.String(name),
+            RowKey: entGen.String(item),
+            relation: entGen.String(relation)
+        };
+        batch.insertOrMergeEntity(entity,{echoContent: true});
+    });
+    tableService.executeBatch('friends', batch, function (error, result, response) {
+        if(!error) {
+            next(null, result);
+        }
+        else
+            next(error, null);
+    });
+
+}
+
+module.exports.UpdateRelation = function (key, name, relation, list, next) {
+    var entity = {
+        PartitionKey: key,
+        RowKey: name
+    }
+    relation = (relation == 'family') ? 'families' : relation + 's'; 
+    entity[relation] = JSON.stringify(list);
+    SetEntityGen(entity);
+
+    tableService.insertOrMergeEntity('members',entity, function(error, result) {
+        if (!error) {
+            next(null, result);
+        }
+        else 
+            next(error);
+    });
+}
+
+module.exports.SetRelation = function (key, member, target, relationKey, setting, next) {
+
+    exports.GetRelations(member, relationKey, function(error, relations) {
+        if (!error) {
+            var maxFunctionCount = 1;
+            var count = 0;
+            var relList = [];
+            var errorCount = 0;
+            relations.forEach (function(relItem) {
+                relList.push(relItem.RowKey);
+            });
+            if (setting == "delete") {
+                var index = relList.indexOf(target);
+                if (index >= 0) {
+                    relList.splice(index,1);
+                    maxFunctionCount++;
+                    exports.DeleteRelation(member, target, function (error, result) {
+                        if (!error) {
+                            count++;
+                            if (count >= maxFunctionCount)
+                                next (null, 'done');
+                        }
+                        else {
+                            count++;
+                            errorCount++;
+                            console.log("error:" + error);
+                            if (errorCount >= maxFunctionCount)
+                                next(error);
+                            else if (count >= maxFunctionCount)
+                                next (null, 'done');
+                        }
+                    });
+
+                }
+            }
+            else if (setting == "insert") {
+                target.forEach(function (item) {
+                    if (relList.indexOf(item) < 0) {
+                        relList.push(item);
+                    }
+                });
+                maxFunctionCount++;
+                exports.AddRelations(member, target, relationKey, function (error, result) {
+                    if (!error) {
+                        count++;
+                        if (count >= maxFunctionCount)
+                            next (null, 'done');
+                    }
+                    else {
+                        count++;
+                        errorCount++;
+                        console.log("error:" + error);
+                        if (errorCount >= maxFunctionCount)
+                            next(error);
+                        else if (count >= maxFunctionCount)
+                            next (null, 'done');
+                    }
+                });
+            }
+            exports.UpdateRelation(key, member, relationKey, relList, function (error, result) {
+                if (!error) {
+                    count++;
+                    if (count >= maxFunctionCount)
+                        next (null, 'done');
+                }
+                else  {
+                    count++;
+                    errorCount++;
+                    console.log("error:" + error);
+                    if (errorCount >= maxFunctionCount)
+                        next(error);
+                    else if (count >= maxFunctionCount)
+                        next (null, 'done');
+                }
+            });
+        }
+    });
 }

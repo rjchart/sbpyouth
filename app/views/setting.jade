@@ -1,4 +1,4 @@
-extends layout  
+extends layout
 block header_setting
     a.ui.main.item.active(href="/setting")
         i.settings.icon  
@@ -6,9 +6,11 @@ block header_setting
 block content
     div.ui.secondary.pointing.menu
         div.ui.container
-            a.active.sub.item 내 프로필
-            a.sub.item 설정
-    div.main.ui.container
-        div.two.column.grid
-            div.column
-                include big_profile
+            block sub_item01
+                a.sub.item(href="/setting") 프로필
+            block sub_item02
+                a.sub.item(href="/setting/amend") 설정
+            block sub_item03
+                a.sub.item(href="/setting/secret") 비밀창
+    block sub_content
+    block modal_content

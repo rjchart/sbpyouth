@@ -2,9 +2,13 @@ function profile_template(locals) {
 var buf = [];
 var jade_mixins = {};
 var jade_interp;
-;var locals_for_with = (locals || {});(function (attendDesc, birthDay, birthMonth, birthYear, branch, gender, locate, mail, name, phone, photo) {
+;var locals_for_with = (locals || {});(function (attendDesc, birthDay, birthMonth, birthYear, branch, gender, locate, mail, name, phone, photo, userPhoto, usingPhoto) {
 buf.push("<div class=\"ui card\"><div style=\"background-color:#e5e5e5\" class=\"image outImg\">");
-if ( (photo))
+if ( (usingPhoto == 'true'))
+{
+buf.push("<img" + (jade.attr("src", "" + (userPhoto||'') + "", true, false)) + " class=\"fitImg\"/>");
+}
+else if ( (photo))
 {
 buf.push("<img" + (jade.attr("src", "" + (photo) + "", true, false)) + " class=\"fitImg\"/>");
 }
@@ -12,7 +16,7 @@ else
 {
 buf.push("<img src=\"/public/img/image.png\" class=\"fitImg\"/>");
 }
-buf.push("</div><div class=\"content\"><a class=\"header\">" + (jade.escape((jade_interp = name) == null ? '' : jade_interp)) + "</a><div class=\"meta\"><span class=\"date\">" + (jade.escape((jade_interp = birthYear) == null ? '' : jade_interp)) + "." + (jade.escape((jade_interp = birthMonth) == null ? '' : jade_interp)) + "." + (jade.escape((jade_interp = birthDay) == null ? '' : jade_interp)) + "</span></div><div class=\"ui relaxed celled list\"><div class=\"item\"><i class=\"big heterosexual middle aligned icon\"></i><div class=\"content\"><div class=\"header\">성별<div style=\"color:gray\" class=\"description\"></div>" + (jade.escape((jade_interp = gender) == null ? '' : jade_interp)) + "</div></div></div><div class=\"item\"><i class=\"big phone middle aligned icon\"></i><div class=\"content\"><div class=\"header\">전화번호<div style=\"color:gray\" class=\"description\"></div>" + (jade.escape((jade_interp = phone) == null ? '' : jade_interp)) + "</div></div></div><div class=\"item\"><i class=\"big tag middle aligned icon\"></i><div class=\"content\"><div class=\"header\">브랜치<div style=\"color:gray\" class=\"description\"></div>" + (jade.escape((jade_interp = branch || '') == null ? '' : jade_interp)) + "</div></div></div><div class=\"item\"><i class=\"big mail middle aligned icon\"></i><div class=\"content\"><div class=\"header\">메일<div style=\"color:gray\" class=\"description\"></div>" + (jade.escape((jade_interp = mail || '') == null ? '' : jade_interp)) + "</div></div></div><div class=\"item\"><i class=\"big building middle aligned icon\"></i><div class=\"content\"><div class=\"header\">거주지<div style=\"color:gray\" class=\"description\"></div>" + (jade.escape((jade_interp = locate || '') == null ? '' : jade_interp)) + "</div></div></div><div class=\"item\"><i class=\"big comment middle aligned icon\"></i><div class=\"content\"><div class=\"header\">비고<div style=\"color:gray\" class=\"description\"></div>" + (jade.escape((jade_interp = attendDesc || '') == null ? '' : jade_interp)) + "</div></div></div></div></div></div>");}.call(this,"attendDesc" in locals_for_with?locals_for_with.attendDesc:typeof attendDesc!=="undefined"?attendDesc:undefined,"birthDay" in locals_for_with?locals_for_with.birthDay:typeof birthDay!=="undefined"?birthDay:undefined,"birthMonth" in locals_for_with?locals_for_with.birthMonth:typeof birthMonth!=="undefined"?birthMonth:undefined,"birthYear" in locals_for_with?locals_for_with.birthYear:typeof birthYear!=="undefined"?birthYear:undefined,"branch" in locals_for_with?locals_for_with.branch:typeof branch!=="undefined"?branch:undefined,"gender" in locals_for_with?locals_for_with.gender:typeof gender!=="undefined"?gender:undefined,"locate" in locals_for_with?locals_for_with.locate:typeof locate!=="undefined"?locate:undefined,"mail" in locals_for_with?locals_for_with.mail:typeof mail!=="undefined"?mail:undefined,"name" in locals_for_with?locals_for_with.name:typeof name!=="undefined"?name:undefined,"phone" in locals_for_with?locals_for_with.phone:typeof phone!=="undefined"?phone:undefined,"photo" in locals_for_with?locals_for_with.photo:typeof photo!=="undefined"?photo:undefined));;return buf.join("");
+buf.push("</div><div class=\"content\"><a class=\"header\">" + (jade.escape((jade_interp = name) == null ? '' : jade_interp)) + "</a><div class=\"meta\"><span class=\"date\">" + (jade.escape((jade_interp = birthYear) == null ? '' : jade_interp)) + "." + (jade.escape((jade_interp = birthMonth) == null ? '' : jade_interp)) + "." + (jade.escape((jade_interp = birthDay) == null ? '' : jade_interp)) + "</span></div><div class=\"ui relaxed celled list\"><div class=\"item\"><i class=\"big heterosexual middle aligned icon\"></i><div class=\"content\"><div class=\"header\">성별<div style=\"color:gray\" class=\"description\"></div>" + (jade.escape((jade_interp = gender) == null ? '' : jade_interp)) + "</div></div></div><div class=\"item\"><i class=\"big phone middle aligned icon\"></i><div class=\"content\"><div class=\"header\">전화번호<div style=\"color:gray\" class=\"description\"></div>" + (jade.escape((jade_interp = phone) == null ? '' : jade_interp)) + "</div></div></div><div class=\"item\"><i class=\"big tag middle aligned icon\"></i><div class=\"content\"><div class=\"header\">브랜치<div style=\"color:gray\" class=\"description\"></div>" + (jade.escape((jade_interp = branch || '') == null ? '' : jade_interp)) + "</div></div></div><div class=\"item\"><i class=\"big mail middle aligned icon\"></i><div class=\"content\"><div class=\"header\">메일<div style=\"color:gray\" class=\"description\"></div>" + (jade.escape((jade_interp = mail || '') == null ? '' : jade_interp)) + "</div></div></div><div class=\"item\"><i class=\"big building middle aligned icon\"></i><div class=\"content\"><div class=\"header\">거주지<div style=\"color:gray\" class=\"description\"></div>" + (jade.escape((jade_interp = locate || '') == null ? '' : jade_interp)) + "</div></div></div><div class=\"item\"><i class=\"big comment middle aligned icon\"></i><div class=\"content\"><div class=\"header\">비고<div style=\"color:gray\" class=\"description\"></div>" + (jade.escape((jade_interp = attendDesc || '') == null ? '' : jade_interp)) + "</div></div></div></div></div></div>");}.call(this,"attendDesc" in locals_for_with?locals_for_with.attendDesc:typeof attendDesc!=="undefined"?attendDesc:undefined,"birthDay" in locals_for_with?locals_for_with.birthDay:typeof birthDay!=="undefined"?birthDay:undefined,"birthMonth" in locals_for_with?locals_for_with.birthMonth:typeof birthMonth!=="undefined"?birthMonth:undefined,"birthYear" in locals_for_with?locals_for_with.birthYear:typeof birthYear!=="undefined"?birthYear:undefined,"branch" in locals_for_with?locals_for_with.branch:typeof branch!=="undefined"?branch:undefined,"gender" in locals_for_with?locals_for_with.gender:typeof gender!=="undefined"?gender:undefined,"locate" in locals_for_with?locals_for_with.locate:typeof locate!=="undefined"?locate:undefined,"mail" in locals_for_with?locals_for_with.mail:typeof mail!=="undefined"?mail:undefined,"name" in locals_for_with?locals_for_with.name:typeof name!=="undefined"?name:undefined,"phone" in locals_for_with?locals_for_with.phone:typeof phone!=="undefined"?phone:undefined,"photo" in locals_for_with?locals_for_with.photo:typeof photo!=="undefined"?photo:undefined,"userPhoto" in locals_for_with?locals_for_with.userPhoto:typeof userPhoto!=="undefined"?userPhoto:undefined,"usingPhoto" in locals_for_with?locals_for_with.usingPhoto:typeof usingPhoto!=="undefined"?usingPhoto:undefined));;return buf.join("");
 }
 function profile_edit(locals) {
 var buf = [];
@@ -83,31 +87,8 @@ function detailProfile_template(locals) {
 var buf = [];
 var jade_mixins = {};
 var jade_interp;
-;var locals_for_with = (locals || {});(function (friends, haters, hopers, undefined) {
-buf.push("<h4 class=\"ui header\"> \n싫어하는 사람 리스트</h4><div class=\"ui relaxed celled list\"><div class=\"item\"><div class=\"ui grid\">");
-// iterate haters
-;(function(){
-  var $$obj = haters;
-  if ('number' == typeof $$obj.length) {
-
-    for (var index = 0, $$l = $$obj.length; index < $$l; index++) {
-      var hater = $$obj[index];
-
-buf.push("<div class=\"four wide column\"><div class=\"right floated content\"><div class=\"ui mini button\">Delete</div></div><i class=\"large ban middle aligned icon\"></i>" + (jade.escape((jade_interp = hater) == null ? '' : jade_interp)) + "</div>");
-    }
-
-  } else {
-    var $$l = 0;
-    for (var index in $$obj) {
-      $$l++;      var hater = $$obj[index];
-
-buf.push("<div class=\"four wide column\"><div class=\"right floated content\"><div class=\"ui mini button\">Delete</div></div><i class=\"large ban middle aligned icon\"></i>" + (jade.escape((jade_interp = hater) == null ? '' : jade_interp)) + "</div>");
-    }
-
-  }
-}).call(this);
-
-buf.push("</div></div><div class=\"item\"><div class=\"content\"><div class=\"ui grid\"><div class=\"three wide column\"><div class=\"ui mini input focus\"><input type=\"text\" placeholder=\"이름\"/></div></div><div class=\"three wide column\"><div class=\"ui mini input focus\"><input type=\"text\" placeholder=\"이름\"/></div></div><div class=\"three wide column\"><div class=\"ui mini input focus\"><input type=\"text\" placeholder=\"이름\"/></div></div><div class=\"three wide column\"><div class=\"ui mini input focus\"><input type=\"text\" placeholder=\"이름\"/></div></div><div class=\"one wide column\"></div><div class=\"three wide column\"><div class=\"ui mini button\"><i class=\"large add user middle aligned icon\"> </i>Add</div></div></div></div></div></div><h4 class=\"ui header\"> \n친한 사람 리스트</h4><div class=\"ui relaxed celled list\"><div class=\"item\"><div class=\"ui grid\">");
+;var locals_for_with = (locals || {});(function (PartitionKey, RowKey, families, friends, haters, hopers, undefined) {
+buf.push("<h4 class=\"ui header\"> \n친한 사람 리스트</h4><div class=\"ui relaxed celled list\"><div class=\"item\"><div class=\"ui grid\">");
 // iterate friends
 ;(function(){
   var $$obj = friends;
@@ -116,7 +97,7 @@ buf.push("</div></div><div class=\"item\"><div class=\"content\"><div class=\"ui
     for (var index = 0, $$l = $$obj.length; index < $$l; index++) {
       var friend = $$obj[index];
 
-buf.push("<div class=\"four wide column\"><div class=\"right floated content\"><div class=\"ui mini button\">Delete</div></div><i class=\"large retweet middle aligned icon\"></i>" + (jade.escape((jade_interp = friend) == null ? '' : jade_interp)) + "</div>");
+buf.push("<div class=\"four wide column\"><div class=\"right floated content\"><div" + (jade.attr("onclick", "Delete('" + (PartitionKey) + "','" + (RowKey) + "','" + (friend) + "', 'friend')", true, false)) + " class=\"ui mini button\">Delete</div></div><i class=\"large retweet middle aligned icon\"></i>" + (jade.escape((jade_interp = friend) == null ? '' : jade_interp)) + "</div>");
     }
 
   } else {
@@ -124,13 +105,59 @@ buf.push("<div class=\"four wide column\"><div class=\"right floated content\"><
     for (var index in $$obj) {
       $$l++;      var friend = $$obj[index];
 
-buf.push("<div class=\"four wide column\"><div class=\"right floated content\"><div class=\"ui mini button\">Delete</div></div><i class=\"large retweet middle aligned icon\"></i>" + (jade.escape((jade_interp = friend) == null ? '' : jade_interp)) + "</div>");
+buf.push("<div class=\"four wide column\"><div class=\"right floated content\"><div" + (jade.attr("onclick", "Delete('" + (PartitionKey) + "','" + (RowKey) + "','" + (friend) + "', 'friend')", true, false)) + " class=\"ui mini button\">Delete</div></div><i class=\"large retweet middle aligned icon\"></i>" + (jade.escape((jade_interp = friend) == null ? '' : jade_interp)) + "</div>");
     }
 
   }
 }).call(this);
 
-buf.push("</div></div><div class=\"item\"><div class=\"content\"><div class=\"ui grid\"><div class=\"three wide column\"><div class=\"ui mini input focus\"><input type=\"text\" placeholder=\"이름\"/></div></div><div class=\"three wide column\"><div class=\"ui mini input focus\"><input type=\"text\" placeholder=\"이름\"/></div></div><div class=\"three wide column\"><div class=\"ui mini input focus\"><input type=\"text\" placeholder=\"이름\"/></div></div><div class=\"three wide column\"><div class=\"ui mini input focus\"><input type=\"text\" placeholder=\"이름\"/></div></div><div class=\"one wide column\"></div><div class=\"three wide column\"><div class=\"ui mini button\"><i class=\"large add user middle aligned icon\"> </i>Add</div></div></div></div></div></div><h4 class=\"ui header\"> \n묶어줄 사람 리스트</h4><div class=\"ui relaxed celled list\"><div class=\"item\"><div class=\"ui grid\">");
+buf.push("</div></div><div class=\"item\"><div class=\"content\"><form id=\"insert_friend\" action=\"/insert/friend\" method=\"post\"><input type=\"hidden\" name=\"key\"" + (jade.attr("value", "" + (PartitionKey) + "", true, false)) + "/><input type=\"hidden\" name=\"member\"" + (jade.attr("value", "" + (RowKey) + "", true, false)) + "/><input type=\"hidden\" name=\"relation\" value=\"friend\"/><div class=\"ui grid\"><div class=\"three wide column\"><div class=\"ui mini input focus\"><input type=\"text\" placeholder=\"이름\" name=\"target[0]\"/></div></div><div class=\"three wide column\"><div class=\"ui mini input focus\"><input type=\"text\" placeholder=\"이름\" name=\"target[1]\"/></div></div><div class=\"three wide column\"><div class=\"ui mini input focus\"><input type=\"text\" placeholder=\"이름\" name=\"target[2]\"/></div></div><div class=\"three wide column\"><div class=\"ui mini input focus\"><input type=\"text\" placeholder=\"이름\" name=\"target[3]\"/></div></div><div class=\"one wide column\"></div><div class=\"three wide column\"><div onclick=\"Insert('friend')\" class=\"ui mini button\"><i class=\"large add user middle aligned icon\"> </i>Add</div></div></div></form></div></div></div><h4 class=\"ui header\"> \n가족 혹은 연인 리스트</h4><div class=\"ui relaxed celled list\"><div class=\"item\"><div class=\"ui grid\">");
+// iterate families
+;(function(){
+  var $$obj = families;
+  if ('number' == typeof $$obj.length) {
+
+    for (var index = 0, $$l = $$obj.length; index < $$l; index++) {
+      var family = $$obj[index];
+
+buf.push("<div class=\"four wide column\"><div class=\"right floated content\"><div" + (jade.attr("onclick", "Delete('" + (PartitionKey) + "','" + (RowKey) + "','" + (family) + "', 'family')", true, false)) + " class=\"ui mini button\">Delete</div></div><i class=\"large heart middle aligned icon\"></i>" + (jade.escape((jade_interp = family) == null ? '' : jade_interp)) + "</div>");
+    }
+
+  } else {
+    var $$l = 0;
+    for (var index in $$obj) {
+      $$l++;      var family = $$obj[index];
+
+buf.push("<div class=\"four wide column\"><div class=\"right floated content\"><div" + (jade.attr("onclick", "Delete('" + (PartitionKey) + "','" + (RowKey) + "','" + (family) + "', 'family')", true, false)) + " class=\"ui mini button\">Delete</div></div><i class=\"large heart middle aligned icon\"></i>" + (jade.escape((jade_interp = family) == null ? '' : jade_interp)) + "</div>");
+    }
+
+  }
+}).call(this);
+
+buf.push("</div></div><div class=\"item\"><div class=\"content\"><form id=\"insert_family\" action=\"/insert/family\" method=\"post\"><input type=\"hidden\" name=\"key\"" + (jade.attr("value", "" + (PartitionKey) + "", true, false)) + "/><input type=\"hidden\" name=\"member\"" + (jade.attr("value", "" + (RowKey) + "", true, false)) + "/><input type=\"hidden\" name=\"relation\" value=\"family\"/><div class=\"ui grid\"><div class=\"three wide column\"><div class=\"ui mini input focus\"><input type=\"text\" placeholder=\"이름\" name=\"target[0]\"/></div></div><div class=\"three wide column\"><div class=\"ui mini input focus\"><input type=\"text\" placeholder=\"이름\" name=\"target[1]\"/></div></div><div class=\"three wide column\"><div class=\"ui mini input focus\"><input type=\"text\" placeholder=\"이름\" name=\"target[2]\"/></div></div><div class=\"three wide column\"><div class=\"ui mini input focus\"><input type=\"text\" placeholder=\"이름\" name=\"target[3]\"/></div></div><div class=\"one wide column\"></div><div class=\"three wide column\"><div onclick=\"Insert('family')\" class=\"ui mini button\"><i class=\"large add user middle aligned icon\"> </i>Add</div></div></div></form></div></div></div><h4 class=\"ui header\"> \n싫어하는 사람 리스트</h4><div class=\"ui relaxed celled list\"><div class=\"item\"><div class=\"ui grid\">");
+// iterate haters
+;(function(){
+  var $$obj = haters;
+  if ('number' == typeof $$obj.length) {
+
+    for (var index = 0, $$l = $$obj.length; index < $$l; index++) {
+      var hater = $$obj[index];
+
+buf.push("<div class=\"four wide column\"><div class=\"right floated content\"><div" + (jade.attr("onclick", "Delete('" + (PartitionKey) + "','" + (RowKey) + "','" + (hater) + "', 'hater')", true, false)) + " class=\"ui mini button\">Delete</div></div><i class=\"large ban middle aligned icon\"></i>" + (jade.escape((jade_interp = hater) == null ? '' : jade_interp)) + "</div>");
+    }
+
+  } else {
+    var $$l = 0;
+    for (var index in $$obj) {
+      $$l++;      var hater = $$obj[index];
+
+buf.push("<div class=\"four wide column\"><div class=\"right floated content\"><div" + (jade.attr("onclick", "Delete('" + (PartitionKey) + "','" + (RowKey) + "','" + (hater) + "', 'hater')", true, false)) + " class=\"ui mini button\">Delete</div></div><i class=\"large ban middle aligned icon\"></i>" + (jade.escape((jade_interp = hater) == null ? '' : jade_interp)) + "</div>");
+    }
+
+  }
+}).call(this);
+
+buf.push("</div></div><div class=\"item\"><div class=\"content\"><form id=\"insert_hater\" action=\"/insert/hater\" method=\"post\"><input type=\"hidden\" name=\"key\"" + (jade.attr("value", "" + (PartitionKey) + "", true, false)) + "/><input type=\"hidden\" name=\"member\"" + (jade.attr("value", "" + (RowKey) + "", true, false)) + "/><input type=\"hidden\" name=\"relation\" value=\"hater\"/><div class=\"ui grid\"><div class=\"three wide column\"><div class=\"ui mini input focus\"><input type=\"text\" placeholder=\"이름\" name=\"target[0]\"/></div></div><div class=\"three wide column\"><div class=\"ui mini input focus\"><input type=\"text\" placeholder=\"이름\" name=\"target[1]\"/></div></div><div class=\"three wide column\"><div class=\"ui mini input focus\"><input type=\"text\" placeholder=\"이름\" name=\"target[2]\"/></div></div><div class=\"three wide column\"><div class=\"ui mini input focus\"><input type=\"text\" placeholder=\"이름\" name=\"target[3]\"/></div></div><div class=\"one wide column\"></div><div class=\"three wide column\"><div onclick=\"Insert('hater')\" class=\"ui mini button\"><i class=\"large add user middle aligned icon\"> </i>Add</div></div></div></form></div></div></div><h4 class=\"ui header\"> \n다음 브랜치 같이 할 사람 리스트</h4><div class=\"ui relaxed celled list\"><div class=\"item\"><div class=\"ui grid\">");
 // iterate hopers
 ;(function(){
   var $$obj = hopers;
@@ -139,7 +166,7 @@ buf.push("</div></div><div class=\"item\"><div class=\"content\"><div class=\"ui
     for (var index = 0, $$l = $$obj.length; index < $$l; index++) {
       var hoper = $$obj[index];
 
-buf.push("<div class=\"four wide column\"><div class=\"right floated content\"><div class=\"ui mini button\">Delete</div></div><i class=\"large compress middle aligned icon\"></i>" + (jade.escape((jade_interp = hoper) == null ? '' : jade_interp)) + "</div>");
+buf.push("<div class=\"four wide column\"><div class=\"right floated content\"><div" + (jade.attr("onclick", "Delete('" + (PartitionKey) + "','" + (RowKey) + "','" + (hoper) + "', 'hoper')", true, false)) + " class=\"ui mini button\">Delete</div></div><i class=\"large compress middle aligned icon\"></i>" + (jade.escape((jade_interp = hoper) == null ? '' : jade_interp)) + "</div>");
     }
 
   } else {
@@ -147,11 +174,11 @@ buf.push("<div class=\"four wide column\"><div class=\"right floated content\"><
     for (var index in $$obj) {
       $$l++;      var hoper = $$obj[index];
 
-buf.push("<div class=\"four wide column\"><div class=\"right floated content\"><div class=\"ui mini button\">Delete</div></div><i class=\"large compress middle aligned icon\"></i>" + (jade.escape((jade_interp = hoper) == null ? '' : jade_interp)) + "</div>");
+buf.push("<div class=\"four wide column\"><div class=\"right floated content\"><div" + (jade.attr("onclick", "Delete('" + (PartitionKey) + "','" + (RowKey) + "','" + (hoper) + "', 'hoper')", true, false)) + " class=\"ui mini button\">Delete</div></div><i class=\"large compress middle aligned icon\"></i>" + (jade.escape((jade_interp = hoper) == null ? '' : jade_interp)) + "</div>");
     }
 
   }
 }).call(this);
 
-buf.push("</div></div><div class=\"item\"><div class=\"content\"><div class=\"ui grid\"><div class=\"three wide column\"><div class=\"ui mini input focus\"><input type=\"text\" placeholder=\"이름\"/></div></div><div class=\"three wide column\"><div class=\"ui mini input focus\"><input type=\"text\" placeholder=\"이름\"/></div></div><div class=\"three wide column\"><div class=\"ui mini input focus\"><input type=\"text\" placeholder=\"이름\"/></div></div><div class=\"three wide column\"><div class=\"ui mini input focus\"><input type=\"text\" placeholder=\"이름\"/></div></div><div class=\"one wide column\"></div><div class=\"three wide column\"><div class=\"ui mini button\"><i class=\"large add user middle aligned icon\"> </i>Add</div></div></div></div></div></div>");}.call(this,"friends" in locals_for_with?locals_for_with.friends:typeof friends!=="undefined"?friends:undefined,"haters" in locals_for_with?locals_for_with.haters:typeof haters!=="undefined"?haters:undefined,"hopers" in locals_for_with?locals_for_with.hopers:typeof hopers!=="undefined"?hopers:undefined,"undefined" in locals_for_with?locals_for_with.undefined:typeof undefined!=="undefined"?undefined:undefined));;return buf.join("");
+buf.push("</div></div><div class=\"item\"><div class=\"content\"><form id=\"insert_hoper\" action=\"/insert/hoper\" method=\"post\"><input type=\"hidden\" name=\"key\"" + (jade.attr("value", "" + (PartitionKey) + "", true, false)) + "/><input type=\"hidden\" name=\"member\"" + (jade.attr("value", "" + (RowKey) + "", true, false)) + "/><input type=\"hidden\" name=\"relation\" value=\"hoper\"/><div class=\"ui grid\"><div class=\"three wide column\"><div class=\"ui mini input focus\"><input type=\"text\" placeholder=\"이름\" name=\"target[0]\"/></div></div><div class=\"three wide column\"><div class=\"ui mini input focus\"><input type=\"text\" placeholder=\"이름\" name=\"target[1]\"/></div></div><div class=\"three wide column\"><div class=\"ui mini input focus\"><input type=\"text\" placeholder=\"이름\" name=\"target[2]\"/></div></div><div class=\"three wide column\"><div class=\"ui mini input focus\"><input type=\"text\" placeholder=\"이름\" name=\"target[3]\"/></div></div><div class=\"one wide column\"></div><div class=\"three wide column\"><div onclick=\"Insert('hoper')\" class=\"ui mini button\"><i class=\"large add user middle aligned icon\"> </i>Add</div></div></div></form></div></div></div>");}.call(this,"PartitionKey" in locals_for_with?locals_for_with.PartitionKey:typeof PartitionKey!=="undefined"?PartitionKey:undefined,"RowKey" in locals_for_with?locals_for_with.RowKey:typeof RowKey!=="undefined"?RowKey:undefined,"families" in locals_for_with?locals_for_with.families:typeof families!=="undefined"?families:undefined,"friends" in locals_for_with?locals_for_with.friends:typeof friends!=="undefined"?friends:undefined,"haters" in locals_for_with?locals_for_with.haters:typeof haters!=="undefined"?haters:undefined,"hopers" in locals_for_with?locals_for_with.hopers:typeof hopers!=="undefined"?hopers:undefined,"undefined" in locals_for_with?locals_for_with.undefined:typeof undefined!=="undefined"?undefined:undefined));;return buf.join("");
 }

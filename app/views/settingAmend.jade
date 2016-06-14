@@ -1,0 +1,105 @@
+extends setting
+block script
+    script.
+        var amend = {};
+        amend.PartitionKey = '#{PartitionKey}';
+        amend.RowKey = '#{RowKey}';
+        amend.usingPhoto = #{usingPhoto || false};
+        amend.showPhoto = #{showPhoto || false};
+        amend.showPhone = #{showPhone || false};
+        amend.showMail = #{showMail || false};
+        amend.showLocate = #{showLocate || false};
+        amend.photoSrc = "#{photo}";
+        amend.userPhotoSrc = "#{userPhoto}";
+        function SetButtonPositive (setKey, setValue) {
+            var jqueryKey = '.' + setKey;
+            var jqueryPositiveKey = jqueryKey + '.' + setValue;
+            $(jqueryKey).removeClass('positive');
+            $(jqueryPositiveKey).addClass('positive');
+        }
+
+        function SettingButton(setKey, setValue) {
+            amend[setKey] = setValue;
+            if (setKey == "usingPhoto")
+                CheckPhotos();
+            SetButtonPositive(setKey, setValue)
+        }
+        
+        function CheckPhotos () {
+            if (amend.usingPhoto) {
+                var ampRemove = amend.userPhotoSrc.replace('amp;','');
+                document.getElementById('photo').src = ampRemove;
+                var click = document.getElementById('clickPhoto')
+                click.htmlFor = "";
+                click.style.cursor = "";
+            }
+            else {
+                var ampRemove = amend.photoSrc.replace('amp;','');
+                document.getElementById('photo').src = ampRemove;
+                var click = document.getElementById('clickPhoto')
+                click.htmlFor = "uploadInput";
+                click.style.cursor = "pointer";
+            } 
+        }
+
+        function SettingSave () {
+            SendData();
+        }
+
+        function SendData () {
+            var url = "/setting/saveUserSet";
+            var getPhoto = document.getElementById('uploadInput');
+            var formData = new FormData();
+            var checkList = ['PartitionKey', 'RowKey', 'usingPhoto', 'showPhoto', 'showPhone', 'showMail', 'showLocate'];
+            checkList.forEach(function (item) {
+                var value = amend[item];
+                formData.append(item, value);
+            });
+
+            var file;
+            if (getPhoto) {
+                file = getPhoto.files[0];
+                formData.append('file',file);
+            }
+            
+            $.ajax({
+                url: url,
+                type: "post",
+                data: formData,
+                dataType: "text",
+                processData: false,
+                contentType: false,
+                success: function(data) {
+                    alert('저장했습니다.');
+                },
+                error: function(xhr) {
+                    alert('저장에 실패 했습니다. \n' + xhr.responseText);
+                    if (xhr.status == 500)
+                    location.href='/auth/login';
+                }
+            });
+        }
+
+        function ReadURL(input) {
+            var url = input.value;
+            var ext = url.substring(url.lastIndexOf('.') + 1).toLowerCase();
+            if (input.files && input.files[0] && (ext == "gif" || ext == "png" || ext == "jpeg" || ext == "jpg")) {
+                var reader = new FileReader();
+
+                reader.onload = function (e) {
+                    $('#photo').attr('src', e.target.result);
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+            else{
+                alert("파일을 올리는데 실패하였습니다.");
+            }
+        }
+		
+block sub_item02
+    a.active.sub.item(href="/setting/amend") 설정 
+block sub_content
+    div.main.ui.container
+        div.two.column.grid
+            div.column
+                include big_profileSetting

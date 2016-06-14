@@ -30,6 +30,10 @@ block script
 					if (isEditable) {
 						var detail = window.detailProfile_template(data);
 						document.getElementById("DetailProfile").innerHTML = detail;
+						$('#DetailProfile').show();
+					}
+					else {
+						$('#DetailProfile').hide();
 					}
 					
 					$(".ui.dropdown").dropdown();
@@ -139,10 +143,10 @@ block script
 						var part = check.children[5];
 						var attend = check.children[6];
 						var desc = check.children[7];
-						first.onclick = function () {ProfileBS(field['year'], field['RowKey'], field['PartitionKey'], field['branch'], field['attendString'], field['attend'],
-						 field['birthYear'], field['birthMonth'], field['birthDay'], field['gender'], field['phone'], field['attendDesc'], 
-						 field['tension'], field['tensionString'], field['part'], field['photo'] ,field['charge'] ,field['mail'] ,field['locate'] ,field['service'] );
-						};
+						//- first.onclick = function () {ProfileBS(field['year'], field['RowKey'], field['PartitionKey'], field['branch'], field['attendString'], field['attend'],
+						//-  field['birthYear'], field['birthMonth'], field['birthDay'], field['gender'], field['phone'], field['attendDesc'], 
+						//-  field['tension'], field['tensionString'], field['part'], field['photo'] ,field['charge'] ,field['mail'] ,field['locate'] ,field['service'] );
+						//- };
 						gender.innerHTML = field['gender'];
 						phone.innerHTML = field['phone'];
 						birth.innerHTML = (field['birthYear']+1900)+"."+field['birthMonth']+"."+field['birthDay'];
@@ -361,6 +365,7 @@ block script
 				if(e.keyCode==13)
 					TypeSearch();
 			});
+			$('#DetailProfile').hide();
 		});
 		
 		function DeleteMember(year, name) {
@@ -378,6 +383,44 @@ block script
 				},
 				error: function(xhr) {
 					alert('삭제 실패했습니다.');
+				}
+			});
+		}
+
+		function Delete(key, member, target, relation) {
+			var data = {
+				key: key,
+				member: member,
+				target: target,
+				relation: relation
+			}
+
+			$.ajax({
+				url: "/delete/" + relation,
+				type: "post",
+				data: data,
+				dataType: "json",
+				success: function(data) {
+					console.log("success");
+					var alertString = data.target + "님이 목록에서 제거되었습니다."
+					alert(alertString);
+				},
+				error: function(request) {
+					alert("실패");
+				}
+			});
+		}
+
+		function Insert(relation) {
+			var getID = "#insert_" + relation;
+			$(getID).ajaxSubmit({
+				success: function(data) {
+					console.log("success");
+					var alertString = data.target + "님이 목록에 추가되었습니다."
+					alert(alertString);
+				},
+				error: function(request) {
+					alert("실패");
 				}
 			});
 		}

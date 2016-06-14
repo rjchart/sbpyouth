@@ -231,10 +231,6 @@ router.post('/friend_profile', function (req, res, next) {
             getData.branch = req.body.branch; // req.body.branch
             getData.attend = req.body.attend; // req.body.attend
             getData.attendString = sbp_member.AttendToString(req.body.attend);
-            getData.haters = getData.haters ? JSON.parse(getData.haters) : [];
-            getData.hopers = getData.hopers ? JSON.parse(getData.hopers) : [];
-            getData.friends = getData.friends ? JSON.parse(getData.friends) : [];
-            getData.families = getData.families ? JSON.parse(getData.families) : [];
             getData.year = req.body.year;
             res.send(getData);
         }
@@ -455,32 +451,40 @@ router.post('/makeBranch', function (req, res, next) {
             res.render('branchTemp', newList);
         }    
     });
-    
-    
-    // for (i = 0; i < bsList.length; i++) {
-    //     if (body['add_name'][i] == null || body['add_name'][i] == '')
-    //         continue;
-            
-    //     keys.forEach (function(key, index) {
-    //         if (key != 'year' && key != 'name') {
-    //             var addkey = "add_" + key;
-    //             tmp[key] = body[addkey][i];   
-    //         }
-    //     }, this);
-    //     tmp.PartitionKey = body.add_year[i];
-    //     tmp.RowKey = body.add_name[i];
-    //     tmp.branchYear = body.add_year[i].toString().replace('-2','.5');
-        
-    //     addData.push(tmp);
-    // }
-    
-    // sbp_member.AddBranch(addData, function (error, result) {
-    //     if (!error) {
-    //         var data = {
-    //             result:true
-    //         }
-    //         res.send(data);
-    //     }
-    // });
-    
+});
+
+router.post('/delete/:id', function (req, res, next) {
+    var id = req.params.id;
+    var member = req.body.member;
+    var target = req.body.target;
+    var key = req.body.key;
+    sbp_member.SetRelation(key, member, target, id, 'delete', function (error, result) {
+        if (!error) {
+            res.send(req.body);
+        }
+        else 
+            console.log('error: ' + error);
+    });
+});
+
+router.post('/insert/:id', function (req, res, next) {
+    var id = req.params.id;
+    var member = req.body.member;
+    var targets = req.body.target;
+    var key = req.body.key;
+    var target = [];
+    targets.forEach(function (item) {
+        if (item && item != '')
+            target.push(item);
+    });
+    req.body.target = target;
+    if (target.length > 0) {
+        sbp_member.SetRelation(key, member, target, id, 'insert', function (error, result) {
+            if (!error) {
+                res.send(req.body);
+            }
+            else 
+                console.log('error: ' + error);
+        });
+    }
 });
