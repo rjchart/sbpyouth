@@ -238,7 +238,12 @@ module.exports.GetMemberWithName = function (name, next) {
     });
 }
 
-module.exports.GetMemberWithQuery = function (queryString, next, top) {
+module.exports.GetMembersWithNames = function (names, next) {
+    var memberString = MakeQueryWithList(names, 'RowKey');
+    exports.GetMembersWithQuery(memberString, next);
+}
+
+module.exports.GetMembersWithQuery = function (queryString, next, top) {
     var query = new azure.TableQuery();
     if (top != null && top != '' && top != 0)
         query.top(top)
@@ -543,7 +548,7 @@ module.exports.GetBranchMembersWithBranch = function (year, branch, next) {
                 names.push(item.RowKey);
             });
             var queryString = MakeQueryWithList(names, 'RowKey');
-            exports.GetMemberWithQuery (queryString, function (error2, member) {
+            exports.GetMembersWithQuery (queryString, function (error2, member) {
                 if (!error2) {
                     CombineLogToMember(log.entries, member);
                     SetBranchSort(member);
@@ -651,6 +656,10 @@ module.exports.AddBranch = function (addData, next) {
     });
     
 }
+
+/***                                                                         ****
+****                            Just Relation                                ****
+****                                                                         ***/
 
 module.exports.GetRelations = function (member, relationKey, next) {
 
@@ -802,3 +811,92 @@ module.exports.SetRelation = function (key, member, target, relationKey, setting
         }
     });
 }
+
+
+/***                                                                         ****
+****                            Just User                                    ****
+****                                                                         ***/
+
+module.exports.GetUsersWithQuery = function (queryString, next, top) {
+
+    var query = new azure.TableQuery();
+    if (top != null && top != '' && top != 0)
+        query.top(1);
+    if (queryString != null  && queryString != '')
+        query.where(queryString);
+    tableService.queryEntities('users', query, null, function (error, result) {
+        if (!error) {
+            RemoveEntityGenList(result.entries);    
+            return next(null, result.entries);
+        }
+        else 
+            return next(error, null);
+    });  
+}
+
+module.exports.SaveUser = function (entity, next) {
+    SetEntityGen(entity);
+    
+	// 데이터베이스에 entity를 추가합니다.
+	tableService.insertOrMergeEntity('users', entity, function(error, result, res) {
+		if (!error) {
+            next (null, result);
+		}
+		else {
+            next (error, null);
+		}
+	});
+    
+}
+
+module.exports.SaveUsers = function (entities, next) {
+    var maxCount = 0;
+    var count = 0;
+    entities.forEach(function(item) {
+        maxCount++;
+        exports.SaveUser(item, function (error, result) {
+            if (!error) {
+                count++;
+                if (count >= maxCount)
+                    next(null, "all done");
+            }
+            else 
+                next(item.name + " : " + error);
+        });
+    });
+}
+
+/***                                                                         ****
+****                            Just Auth                                    ****
+****                                                                         ***/
+
+module.exports.SetAuth = function (targets, relationKey, setting, next) {
+
+    exports.GetMembersWithNames(targets, function(error, members) {
+        if (!error) {
+            var maxFunctionCount = 0;
+            var count = 0;
+            var relList = [];
+            var errorCount = 0;
+            members.forEach (function(member) {
+                maxFunctionCount++;
+                if (setting == "delete")
+                    member.auth = '';
+                if (setting == "insert")
+                    member.auth = relationKey;
+                exports.SaveMember(member, function(error, result) {
+                    if (!error) {
+                        count++;
+                        if (count >= maxFunctionCount)
+                            next(null, 'all done');
+                    }
+                    else 
+                        next(error);
+                });
+            });
+        }
+        else 
+            next(error);
+    });
+}
+

@@ -56,6 +56,9 @@ passport.use(new FacebookStrategy({
                         var getMember = final[0];
                         if (!error) {
                             entity.link = getMember;
+                            entity.link.userPhoto = profile.photos[0].value;
+                            var name = profile.displayName ? profile.displayName : profile.username;
+                            entity.link.userName = name; 
                         }
                         console.log(result);
                         var addPhoto = {

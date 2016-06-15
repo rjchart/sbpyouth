@@ -1,8 +1,178 @@
 extends setting
+block script
+    script.
+        $(document).ready(function(){
+            $('.ui.dropdown').dropdown();
+        });
+
+        function SubmitButton () {
+            $('#auth').submit();
+        }
+
+        function DeleteMember (pKey, rKey) {
+            var data = {
+                PartitionKey: pKey,
+                RowKey: rKey
+            }
+            $.ajax({
+                url: "/setting/deleteLink",
+                type: "post",
+                data: data,
+                dataType: "json",
+                success: function(data) {
+                    alert('삭제 성공했습니다.');
+                    location.href="/setting/auth";
+                },
+                error: function(xhr) {
+                    alert('삭제 실패했습니다.');
+                }
+            });
+        }
+
+        function Delete(key, target, relation) {
+            var data = {
+                key: key,
+                target: target,
+                relation: relation
+            }
+
+            $.ajax({
+                url: "/setting/delete/" + relation,
+                type: "post",
+                data: data,
+                dataType: "json",
+                success: function(data) {
+                    console.log("success");
+                    var alertString = data.target + "님이 목록에서 제거되었습니다."
+                    alert(alertString);
+                    location.href="/setting/auth";
+                },
+                error: function(request) {
+                    alert("작업에 실패하였습니다.");
+                }
+            });
+        }
+
+        function Insert(relation) {
+            var getID = "#insert_" + relation;
+            $(getID).ajaxSubmit({
+                success: function(data) {
+                    console.log("success");
+                    var alertString = data.target + "님이 목록에 추가되었습니다."
+                    alert(alertString);
+                    location.href="/setting/auth";
+                },
+                error: function(request) {
+                    alert("작업에 실패하였습니다.");
+                }
+            });
+        }
+			
 block sub_item04
     a.active.sub.item(href="/setting") 권한
 block sub_content
     div.main.ui.container
-        div.two.column.grid
-            div.column
-                include big_profile_template
+        div.ui.raised.segment
+            h4.ui.header 
+                | 등록 안된 사람들 리스트
+            form#auth(action="/setting/auth", method="post")
+                div.ui.relaxed.celled.list
+                    div.item
+                        div.ui.grid
+                            each user in unlinkUsers
+                                div.four.wide.column
+                                    i.large.user.middle.aligned.icon
+                                    | #{user.name} :  
+                                    div.ui.compact.selection.dropdown
+                                        input(type="hidden" name="#{user.PartitionKey}&&#{user.RowKey}")
+                                        i.dropdown.icon
+                                        div.defult.text 맴버 선택
+                                        div.menu
+                                            each member, index in members
+                                                div.item(data-value="#{member.PartitionKey}&&#{member.RowKey}") #{member.RowKey}
+                    if unlinkUsers.length > 0
+                        div.item
+                            div.right.floated.content
+                                div.ui.red.button(onclick="SubmitButton()") Submit
+            h4.ui.header 
+                | 등록된 사람들 리스트
+            form#delete(action="/setting/delete", method="post")
+                div.ui.relaxed.celled.list
+                    div.item
+                        div.ui.grid
+                            each user in linkUsers
+                                div.four.wide.column
+                                    input(type="hidden" name="#{user.PartitionKey}&&#{user.RowKey}")
+                                    div.right.floated.content
+                                        div.ui.mini.red.button(onclick="DeleteMember('#{user.PartitionKey}','#{user.RowKey}')") 연결끊기
+                                    i.large.user.middle.aligned.icon
+                                    | #{user.name} : #{user.linkR}
+        div.ui.raised.segment
+            h4.ui.header 
+                | 관리자 권한 리스트
+            div.ui.relaxed.celled.list
+                div.item
+                    div.ui.grid
+                        each manager, index in managers
+                            div.four.wide.column
+                                div.right.floated.content
+                                    div.ui.mini.button(onclick="Delete('#{PartitionKey}','#{RowKey}','#{manager}', 'manager')") Delete
+                                i.large.setting.middle.aligned.icon
+                                | #{manager.RowKey}
+                div.item
+                    div.content
+                        form#insert_manager(action="/setting/insert/manager", method="post")
+                            input(type="hidden", name="key", value="#{PartitionKey}")
+                            input(type="hidden", name="member", value="#{RowKey}")
+                            input(type="hidden", name="relation", value="manager")
+                            div.ui.grid
+                                div.three.wide.column
+                                    div.ui.mini.input.focus
+                                        input(type="text", placeholder="이름", name="target[0]")
+                                div.three.wide.column
+                                    div.ui.mini.input.focus
+                                        input(type="text", placeholder="이름", name="target[1]")
+                                div.three.wide.column
+                                    div.ui.mini.input.focus
+                                        input(type="text", placeholder="이름", name="target[2]")
+                                div.three.wide.column
+                                    div.ui.mini.input.focus
+                                        input(type="text", placeholder="이름", name="target[3]")
+                                div.one.wide.column
+                                div.three.wide.column
+                                    div.ui.mini.button(onclick="Insert('manager')")
+                                        i.large.add.user.middle.aligned.icon 
+                                        |Add
+            h4.ui.header 
+                | 임원 권한 리스트
+            div.ui.relaxed.celled.list
+                div.item
+                    div.ui.grid
+                        each executive, index in executives
+                            div.four.wide.column
+                                div.right.floated.content
+                                    div.ui.mini.button(onclick="Delete('#{executive.PartitionKey}', '#{executive.RowKey}', 'executive')") Delete
+                                i.large.fire.middle.aligned.icon
+                                | #{executive.RowKey}
+                div.item
+                    div.content
+                        form#insert_executive(action="/setting/insert/executive", method="post")
+                            input(type="hidden", name="relation", value="executive")
+                            div.ui.grid
+                                div.three.wide.column
+                                    div.ui.mini.input.focus
+                                        input(type="text", placeholder="이름", name="target[0]")
+                                div.three.wide.column
+                                    div.ui.mini.input.focus
+                                        input(type="text", placeholder="이름", name="target[1]")
+                                div.three.wide.column
+                                    div.ui.mini.input.focus
+                                        input(type="text", placeholder="이름", name="target[2]")
+                                div.three.wide.column
+                                    div.ui.mini.input.focus
+                                        input(type="text", placeholder="이름", name="target[3]")
+                                div.one.wide.column
+                                div.three.wide.column
+                                    div.ui.mini.button(onclick="Insert('executive')")
+                                        i.large.add.user.middle.aligned.icon 
+                                        |Add

@@ -47,8 +47,6 @@ router.get('/secret', function (req, res, next) {
     var entity;
     entity = req.session.passport.user.entity;
     if (entity.link) {
-        entity.link.userPhoto = entity.photo;
-        entity.link.userName = entity.name;
         res.render('settingSecret', entity.link);
     }
     else 
@@ -75,7 +73,7 @@ router.get('/amend', function (req, res, next) {
 router.post('/saveUserSet', function (req, res, next) {
     var link;
     var id = '';
-    if (req.session.passport) {
+    if (req.session.passport && req.session.passport.user.entity.link) {
         link = req.session.passport.user.entity.link;
         id = link.RowKey;
     }
@@ -113,41 +111,163 @@ router.post('/saveUserSet', function (req, res, next) {
         else 
             next(error);
     });
-    // form.on('part', function(part) {
-	//     if (!part.filename) {
-	// 		console.log('none');
-	//     }
-	//     else {
-    //         var id = '이제희';
-	// 		var filename = id + new Date().toISOString() + ".jpg";
-	// 		var size = part.byteCount;
-	// 		var size2 = part.byteCount - part.byteOffset;
-	// 		var name = filename;
-	// 		var container = 'imgcontainer';
+});
 
-	//     	console.log("part:" + filename + ", size:" + size + ", size2:" + size2);
-	// 		var urlString = "https://sbpccyouth.blob.core.windows.net/" + container + "/" + filename;
-	//     }
-    // });
+router.get('/auth', function (req, res, next) {
+    // if (!req.session.passport) {
+    //     res.redirect('/auth/login?ret=setting/secret');
+    //     return;
+    // }
+    // var entity;
+    // entity = req.session.passport.user.entity;
+    // if (entity.link) {
+        var input = {};
+        var maxCount = 2;
+        var count = 0;
+        sbp_member.GetUsersWithQuery(null,function (error, result) {
+            if (!error) {
+                var unlinkUsers = [];
+                var linkUsers = [];
+                result.forEach(function(user) {
+                    if (user.linkP && user.linkP != '')
+                        linkUsers.push(user);
+                    else 
+                        unlinkUsers.push(user);
+                });
+                input.linkUsers = linkUsers;
+                input.unlinkUsers = unlinkUsers;
+                count++;
+                if (count >= maxCount)
+                    res.render('settingAuth', input);
+            }   
+            else {
+                res.status(500).send('맴버의 정보를 가져오지 못했습니다. 인터넷 상황을 확인 바랍니다.');
+                return;
+            } 
+        });
+        
+        sbp_member.GetMembersWithQuery(null,function (error, result) {
+            if (!error) {
+                var managers = [];
+                var executives = [];
+                var normals = [];
+                result.forEach(function(user) {
+                    if (user.auth && user.auth != '') {
+                        if (user.auth == 'manager')
+                            managers.push(user);
+                        else
+                            executives.push(user);
+                    }
+                    else 
+                        normals.push(user);
+                });
+                input.normals = normals;
+                input.executives = executives;
+                input.managers = managers;
+                input.members = result;
+                count++;
+                if (count >= maxCount)
+                    res.render('settingAuth', input);
+            }   
+            else {
+                res.status(500).send('맴버의 정보를 가져오지 못했습니다. 인터넷 상황을 확인 바랍니다.');
+                return;
+            } 
+        });
+        // entity.link.userPhoto = entity.photo;
+        // entity.link.userName = entity.name;
+    // }
+    // else {
+    //     res.status(500).send('회원 정보가 존재하지 않습니다.');
+    //     return;
+    // }
+});
 
-    // form.parse(req);
-    // form.parse(req, function(err, fields, files) {
-    //     var entity = {};
-    //     for (var key in fields) {
-    //         entity[key] = fields[key][0];
-    //     }
-    //     if (entity.length != 0) {
-    //         sbp_member.SaveMember(entity, function (error, result) {
-    //             if(!error) {
-    //                 if (link) {
-    //                     for (var key in fields) {
-    //                         link[key] = fields[key][0];
-    //                     }
-    //                 }
-    //                 // res.send('ok');
-    //             }
-    //         });
-    //     }
-    // });
+router.post('/auth', function (req, res, next) {
+    var body = req.body;
+    var input = [];
+    for (var key in req.body) {
+        var data = {};
+        var value = req.body[key]; 
+        if (!value || value == '')
+            continue;
+        var strList = key.split("&&"); 
+        data.PartitionKey = strList[0];
+        data.RowKey = strList[1];
+        var linkList = value.split("&&");
+        data.linkP = linkList[0];
+        data.linkR = linkList[1];
+        input.push(data);
+    }
+    if (input.length == 0) {
+        // res.status(500).send('등록할 정보가 없습니다.');
+        res.redirect('/setting/auth');
+        return;
+    }
+    sbp_member.SaveUsers(input, function (error, result) {
+        if (!error) {
+            res.redirect('/setting/auth');
+        }
+        else {
+            res.status(500).send(error);
+        }
+    });
 
+});
+
+
+router.post('/deleteLink', function (req, res, next) {
+    var body = req.body;
+    body.linkP = '';
+    body.linkR = '';
+    sbp_member.SaveUser(body, function (error, result) {
+        if (!error) {
+            // res.redirect('/setting/auth');
+            var data = {
+                result:true
+            }
+            res.send(data);
+            return;
+        }
+        else {
+            res.status(500).send(error);
+        }
+    });
+});
+
+router.post('/delete/:id', function (req, res, next) {
+    var id = req.params.id;
+    var key = req.body.target;
+    var target = req.body.target;
+    var targets = [];
+    targets.push(target);
+    sbp_member.SetAuth(targets, id, 'delete', function (error, result) {
+        if (!error) {
+            res.send(req.body);
+        }
+        else 
+            console.log('error: ' + error);
+    });
+});
+
+router.post('/insert/:id', function (req, res, next) {
+    var id = req.params.id;
+    var targets = req.body.target;
+    var target = [];
+    targets.forEach(function (item) {
+        if (item && item != '')
+            target.push(item);
+    });
+    req.body.target = target;
+    if (target.length > 0) {
+        sbp_member.SetAuth(target, id, 'insert', function (error, result) {
+            if (!error) {
+                res.send(req.body);
+            }
+            else 
+                console.log('error: ' + error);
+        });
+    }
+    else 
+        res.send(req.body);
 });
