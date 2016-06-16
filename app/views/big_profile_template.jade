@@ -37,10 +37,16 @@ div.ui.raised.segment
                                         |#{data.mail}
                         div.item
                             i.big.tag.middle.aligned.icon
-                            div.content
-                                div.header 브랜치
-                                    div.description(style="color:gray")
-                                        |#{data.branch}
+                            if data.branch
+                                div.content
+                                    div.header 브랜치
+                                        div.description(style="color:gray")
+                                            |#{data.branch}
+                            else 
+                                div.content
+                                    div.header 봉사 부서
+                                        div.description(style="color:gray")
+                                            |#{data.service}
                         div.item
                             i.big.building.middle.aligned.icon
                             div.content

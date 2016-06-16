@@ -251,7 +251,7 @@ router.post('/branch_profile', function (req, res, next) {
                 getData.branch = inputData.branch; // req.body.branch
                 getData.attend = inputData.attend; // req.body.attend
                 getData.attendString = sbp_member.AttendToString(getData.attend);
-                gatData.charge = req.body.charge;
+                getData.charge = inputData.charge;
                 getData.year = req.body.year;
                 getData.title = title;
                 if (user.auth && user.auth != '') {

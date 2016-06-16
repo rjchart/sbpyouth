@@ -2,7 +2,7 @@ function profile_template(locals) {
 var buf = [];
 var jade_mixins = {};
 var jade_interp;
-;var locals_for_with = (locals || {});(function (attendDesc, birthDay, birthMonth, birthYear, branch, gender, locate, mail, mustShow, name, phone, photo, showLocate, showMail, showPhone, userPhoto, usingPhoto) {
+;var locals_for_with = (locals || {});(function (birthDay, birthMonth, birthYear, branch, gender, locate, mail, mustShow, name, phone, photo, showLocate, showMail, showPhone, userPhoto, usingPhoto) {
 buf.push("<div class=\"ui card\"><div style=\"background-color:#e5e5e5\" class=\"image outImg\">");
 if ( (usingPhoto == 'true'))
 {
@@ -16,34 +16,34 @@ else
 {
 buf.push("<img src=\"/public/img/image.png\" class=\"fitImg\"/>");
 }
-buf.push("</div><div class=\"content\"><a class=\"header\">" + (jade.escape((jade_interp = name) == null ? '' : jade_interp)) + "</a><div class=\"meta\"><span class=\"date\">" + (jade.escape((jade_interp = birthYear) == null ? '' : jade_interp)) + "." + (jade.escape((jade_interp = birthMonth) == null ? '' : jade_interp)) + "." + (jade.escape((jade_interp = birthDay) == null ? '' : jade_interp)) + "</span></div><div class=\"ui relaxed celled list\"><div class=\"item\"><i class=\"big heterosexual middle aligned icon\"></i><div class=\"content\"><div class=\"header\">성별<div style=\"color:gray\" class=\"description\"></div>" + (jade.escape((jade_interp = gender) == null ? '' : jade_interp)) + "</div></div></div><div class=\"item\"><i class=\"big phone middle aligned icon\"></i><div class=\"content\"><div class=\"header\">전화번호");
+buf.push("</div><div class=\"content\"><a class=\"header\">" + (jade.escape((jade_interp = name) == null ? '' : jade_interp)) + "</a><div class=\"meta\"><span class=\"date\">" + (jade.escape((jade_interp = birthYear) == null ? '' : jade_interp)) + "." + (jade.escape((jade_interp = birthMonth) == null ? '' : jade_interp)) + "." + (jade.escape((jade_interp = birthDay) == null ? '' : jade_interp)) + "</span></div><div class=\"ui relaxed celled list\"><div class=\"item\"><i class=\"big heterosexual middle aligned icon\"></i><div class=\"content\"><div class=\"header\">성별<div style=\"color:gray\" class=\"description\">" + (jade.escape((jade_interp = gender) == null ? '' : jade_interp)) + "</div></div></div></div><div class=\"item\"><i class=\"big tag middle aligned icon\"></i><div class=\"content\"><div class=\"header\">브랜치<div style=\"color:gray\" class=\"description\">" + (jade.escape((jade_interp = branch || '') == null ? '' : jade_interp)) + "</div></div></div></div><div class=\"item\"><i class=\"big phone middle aligned icon\"></i><div class=\"content\"><div class=\"header\">전화번호");
 if ( showPhone == "true" || mustShow == true)
 {
-buf.push("<div style=\"color:gray\" class=\"description\"></div>" + (jade.escape((jade_interp = phone) == null ? '' : jade_interp)) + "");
+buf.push("<div style=\"color:gray\" class=\"description\">" + (jade.escape((jade_interp = phone) == null ? '' : jade_interp)) + "</div>");
 }
 else
 {
-buf.push("<div style=\"color:gray\" class=\"description\"></div>비공개");
+buf.push("<div style=\"color:gray\" class=\"description\">비공개</div>");
 }
-buf.push("</div></div></div><div class=\"item\"><i class=\"big tag middle aligned icon\"></i><div class=\"content\"><div class=\"header\">브랜치<div style=\"color:gray\" class=\"description\"></div>" + (jade.escape((jade_interp = branch || '') == null ? '' : jade_interp)) + "</div></div></div><div class=\"item\"><i class=\"big mail middle aligned icon\"></i><div class=\"content\"><div class=\"header\">메일");
+buf.push("</div></div></div><div class=\"item\"><i class=\"big mail middle aligned icon\"></i><div class=\"content\"><div class=\"header\">메일");
 if ( showMail == "true" || mustShow == true)
 {
-buf.push("<div style=\"color:gray\" class=\"description\"></div>" + (jade.escape((jade_interp = mail || '') == null ? '' : jade_interp)) + "");
+buf.push("<div style=\"color:gray\" class=\"description\">" + (jade.escape((jade_interp = mail || '') == null ? '' : jade_interp)) + "</div>");
 }
 else
 {
-buf.push("<div style=\"color:gray\" class=\"description\"></div>비공개");
+buf.push("<div style=\"color:gray\" class=\"description\">비공개</div>");
 }
 buf.push("</div></div></div><div class=\"item\"><i class=\"big building middle aligned icon\"></i><div class=\"content\"><div class=\"header\">거주지");
 if ( showLocate == "true" || mustShow == true)
 {
-buf.push("<div style=\"color:gray\" class=\"description\"></div>" + (jade.escape((jade_interp = locate || '') == null ? '' : jade_interp)) + "");
+buf.push("<div style=\"color:gray\" class=\"description\">" + (jade.escape((jade_interp = locate || '') == null ? '' : jade_interp)) + "</div>");
 }
 else
 {
-buf.push("<div style=\"color:gray\" class=\"description\"></div>비공개");
+buf.push("<div style=\"color:gray\" class=\"description\">비공개</div>");
 }
-buf.push("</div></div></div><div class=\"item\"><i class=\"big comment middle aligned icon\"></i><div class=\"content\"><div class=\"header\">비고<div style=\"color:gray\" class=\"description\"></div>" + (jade.escape((jade_interp = attendDesc || '') == null ? '' : jade_interp)) + "</div></div></div></div></div></div>");}.call(this,"attendDesc" in locals_for_with?locals_for_with.attendDesc:typeof attendDesc!=="undefined"?attendDesc:undefined,"birthDay" in locals_for_with?locals_for_with.birthDay:typeof birthDay!=="undefined"?birthDay:undefined,"birthMonth" in locals_for_with?locals_for_with.birthMonth:typeof birthMonth!=="undefined"?birthMonth:undefined,"birthYear" in locals_for_with?locals_for_with.birthYear:typeof birthYear!=="undefined"?birthYear:undefined,"branch" in locals_for_with?locals_for_with.branch:typeof branch!=="undefined"?branch:undefined,"gender" in locals_for_with?locals_for_with.gender:typeof gender!=="undefined"?gender:undefined,"locate" in locals_for_with?locals_for_with.locate:typeof locate!=="undefined"?locate:undefined,"mail" in locals_for_with?locals_for_with.mail:typeof mail!=="undefined"?mail:undefined,"mustShow" in locals_for_with?locals_for_with.mustShow:typeof mustShow!=="undefined"?mustShow:undefined,"name" in locals_for_with?locals_for_with.name:typeof name!=="undefined"?name:undefined,"phone" in locals_for_with?locals_for_with.phone:typeof phone!=="undefined"?phone:undefined,"photo" in locals_for_with?locals_for_with.photo:typeof photo!=="undefined"?photo:undefined,"showLocate" in locals_for_with?locals_for_with.showLocate:typeof showLocate!=="undefined"?showLocate:undefined,"showMail" in locals_for_with?locals_for_with.showMail:typeof showMail!=="undefined"?showMail:undefined,"showPhone" in locals_for_with?locals_for_with.showPhone:typeof showPhone!=="undefined"?showPhone:undefined,"userPhoto" in locals_for_with?locals_for_with.userPhoto:typeof userPhoto!=="undefined"?userPhoto:undefined,"usingPhoto" in locals_for_with?locals_for_with.usingPhoto:typeof usingPhoto!=="undefined"?usingPhoto:undefined));;return buf.join("");
+buf.push("</div></div></div></div></div></div>");}.call(this,"birthDay" in locals_for_with?locals_for_with.birthDay:typeof birthDay!=="undefined"?birthDay:undefined,"birthMonth" in locals_for_with?locals_for_with.birthMonth:typeof birthMonth!=="undefined"?birthMonth:undefined,"birthYear" in locals_for_with?locals_for_with.birthYear:typeof birthYear!=="undefined"?birthYear:undefined,"branch" in locals_for_with?locals_for_with.branch:typeof branch!=="undefined"?branch:undefined,"gender" in locals_for_with?locals_for_with.gender:typeof gender!=="undefined"?gender:undefined,"locate" in locals_for_with?locals_for_with.locate:typeof locate!=="undefined"?locate:undefined,"mail" in locals_for_with?locals_for_with.mail:typeof mail!=="undefined"?mail:undefined,"mustShow" in locals_for_with?locals_for_with.mustShow:typeof mustShow!=="undefined"?mustShow:undefined,"name" in locals_for_with?locals_for_with.name:typeof name!=="undefined"?name:undefined,"phone" in locals_for_with?locals_for_with.phone:typeof phone!=="undefined"?phone:undefined,"photo" in locals_for_with?locals_for_with.photo:typeof photo!=="undefined"?photo:undefined,"showLocate" in locals_for_with?locals_for_with.showLocate:typeof showLocate!=="undefined"?showLocate:undefined,"showMail" in locals_for_with?locals_for_with.showMail:typeof showMail!=="undefined"?showMail:undefined,"showPhone" in locals_for_with?locals_for_with.showPhone:typeof showPhone!=="undefined"?showPhone:undefined,"userPhoto" in locals_for_with?locals_for_with.userPhoto:typeof userPhoto!=="undefined"?userPhoto:undefined,"usingPhoto" in locals_for_with?locals_for_with.usingPhoto:typeof usingPhoto!=="undefined"?usingPhoto:undefined));;return buf.join("");
 }
 function profile_edit(locals) {
 var buf = [];

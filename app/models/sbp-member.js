@@ -27,6 +27,8 @@ function SetEntityGen (entity) {
     for (var key in entity) {
         var value = entity[key];
         var valueType = typeof value;
+        if (value == null)
+            value = '';
         // console.log(valueType);
         if (key == "PartitionKey" || key == "RowKey")
             entity[key] = entGen.String(value.toString());
@@ -890,11 +892,29 @@ module.exports.GetUsersWithQuery = function (queryString, next, top) {
     });  
 }
 
+
+module.exports.FindUser = function (provider, id, next) {
+    var query = new azure.TableQuery()
+    .top(1)
+    .where('PartitionKey eq ? and RowKey eq ?', provider.toString(), id.toString());
+    tableService.queryEntities('users', query, null, function (error, result) {
+        if (!error) {
+            RemoveEntityGenList(result.entries);
+            if (result.entries[0])
+                return next(null, result.entries[0]);
+            else
+                return next("Not found", null);
+        }
+        else 
+            return next(error, null);
+    });  
+}
+
 module.exports.SaveUser = function (entity, next) {
     SetEntityGen(entity);
     
 	// 데이터베이스에 entity를 추가합니다.
-	tableService.insertOrMergeEntity('users', entity, function(error, result, res) {
+	tableService.insertOrMergeEntity('users', entity, function(error, result) {
 		if (!error) {
             next (null, result);
 		}

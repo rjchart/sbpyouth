@@ -59,7 +59,6 @@ block sub_content
 										td
 											if item.arm.length > i 
 												label#profile(onclick="ProfileBS('#{item.arm[i].RowKey}','#{year}','#{item.arm[i].branch}','#{item.arm[i].attend}')") #{item.arm[i].RowKey}
-									td
 								- }
 								- for(var i = 0; i < maxLength.out; i++) {
 								tr 
@@ -70,7 +69,6 @@ block sub_content
 										td
 											if item.out.length > i 
 												label#profile(onclick="ProfileBS('#{item.out[i].RowKey}','#{year}','#{item.out[i].branch}','#{item.out[i].attend}')") #{item.out[i].RowKey}
-									td
 								- }
 			div#profileData.four.wide.column
 				include profile

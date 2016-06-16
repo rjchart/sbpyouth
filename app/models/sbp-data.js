@@ -102,8 +102,16 @@ module.exports.CheckLogin = function (req) {
 			title: title
 		};
     }
-    var entity = req.session.passport.user.entity;
-	entity.link.isLogin = true;
-	entity.link.title = title;
-	return entity.link;
+	if (!req.session.passport.user.link) {
+		return {
+			title: title,
+			isLogin: true,
+			isLink: false
+		};
+	}
+    var link = req.session.passport.user.link;
+	link.isLogin = true;
+	link.isLink = true;
+	link.title = title;
+	return link;
 }

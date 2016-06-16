@@ -48,59 +48,14 @@ passport.use(new FacebookStrategy({
         profileFields: ['id', 'displayName', 'name', 'gender', 'picture.type(large)']
     },function(accessToken, refreshToken, profile, done) {
         console.log("profile: " + profile.displayName)
-        sbp_user.FindUser('facebook', profile.id, function (error, result) {
+        var name = profile.displayName ? profile.displayName : profile.username;
+        var image = profile.photos[0].value;
+        sbp_user.UserDataFunction(profile, name, image, function (error, result) {
             if (!error) {
-                var entity = result;
-                profile.entity = entity;
-                if (result.linkP != null && result.linkP != '') {
-                    sbp_member.GetMemberAndLogWithName(result.linkR, function (error, final) {
-                        var getMember = final[0];
-                        if (!error) {
-                            entity.link = getMember;
-                            entity.link.userPhoto = profile.photos[0].value;
-                            var name = profile.displayName ? profile.displayName : profile.username;
-                            entity.link.userName = name; 
-                        }
-                        console.log(result);
-                        var addPhoto = {
-                            PartitionKey: getMember.PartitionKey,
-                            RowKey: getMember.RowKey,
-                            userPhoto: profile.photos[0].value
-                        }
-                        sbp_member.SaveMember(addPhoto, function (error, reult) {});
-
-                        return done(null, profile);
-                    });
-                }
-                else
-                    return done(null, profile);
+                done(null, result);
             }
-            else {
-                console.log(error);
-                var name = profile.displayName ? profile.displayName : profile.username;
-                var entity = {
-                    PartitionKey: 'facebook',
-                    RowKey: profile.id,
-                    name: name,
-                    data: profile._raw,
-                    photo: profile.photos[0].value,
-                    gender: profile.gender,
-                    linkP: '',
-                    linkR: ''
-                }
-                profile.entity = entity;    
-                
-                sbp_user.SaveUser(entity, function (error, result) {
-                    if (!error) {
-                        return done(null, profile);
-                    }
-                    else {
-                        console.log(error);
-                        return done(null, profile);
-                    }
-                });
-                
-            }
+            else 
+                done(error);
         });
         
 }));
@@ -151,24 +106,19 @@ passport.use(new GoogleStrategy({
 
 passport.use(new KakaoStrategy({
     clientID : pkginfo.oauth.kakao.KAKAO_CLIENT_ID,
-    callbackURL : pkginfo.oauth.kakao.callbackURL
+    callbackURL : pkginfo.oauth.kakao.callbackURL,
+    profileFields: ['id', 'displayName', 'name', 'profile_image', 'picture.type(large)']
   },
   function(accessToken, refreshToken, profile, done){
-    // 사용자의 정보는 profile에 들어있다. 
-    // User.findOrCreate(..., function(err, user) {
-    //   if (err) { return done(err); }
-    //   done(null, user);
-    // });
         var name = profile.displayName ? profile.displayName : profile.username;
-        var entity = {
-            profile_id: profile.id,
-            name: name,
-            provider: 'kakao',
-            data: profile._raw
-        }
-        profile.entity = entity;
-        console.log("kakao: " + profile._raw);
-        return done(null, profile);
+        var image = profile._json.properties.profile_image;
+        sbp_user.UserDataFunction(profile, name, image, function (error, result) {
+            if (!error) {
+                done(null, result);
+            }
+            else 
+                done(error);
+        });
   }
 ));
 
@@ -246,7 +196,7 @@ router.get('/logout', function(req, res){
 // req.session.passport 의 정보를 삭제한다.
 //
     req.logout();
-    res.redirect('/auth/login');
+    res.redirect('/');
 });
 
 router.get('/login', function (req, res) {
@@ -254,7 +204,7 @@ router.get('/login', function (req, res) {
     if (getReturn)
         redirectURL = "../" + getReturn;
     var session_name;
-    if (req.session.passport) {
+    if (req.session.passport && req.session.passport.user) {
         if (redirectURL != "/auth/login") {
             res.redirect(redirectURL);
             return;

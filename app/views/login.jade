@@ -21,46 +21,49 @@ block content
             h2.ui.blue.image.header
                 img.image(src="/public/img/logo.png")
                 div.content 신반포 중앙교회 청년부 로그인
-                if name
-                    div Login with #{name}
             form.ui.large.form
                 div.ui.stacked.segment
-                    div.field
-                        div.ui.left.icon.input
-                            i.user.icon
-                            input(type="text" name="email" placeholder="E-mail address")
-                    div.field
-                        div.ui.left.icon.input
-                            i.lock.icon
-                            input(type="password" name="password" placeholder="Password")
-                    .ui.fluid.large.black.submit.button Login
-                    div.ui.horizontal.divider OR
+                    //- div.field
+                    //-     div.ui.left.icon.input
+                    //-         i.user.icon
+                    //-         input(type="text" name="email" placeholder="E-mail address")
+                    //- div.field
+                    //-     div.ui.left.icon.input
+                    //-         i.lock.icon
+                    //-         input(type="password" name="password" placeholder="Password")
+                    //- .ui.fluid.large.black.submit.button Login
+                    //- div.ui.horizontal.divider OR
                     a.ui.fluid.large.facebook.button(href="/auth/facebook")
                         i.facebook.icon 
-                        |페이스북 계정으로 로그인
-                    br
-                    a.ui.fluid.large.twitter.button(href="/auth/twitter")
-                        i.twitter.icon 
-                        |트위터 계정으로 로그인
-                    br
-                    a.ui.fluid.large.instagram.button(href="/auth/instagram")
-                        i.instagram.icon 
-                        |인스타그램 계정으로 로그인
-                    br
-                    a.ui.fluid.large.google.plus.button(href="/auth/google")
-                        i.google.plus.icon 
-                        |구글 플러스 계정으로 로그인
-                    br
-                    button.ui.fluid.large.button(style="background-color:#1EC800")
-                        i.image.icon
-                            img(src="/public/img/icon_naver.png" style="max-height:100%")
-                        span(style="color:white") 네이버 계정으로 로그인
+                        |페이스북 계정으로 접속
+                    //- br
+                    //- a.ui.fluid.large.twitter.button(href="/auth/twitter")
+                    //-     i.twitter.icon 
+                    //-     |트위터 계정으로 로그인
+                    //- br
+                    //- a.ui.fluid.large.instagram.button(href="/auth/instagram")
+                    //-     i.instagram.icon 
+                    //-     |인스타그램 계정으로 로그인
+                    //- br
+                    //- a.ui.fluid.large.google.plus.button(href="/auth/google")
+                    //-     i.google.plus.icon 
+                    //-     |구글 플러스 계정으로 로그인
+                    //- br
+                    //- button.ui.fluid.large.button(style="background-color:#1EC800")
+                    //-     i.image.icon
+                    //-         img(src="/public/img/icon_naver.png" style="max-height:100%")
+                    //-     span(style="color:white") 네이버 계정으로 로그인
                     br
                     a.ui.fluid.large.button(style="background-color:yellow", href="/auth/kakao")
                         i.image.icon
                             img(src="/public/img/icon_kakao.png" style="max-height:130%")
-                        span(style="color:black") 카카오 계정으로 로그인
+                        span(style="color:black") 카카오 계정으로 접속
                 div.ui.error.message
-            div.ui.message New to us? 
-                a(a href="#") Sign up
+            div.ui.bottom.attached.warning.message
+                i.icon.help
+                |현 사이트는 회원 이메일과 비밀번호 관리가 귀찮아서
+                br 
+                |다른 사이트를 통한 접속만 지원합니다.
+            //- div.ui.message New to us? 
+            //-     a(a href="#") Sign up
 

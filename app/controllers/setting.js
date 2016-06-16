@@ -22,53 +22,70 @@ module.exports = function (app) {
 };
 
 router.get('/', function (req, res, next) {
-    if (!req.session.passport || !req.session.passport.user) {
+    var user = sbp_data.CheckLogin(req);
+    if (!user.isLogin) {
         res.redirect('/auth/login?ret=setting');
+        return;
+    }
+    else if (!user.isLink) {
+        res.redirect('/setting/nolink');
         return;
     }
     // var session_name, entity;
     // session_name = req.session.passport.user.displayName;
     var entity = req.session.passport.user.entity;
-    if (entity.link) {
-        // entity.link.userPhoto = entity.photo;
-        // entity.link.userName = entity.name;
+    if (user.isLink) {
         res.render('settingProfile', {
-            title: title,
-            data:entity.link
-        });
+                title: user.title,
+                isLogin: user.isLogin,
+                isLink: user.isLink,
+                auth: user.auth,
+                data: user
+            });
+        // user.data = null;
     }
+});
+
+router.get('/nolink', function (req, res, next) {
+    var user = sbp_data.CheckLogin(req);
+    if (!user.isLogin) {
+        res.redirect('/auth/login?ret=setting');
+        return;
+    }
+    else if (user.isLink) {
+        res.redirect('/setting');
+        return;
+    }
+
+    res.render('settingNolink', user);
 });
 
 router.get('/secret', function (req, res, next) {
-    if (!req.session.passport) {
+    var user = sbp_data.CheckLogin(req);
+    if (!user.isLogin) {
         res.redirect('/auth/login?ret=setting/secret');
         return;
     }
-    var entity;
-    entity = req.session.passport.user.entity;
-    if (entity.link) {
-        entity.link.title = title;
-        res.render('settingSecret', entity.link);
+    else if (!user.isLink) {
+        res.redirect('/');
+        return;
     }
-    else 
-        res.send('error');
+    res.render('settingSecret', user);
 });
 
 router.get('/amend', function (req, res, next) {
-    if (!req.session.passport) {
+    var user = sbp_data.CheckLogin(req);
+    
+    if (!user.isLogin) {
         res.redirect('/auth/login?ret=setting/amend');
         return;
     }
-    var entity;
-    entity = req.session.passport.user.entity;
-    if (entity.link) {
-        entity.link.title = title;
-        // entity.link.userPhoto = entity.photo;
-        // entity.link.userName = entity.name;
-        res.render('settingAmend', entity.link);
+    else if (!user.isLink) {
+        res.redirect('/');
+        return;
     }
-    else 
-        res.send('error');
+
+    res.render('settingAmend', user);
 });
 
 
@@ -107,6 +124,16 @@ router.post('/saveUserSet', function (req, res, next) {
 });
 
 router.get('/auth', function (req, res, next) {
+    var user = sbp_data.CheckLogin(req);
+    
+    // if (!user.isLogin) {
+    //     res.redirect('/auth/login?ret=setting/amend');
+    //     return;
+    // }
+    // else if (!user.isLink) {
+    //     res.redirect('/');
+    //     return;
+    // }
     // if (!req.session.passport) {
     //     res.redirect('/auth/login?ret=setting/secret');
     //     return;
@@ -130,6 +157,8 @@ router.get('/auth', function (req, res, next) {
                 input.title = title;
                 input.linkUsers = linkUsers;
                 input.unlinkUsers = unlinkUsers;
+                input.isLogin = user.isLogin;
+                input.isLink = user.isLink;
                 count++;
                 if (count >= maxCount)
                     res.render('settingAuth', input);
@@ -162,6 +191,8 @@ router.get('/auth', function (req, res, next) {
                 input.executives = executives;
                 input.managers = managers;
                 input.members = result;
+                input.isLogin = user.isLogin;
+                input.isLink = user.isLink;
                 input.title = title;
                 count++;
                 if (count >= maxCount)

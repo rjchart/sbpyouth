@@ -21,6 +21,7 @@ block script
 				xhttp.send(JSON.stringify(data));
 				xhttp.onreadystatechange = function() {
 					document.getElementById('profileData').innerHTML = xhttp.responseText;
+					$('#profileData').show();
 				}
 				
 				//- $.ajax({
@@ -62,6 +63,10 @@ block script
 					.modal('show');
 					
 			}
+
+			$(document).ready(function(){
+				$('#profileData').hide();
+			});
 			
 			var addMemberNumber = 1;
 			function PlusAddMember () {
@@ -171,12 +176,13 @@ block content
 				- });
 			if auth=="manager" || auth=="executive" || auth=="developer" 
 				div.ui.right.small.menu
-					if auth=="manager" || auth=="developer"
+					if auth=="manager" || auth=="developer" || auth=="executive"
 						button.ui.blue.primary.labeled.icon.button(onclick="AddBranchButton()")
 							i.user.icon 
 							|Edit Branch
-					button.ui.red.button(onclick="MakeBranchButton()")
-						|Make Branch
+					if auth=="manager" || auth=="developer"
+						button.ui.red.button(onclick="MakeBranchButton()")
+							|Make Branch
 	block sub_content
 	block modal_content
 		div.ui.edit.modal

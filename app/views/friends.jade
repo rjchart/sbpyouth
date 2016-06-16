@@ -28,6 +28,7 @@ block script
 					else
 						html = window.profile_edit(data);
 					document.getElementById("profileData").innerHTML = html;
+					$('#profileData').show();
 
 					if (isPowerEditable) {
 						var detail = window.detailProfile_template(data);
@@ -374,6 +375,7 @@ block script
 					TypeSearch();
 			});
 			$('#DetailProfile').hide();
+			$('#profileData').hide();
 		});
 		
 		function DeleteMember(year, name) {
@@ -443,13 +445,13 @@ block content
 			a.active.sub.item(onclick="SubMenuFriendClicked(0)") 전체 맴버 현황
 			//- a.sub.item(onclick="SubMenuFriendClicked(1)") 청2부 맴버
 			//- a.sub.item(onclick="SubMenuFriendClicked(2)") 청1부 맴버
-			//- a.sub.item(onclick="SubMenuFriendClicked(3)") 또래 친구들
-			if auth=="manager" || auth=="developer" 
-				div.ui.right.small.menu.buttons
-					button.ui.blue.item.active(onclick="SubMenuEditClicked(false, false)") show
-					button.ui.blue.item(onclick="SubMenuEditClicked(true, false)") edit
-					if auth=="developer"
-						button.ui.blue.item(onclick="SubMenuEditClicked(true, true)") p_edit
+			//- a.sub.item(onclick="SubMenuFriendClicked(3)") 또래 친구들 
+			div.ui.right.small.menu.buttons
+			if auth=="manager" || auth=="developer"
+				button.ui.blue.item.active(onclick="SubMenuEditClicked(false, false)") show
+				button.ui.blue.item(onclick="SubMenuEditClicked(true, false)") edit
+				if auth=="developer"
+					button.ui.blue.item(onclick="SubMenuEditClicked(true, true)") p_edit
 			if auth=="manager" || auth=="executive" || auth=="developer" 
 				div.ui.right.floated.small.primary.labeled.icon.button(onclick="AddMemberButton()")
 					i.user.icon 

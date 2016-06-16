@@ -1,6 +1,7 @@
 var azure = require('azure-storage');
 var accessKey = 'pnOhpX2pEOye58E2gtlU5gVGzUbFVk3GcNYerm4RDuNuzoqsSB06v28oy3EF/wUZo6cUq/SUNdH0AQqek6rg7Q==';
 var storageAccount = 'sbpccyouth';
+var sbp_member = require('../models/sbp-member');
 var util = require('util');
 
 var tableService = azure.createTableService(storageAccount, accessKey);
@@ -16,56 +17,79 @@ tableService.createTableIfNotExists('users', function(error, result, res){
     }
 });  
 
-module.exports.FindUser = function (provider, id, next) {
-    var query = new azure.TableQuery()
-    .top(1)
-    .where('PartitionKey eq ? and RowKey eq ?', provider, id);
-    tableService.queryEntities('users', query, null, function (error, result) {
+module.exports.UserDataFunction = function (profile, name, image, next) {
+    sbp_member.FindUser(profile.provider, profile.id, function (error, result) {
         if (!error) {
-            var changeString = JSON.stringify(result.entries);
-            var entries = JSON.parse(changeString);
-            if (entries[0]) {
-                var entity = entries[0];
-                for (var key in entity) {
-                    var value = entity[key]._;
-                    entity[key] = value;
-                    // var valueType = typeof value;
-                    // console.log(valueType);
-                    // if (typeof value == "string")
-                        // entity[key] = entGen.String(value);
-                    // else if (typeof value == "number")
-                        // entity[key] = entGen.Int32(value);
-                }
-                
-                return next(null, entries[0]);
+            var entity = result;
+            profile.entity = entity;
+            if (result.linkP != null && result.linkP != '') {
+                sbp_member.GetMemberAndLogWithName(result.linkR, function (error, final) {
+                    var getMember = final[0];
+                    if (!error) {
+                        entity.link = getMember;
+                        entity.link.userPhoto = image;
+                        entity.link.userName = name; 
+                    }
+                    console.log(result);
+                    var addPhoto = {
+                        PartitionKey: getMember.PartitionKey,
+                        RowKey: getMember.RowKey,
+                        userPhoto: image
+                    }
+                    sbp_member.SaveMember(addPhoto, function (error, reult) {});
+
+                    return next(null, entity);
+                });
             }
             else
-                return next("Not found", null);
+                return next(null, entity);
         }
-        else 
-            return next(error, null);
-    });  
+        else {
+            console.log(error);
+            var entity = {
+                PartitionKey: profile.provider,
+                RowKey: profile.id,
+                name: name,
+                // data: profile._raw,
+                photo: image,
+                linkP: '',
+                linkR: ''
+            }
+            profile.entity = entity;    
+            
+            sbp_member.SaveUser(entity, function (error, result) {
+                if (!error) {
+                    return next(null, entity);
+                }
+                else {
+                    console.log(error);
+                    return next(null, entity);
+                }
+            });
+            
+        }
+    });
 }
 
-module.exports.SaveUser = function (entity, next) {
-    for (var key in entity) {
-        var value = entity[key];
-        var valueType = typeof value;
-        console.log(valueType);
-        if (typeof value == "string")
-            entity[key] = entGen.String(value);
-        else if (typeof value == "number")
-            entity[key] = entGen.Int32(value);
-    }
+// module.exports.SaveUser = function (entity, next) {
+//     for (var key in entity) {
+//         var value = entity[key];
+//         var valueType = typeof value;
+//         console.log(valueType);
+//         if (typeof value == "string")
+//             entity[key] = entGen.String(value);
+//         else if (typeof value == "number")
+//             entity[key] = entGen.Int32(value);
+//     }
     
-	// 데이터베이스에 entity를 추가합니다.
-	tableService.insertOrMergeEntity('users', entity, function(error, result, res) {
-		if (!error) {
-            next (null, result);
-		}
-		else {
-            next (error, null);
-		}
-	});
+// 	// 데이터베이스에 entity를 추가합니다.
+// 	tableService.insertOrMergeEntity('users', entity, function(error, result, res) {
+// 		if (!error) {
+//             next (null, result);
+// 		}
+// 		else {
+//             next (error, null);
+// 		}
+// 	});
     
-}
+// }
