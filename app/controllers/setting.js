@@ -15,13 +15,14 @@ var StringDecoder = require('string_decoder').StringDecoder;
 var accessKey = 'pnOhpX2pEOye58E2gtlU5gVGzUbFVk3GcNYerm4RDuNuzoqsSB06v28oy3EF/wUZo6cUq/SUNdH0AQqek6rg7Q==';
 var storageAccount = 'sbpccyouth';
 var entGen = azure.TableUtilities.entityGenerator;
+var title = '신반포 중앙교회 청년부';
 
 module.exports = function (app) {
     app.use('/setting', router);
 };
 
 router.get('/', function (req, res, next) {
-    if (!req.session.passport) {
+    if (!req.session.passport || !req.session.passport.user) {
         res.redirect('/auth/login?ret=setting');
         return;
     }
@@ -29,11 +30,10 @@ router.get('/', function (req, res, next) {
     // session_name = req.session.passport.user.displayName;
     var entity = req.session.passport.user.entity;
     if (entity.link) {
-        // entity.link.title = "Setting";
-        entity.link.userPhoto = entity.photo;
-        entity.link.userName = entity.name;
+        // entity.link.userPhoto = entity.photo;
+        // entity.link.userName = entity.name;
         res.render('settingProfile', {
-            title: "Setting",
+            title: title,
             data:entity.link
         });
     }
@@ -47,6 +47,7 @@ router.get('/secret', function (req, res, next) {
     var entity;
     entity = req.session.passport.user.entity;
     if (entity.link) {
+        entity.link.title = title;
         res.render('settingSecret', entity.link);
     }
     else 
@@ -61,8 +62,9 @@ router.get('/amend', function (req, res, next) {
     var entity;
     entity = req.session.passport.user.entity;
     if (entity.link) {
-        entity.link.userPhoto = entity.photo;
-        entity.link.userName = entity.name;
+        entity.link.title = title;
+        // entity.link.userPhoto = entity.photo;
+        // entity.link.userName = entity.name;
         res.render('settingAmend', entity.link);
     }
     else 
@@ -81,13 +83,9 @@ router.post('/saveUserSet', function (req, res, next) {
         res.status(500).send('Your Log-in data is expired: Login again.');
         return;
     }
-    var decoder = new StringDecoder('utf8');
-    var form = new multiparty.Form();
+
     sbp_data.MultipartyFunction(req, id, function (error, result) {
         if (!error) {
-            var phone;
-            if (result.phone)
-                phone = result.phone;
             if (link) {
                 for (var key in result) {
                     link[key] = result[key];
@@ -95,14 +93,9 @@ router.post('/saveUserSet', function (req, res, next) {
             }
             sbp_member.SaveMember(result, function (error, result) {
                 if (!error) {
-                    
-                    if (phone) {
-                        res.send( {
-                            phone: phone
-                        });
-                    }
-                    else 
-                        res.send({});
+                    res.send({
+                        result: 'ok'
+                    });
                 }
                 else 
                     next(error);
@@ -134,6 +127,7 @@ router.get('/auth', function (req, res, next) {
                     else 
                         unlinkUsers.push(user);
                 });
+                input.title = title;
                 input.linkUsers = linkUsers;
                 input.unlinkUsers = unlinkUsers;
                 count++;
@@ -148,12 +142,15 @@ router.get('/auth', function (req, res, next) {
         
         sbp_member.GetMembersWithQuery(null,function (error, result) {
             if (!error) {
+                var developers = [];
                 var managers = [];
                 var executives = [];
                 var normals = [];
                 result.forEach(function(user) {
                     if (user.auth && user.auth != '') {
-                        if (user.auth == 'manager')
+                        if (user.auth == 'developer')
+                            developers.push(user);
+                        else if (user.auth == 'manager')
                             managers.push(user);
                         else
                             executives.push(user);
@@ -161,10 +158,11 @@ router.get('/auth', function (req, res, next) {
                     else 
                         normals.push(user);
                 });
-                input.normals = normals;
+                input.developers = developers;
                 input.executives = executives;
                 input.managers = managers;
                 input.members = result;
+                input.title = title;
                 count++;
                 if (count >= maxCount)
                     res.render('settingAuth', input);

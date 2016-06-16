@@ -109,6 +109,41 @@ block sub_content
                                     | #{user.name} : #{user.linkR}
         div.ui.raised.segment
             h4.ui.header 
+                | 개발자 권한 리스트
+            div.ui.relaxed.celled.list
+                div.item
+                    div.ui.grid
+                        each developer, index in developers
+                            div.four.wide.column
+                                div.right.floated.content
+                                    div.ui.mini.button(onclick="Delete('#{PartitionKey}','#{RowKey}','#{developer}', 'developer')") Delete
+                                i.large.setting.middle.aligned.icon
+                                | #{developer.RowKey}
+                div.item
+                    div.content
+                        form#insert_developer(action="/setting/insert/developer", method="post")
+                            input(type="hidden", name="key", value="#{PartitionKey}")
+                            input(type="hidden", name="member", value="#{RowKey}")
+                            input(type="hidden", name="relation", value="developer")
+                            div.ui.grid
+                                div.three.wide.column
+                                    div.ui.mini.input.focus
+                                        input(type="text", placeholder="이름", name="target[0]")
+                                div.three.wide.column
+                                    div.ui.mini.input.focus
+                                        input(type="text", placeholder="이름", name="target[1]")
+                                div.three.wide.column
+                                    div.ui.mini.input.focus
+                                        input(type="text", placeholder="이름", name="target[2]")
+                                div.three.wide.column
+                                    div.ui.mini.input.focus
+                                        input(type="text", placeholder="이름", name="target[3]")
+                                div.one.wide.column
+                                div.three.wide.column
+                                    div.ui.mini.button(onclick="Insert('developer')")
+                                        i.large.add.user.middle.aligned.icon 
+                                        |Add
+            h4.ui.header 
                 | 관리자 권한 리스트
             div.ui.relaxed.celled.list
                 div.item
@@ -117,7 +152,7 @@ block sub_content
                             div.four.wide.column
                                 div.right.floated.content
                                     div.ui.mini.button(onclick="Delete('#{PartitionKey}','#{RowKey}','#{manager}', 'manager')") Delete
-                                i.large.setting.middle.aligned.icon
+                                i.large.legal.middle.aligned.icon
                                 | #{manager.RowKey}
                 div.item
                     div.content

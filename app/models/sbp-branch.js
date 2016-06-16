@@ -259,7 +259,7 @@ module.exports.GetBranchTable = function(bsMember, members, attendValue) {
 function GetList (item, key) {
 	var list = [];
 	var value = item[key];
-	if (value && value != '') {
+	if (value && typeof(value) == "string" && value != '') {
 		list = JSON.parse(item[key]);
 	}
 	return list;

@@ -21,8 +21,12 @@ div.ui.card
                 i.big.phone.middle.aligned.icon
                 div.content
                     div.header 전화번호
-                        div.description(style="color:gray")
-                        |#{phone}
+                        if showPhone == "true" || mustShow == true
+                            div.description(style="color:gray")
+                            |#{phone}
+                        else
+                            div.description(style="color:gray")
+                            |비공개
             div.item
                 i.big.tag.middle.aligned.icon
                 div.content
@@ -33,14 +37,23 @@ div.ui.card
                 i.big.mail.middle.aligned.icon
                 div.content
                     div.header 메일
-                        div.description(style="color:gray")
-                        |#{mail || ''}
+                        if showMail == "true" || mustShow == true
+                            div.description(style="color:gray")
+                            |#{mail || ''}
+                        else
+                            div.description(style="color:gray")
+                            |비공개
             div.item
                 i.big.building.middle.aligned.icon
                 div.content
                     div.header 거주지
-                        div.description(style="color:gray")
-                        |#{locate || ''}
+                        if showLocate == "true" || mustShow == true
+                            div.description(style="color:gray")
+                            |#{locate || ''}
+                        else 
+                            div.description(style="color:gray")
+                            |비공개
+
             div.item
                 i.big.comment.middle.aligned.icon
                 div.content

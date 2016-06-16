@@ -86,7 +86,12 @@ html(lang='en')
                 a.ui.main.item(href="/setting")
                   i.settings.icon  
                   |Setting
-              a.ui.main.item
-                i.sign.out.icon  
-                |Logout
+              if isLogin
+                a.ui.main.item(href="/auth/logout")
+                  i.sign.out.icon  
+                  |Logout
+              else
+                a.ui.main.item(href="/auth/login")
+                  i.sign.in.icon  
+                  |Login
     block content

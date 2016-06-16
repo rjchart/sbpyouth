@@ -1,4 +1,4 @@
-form#uploadForm(action="/profile_edit/#{name}", enctype="multipart/form-data", method="post")
+form#uploadForm(action="/saveProfile/#{name}", enctype="multipart/form-data", method="post")
     div.ui.card
         input(type="hidden", name="PartitionKey", value="#{PartitionKey}")
         input(type="hidden", name="RowKey", value="#{name}")
@@ -68,12 +68,17 @@ form#uploadForm(action="/profile_edit/#{name}", enctype="multipart/form-data", m
                     td 비고사항
                     td 
                         div.ui.input.focus
-                            input(type="text", name="attendDesc", value="#{attendDesc}", style="max-width:130px; max-height:30px")
+                            input(type="text", name="attendDesc", value="#{attendDesc || ''}", style="max-width:130px; max-height:30px")
                 tr 
                     td 소속
                     td 
                         div.ui.input.focus
                             input(type="text", name="part", value="#{part}", style="max-width:130px; max-height:30px")
+                tr 
+                    td 브랜치 역할
+                    td 
+                        div.ui.input.focus
+                            input(type="text", name="charge", value="#{charge}", style="max-width:130px; max-height:30px")
                 tr 
                     td 봉사 부서
                     td 

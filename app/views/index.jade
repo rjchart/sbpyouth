@@ -126,10 +126,11 @@ block content
 				a.sub.item(href="/branchleader") 브랜치 리더
 			//- block sub_item06
 			//- 	a.sub.item(href="/") 그외 사역자
-			div.ui.right.small.menu
-				button.ui.blue.primary.labeled.icon.button(onclick="AddMemberButton()")
-					i.user.icon 
-					|Add Member
+			if auth=="manager" || auth=="developer"
+				div.ui.right.small.menu
+					button.ui.blue.primary.labeled.icon.button(onclick="AddMemberButton()")
+						i.user.icon 
+						|Add Member
 	block sub_content
 	block modal_content
 		div.ui.modal

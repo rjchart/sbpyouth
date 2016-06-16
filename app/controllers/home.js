@@ -11,6 +11,7 @@ var flowpipe = require('flowpipe');
 var jade = require("jade");
 var fs = require('fs');
 var multiparty = require('multiparty');
+var title = '신반포 중앙교회 청년부';
 
 var accessKey = 'pnOhpX2pEOye58E2gtlU5gVGzUbFVk3GcNYerm4RDuNuzoqsSB06v28oy3EF/wUZo6cUq/SUNdH0AQqek6rg7Q==';
 var storageAccount = 'sbpccyouth';
@@ -36,9 +37,15 @@ module.exports = function (app) {
   app.use('/', router);
 };
 
+function CombineElements(one, two) {
+    for (var key in two) {
+        one[key] = two[key];
+    }
+}
 
 router.get('/', function (req, res, next) {
-    
+    var user = sbp_data.CheckLogin(req);
+
     var tableService = azure.createTableService(storageAccount, accessKey);
     sbp_member.GetCurrentMemberWithGroup('교회', function (error, result) {
         if (!error) {
@@ -48,18 +55,22 @@ router.get('/', function (req, res, next) {
                 var value = result[index];
                 inputData[value.RowKey] = value;
             }
-            
-            res.render('churchLeader', {
-                title: '신반포 중앙교회 청년부',
-                // articles: articles,
-                order: chargeOrder,
-                datas: inputData
-            });
+            user.order = chargeOrder;
+            user.datas = inputData;        
+            // res.render('churchLeader', {
+            //     title: title,
+            //     // articles: articles,
+            //     order: chargeOrder,
+            //     datas: inputData
+            // });
+                  
+            res.render('churchLeader', user);
         }
     });
 });
 
 router.get('/deacons', function (req, res, next) {
+    var user = sbp_data.CheckLogin(req);
     
     var tableService = azure.createTableService(storageAccount, accessKey);
     sbp_member.GetCurrentMemberWithGroup('부장 집사', function (error, result) {
@@ -70,18 +81,22 @@ router.get('/deacons', function (req, res, next) {
                 var value = result[index];
                 inputData[value.RowKey] = value;
             }
+            user.order = chargeOrder;
+            user.datas = inputData;
+            res.render('deacons', user);
             
-            res.render('deacons', {
-                title: '신반포 중앙교회 청년부',
-                // articles: articles,
-                order: chargeOrder,
-                datas: inputData
-            });
+            // res.render('deacons', {
+            //     title: title,
+            //     // articles: articles,
+            //     order: chargeOrder,
+            //     datas: inputData
+            // });
         }
     });
 });
 
 router.get('/executives', function (req, res, next) {
+    var user = sbp_data.CheckLogin(req);
     
     // console.log("is Session: " + req.session.id);
     // var session_name;
@@ -100,17 +115,21 @@ router.get('/executives', function (req, res, next) {
                 inputData[value.RowKey] = value;
             }
             
-            res.render('excutives', {
-                title: '신반포 중앙교회 청년부',
-                // articles: articles,
-                order: chargeOrder,
-                datas: inputData
-            });
+            // res.render('excutives', {
+            //     title: title,
+            //     // articles: articles,
+            //     order: chargeOrder,
+            //     datas: inputData
+            // });
+            user.order = chargeOrder;
+            user.datas = inputData;
+            res.render('executives', user);
         }
     });
 });
 
 router.get('/teamleader', function (req, res, next) {
+    var user = sbp_data.CheckLogin(req);
     
     var tableService = azure.createTableService(storageAccount, accessKey);
     sbp_member.GetCurrentMemberWithGroup('팀장', function (error, result) {
@@ -122,17 +141,21 @@ router.get('/teamleader', function (req, res, next) {
                 inputData[value.RowKey] = value;
             }
             
-            res.render('teamLeaders', {
-                title: '신반포 중앙교회 청년부',
-                // articles: articles,
-                order: chargeOrder,
-                datas: inputData
-            });
+            // res.render('teamLeaders', {
+            //     title: title,
+            //     // articles: articles,
+            //     order: chargeOrder,
+            //     datas: inputData
+            // });
+            user.order = chargeOrder;
+            user.datas = inputData;
+            res.render('teamLeaders', user);
         }
     });
 });
 
 router.get('/branchleader', function (req, res, next) {
+    var user = sbp_data.CheckLogin(req);
     
     var tableService = azure.createTableService(storageAccount, accessKey);
     sbp_member.GetCurrentMemberWithGroup('BS', function (error, result) {
@@ -146,17 +169,22 @@ router.get('/branchleader', function (req, res, next) {
                     chargeOrder.push(value.branch);
             }
             
-            res.render('branchLeaders', {
-                title: '신반포 중앙교회 청년부',
-                // articles: articles,
-                order: chargeOrder,
-                datas: inputData
-            });
+            // res.render('branchLeaders', {
+            //     title: title,
+            //     // articles: articles,
+            //     order: chargeOrder,
+            //     datas: inputData
+            // });
+            user.order = chargeOrder;
+            user.datas = inputData;
+            res.render('branchLeaders', user);
         }
     });
 });
 
 router.get('/branch', function (req, res, next) {
+    var user = sbp_data.CheckLogin(req);
+
     var year = req.query.year;
 	var attendSet = req.query['attendValue'];
 	if (!attendSet)
@@ -169,7 +197,10 @@ router.get('/branch', function (req, res, next) {
                 branchs.push(item.branch);
             });
             result.branchTag = JSON.stringify(branchs);
-            res.render('branchTotal', result);
+            result.title = title;
+            
+            CombineElements(user, result)
+            res.render('branchTotal', user);
         }
         else 
             console.log(error);
@@ -178,6 +209,8 @@ router.get('/branch', function (req, res, next) {
 });
 
 router.get('/branch_segment/:id', function (req, res, next) {
+    var user = sbp_data.CheckLogin(req);
+    
     var getID = req.params.id;
     var year = req.query.year;
     var branchTag = req.query.tag;
@@ -188,13 +221,16 @@ router.get('/branch_segment/:id', function (req, res, next) {
     var getTable = sbp_member.GetBranchMembersWithBranch(year, getID, function (error, result) {
         if (!error) {
             var input = {
+                title: title,
                 datas: result,
                 year: year,
                 branchs: branchs,
                 branchTag: branchTag,
                 branch: getID
             }
-            res.render('branchSeperate', input);        
+
+            CombineElements(user, input)
+            res.render('branchSeperate', user);        
         }
         else 
             console.log(error);
@@ -203,6 +239,8 @@ router.get('/branch_segment/:id', function (req, res, next) {
 });
 
 router.post('/branch_profile', function (req, res, next) {
+    var user = sbp_data.CheckLogin(req);
+
     req.on('data', function(chunk) {
         var getget = req;
         var inputData = JSON.parse(chunk);
@@ -213,7 +251,14 @@ router.post('/branch_profile', function (req, res, next) {
                 getData.branch = inputData.branch; // req.body.branch
                 getData.attend = inputData.attend; // req.body.attend
                 getData.attendString = sbp_member.AttendToString(getData.attend);
+                gatData.charge = req.body.charge;
                 getData.year = req.body.year;
+                getData.title = title;
+                if (user.auth && user.auth != '') {
+                    if (user.auth == "manager" || user.auth == "executive" || user.auth == "developer" || user.branch == getData.branch)
+                        getData.mustShow = true;
+                }
+
                 res.render('profile_template', getData);
             }
         });  
@@ -221,6 +266,7 @@ router.post('/branch_profile', function (req, res, next) {
 });
 
 router.post('/friend_profile', function (req, res, next) {
+    var user = sbp_data.CheckLogin(req);
     // var getData = {};
     // var getget = req;
     // var inputData = JSON.parse(chunk);
@@ -231,13 +277,21 @@ router.post('/friend_profile', function (req, res, next) {
             getData.branch = req.body.branch; // req.body.branch
             getData.attend = req.body.attend; // req.body.attend
             getData.attendString = sbp_member.AttendToString(req.body.attend);
+            getData.charge = req.body.charge;
             getData.year = req.body.year;
+            getData.title = title;
+            if (user.auth && user.auth != '') {
+                if (user.auth == "manager" || user.auth == "executive" || user.auth == "developer" || user.branch == getData.branch)
+                    getData.mustShow = true;
+            }
+            
             res.send(getData);
         }
     });  
 });
 
 router.get('/friends', function (req, res, next) {
+    var user = sbp_data.CheckLogin(req);
     // var year = req.query.year;
     var year = sbp_time.getYear();
 	var attendSet = req.query.attendValue;
@@ -252,83 +306,110 @@ router.get('/friends', function (req, res, next) {
                     memberList2.push(item);
             });
             
+
+            // CombineElements(user, input)
+            user.memberList = memberList2;
+            user.year = year;
+            res.render('friends', user);
             // 정리된 정보를 건내고 ejs 랜더링 하여 보여줌.
-            res.render('friends', 
-                {	
-                    memberList: memberList2,
-                    year: year
-                }
-            );
+            // res.render('friends', 
+            //     {	
+            //         title: title,
+            //         memberList: memberList2,
+            //         year: year
+            //     }
+            // );
         }
         else 
             res.send('error: cannot find friends list: ' + error);
     });
 });
 
-router.post('/profile_edit/:id', function (req, res, next) {
-	var id = req.params.id;
+// router.post('/profile_edit/:id', function (req, res, next) {
+// 	var id = req.params.id;
 
-	var tableService = azure.createTableService(storageAccount, accessKey);
-	var blobService = azure.createBlobService(storageAccount, accessKey);
-	var form = new multiparty.Form();
-	var checkMax = 1;
-	var checkCount = 0;
+// 	var tableService = azure.createTableService(storageAccount, accessKey);
+// 	var blobService = azure.createBlobService(storageAccount, accessKey);
+// 	var form = new multiparty.Form();
+// 	var checkMax = 1;
+// 	var checkCount = 0;
 
-	var fields = [];
-	fields['res'] = res;
-	fields['table'] = tableService;
+// 	var fields = [];
+// 	fields['res'] = res;
+// 	fields['table'] = tableService;
     
-    form.on('part', function(part) {
-	    if (!part.filename) {
-	    	// console.log("not file:" + JSON.stringify(part));
-			console.log('none');
-	    }
-	    else {
-			var filename = id + new Date().toISOString() + ".jpg";
-			var size = part.byteCount;
-	    	// console.log("file:" + JSON.stringify(part));
-			var size2 = part.byteCount - part.byteOffset;
-			var name = filename;
-			var container = 'imgcontainer';
+//     form.on('part', function(part) {
+// 	    if (!part.filename) {
+// 	    	// console.log("not file:" + JSON.stringify(part));
+// 			console.log('none');
+// 	    }
+// 	    else {
+// 			var filename = id + new Date().toISOString() + ".jpg";
+// 			var size = part.byteCount;
+// 	    	// console.log("file:" + JSON.stringify(part));
+// 			var size2 = part.byteCount - part.byteOffset;
+// 			var name = filename;
+// 			var container = 'imgcontainer';
 
-	    	console.log("part:" + filename + ", size:" + size + ", size2:" + size2);
-			var urlString = "https://sbpccyouth.blob.core.windows.net/" + container + "/" + filename;
-			fields['urlString'] = urlString;
-			checkMax++;
+// 	    	console.log("part:" + filename + ", size:" + size + ", size2:" + size2);
+// 			var urlString = "https://sbpccyouth.blob.core.windows.net/" + container + "/" + filename;
+// 			fields['urlString'] = urlString;
+// 			checkMax++;
 
-			blobService.createBlockBlobFromStream(container, filename, part, size, function(error) {
-				if (!error) {
-					console.log("photo upload ok");
-					// res.send({result:true})
-				}
-				else 
-					console.log(error);
+// 			blobService.createBlockBlobFromStream(container, filename, part, size, function(error) {
+// 				if (!error) {
+// 					console.log("photo upload ok");
+// 					// res.send({result:true})
+// 				}
+// 				else 
+// 					console.log(error);
 
-				checkCount++;
-				if (checkCount >= checkMax)
-					sbp_member.MemberSave(fields);
-			});
-			return;
-	    }
-	});
+// 				checkCount++;
+// 				if (checkCount >= checkMax)
+// 					sbp_member.MemberSave(fields);
+// 			});
+// 			return;
+// 	    }
+// 	});
 
-	// Close emitted after form parsed 
-	form.on('close', function() {
-		console.log('Upload completed!');
+// 	// Close emitted after form parsed 
+// 	form.on('close', function() {
+// 		console.log('Upload completed!');
 
-		checkCount++;
-		if (checkCount >= checkMax)
-			sbp_member.MemberSave(fields);
-	});
+// 		checkCount++;
+// 		if (checkCount >= checkMax)
+// 			sbp_member.MemberSave(fields);
+// 	});
 
-    form.on('field', function (field, value) {
-        console.log(field);
-        console.log(value);
-        fields[field] = value;
+//     form.on('field', function (field, value) {
+//         console.log(field);
+//         console.log(value);
+//         fields[field] = value;
+//     });
+
+// 	form.parse(req);
+
+// });
+
+router.post('/saveProfile/:id', function (req, res, next) {
+	var id = req.params.id;
+    
+    sbp_data.MultipartyFunction(req, id, function (error, result) {
+        if (!error) {
+
+            sbp_member.SaveMemberAndLog(result, function (error, result) {
+                if (!error) {
+                    res.send( {
+                        field: result
+                    });
+                }
+                else 
+                    next(error);
+            });
+        }
+        else 
+            next(error);
     });
-
-	form.parse(req);
-
 });
 
 router.post('/addCharge', function (req, res, next) {

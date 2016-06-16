@@ -169,12 +169,14 @@ block content
 				- bsList.forEach( function(item,index) {
 					a.sub.item(href="/branch_segment/#{item.branch}?year=#{year}&tag=#{branchTag}") #{item.branch}
 				- });
-			div.ui.right.small.menu
-				button.ui.blue.primary.labeled.icon.button(onclick="AddBranchButton()")
-					i.user.icon 
-					|Edit Branch
-				button.ui.red.button(onclick="MakeBranchButton()")
-					|Make Branch
+			if auth=="manager" || auth=="executive" || auth=="developer" 
+				div.ui.right.small.menu
+					if auth=="manager" || auth=="developer"
+						button.ui.blue.primary.labeled.icon.button(onclick="AddBranchButton()")
+							i.user.icon 
+							|Edit Branch
+					button.ui.red.button(onclick="MakeBranchButton()")
+						|Make Branch
 	block sub_content
 	block modal_content
 		div.ui.edit.modal

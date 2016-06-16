@@ -9,6 +9,7 @@ var azure = require('azure-storage');
 var flowpipe = require('flowpipe');
 var fs = require('fs');
 var multiparty = require('multiparty');
+var title = '신반포 중앙교회 청년부';
 
 // require('../models/oauth.js')(app);
 // var passport = require('passport');
@@ -244,8 +245,8 @@ router.get('/logout', function(req, res){
 // passport 에서 지원하는 logout 메소드이다.
 // req.session.passport 의 정보를 삭제한다.
 //
-req.logout();
-    res.redirect(redirectURL);
+    req.logout();
+    res.redirect('/auth/login');
 });
 
 router.get('/login', function (req, res) {
@@ -262,7 +263,7 @@ router.get('/login', function (req, res) {
             session_name = req.user.displayName ? req.user.displayName : req.user.username ? req.user.username : "" ;
     }
     res.render('login', {
-        session_id: "Jake" || {},
+        title: title,
         user: req.user || {},
         name: session_name || null
     });

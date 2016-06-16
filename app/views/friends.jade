@@ -5,13 +5,15 @@ block script
 	script(type="text/javascript", src="javascript/runtime.js")
 	script.
 		var isEditable = false;
+		var isPowerEditable = false;
 		var ttoleValue = 1985;
-		function ProfileBS(name, year, branch, attend) {
+		function ProfileBS(name, year, branch, attend, charge) {
 			var data = {
 				name: name,
 				year: year,
 				branch: branch,
-				attend: attend
+				attend: attend,
+				charge: charge
 			}
 			
 			$.ajax({
@@ -27,7 +29,7 @@ block script
 						html = window.profile_edit(data);
 					document.getElementById("profileData").innerHTML = html;
 
-					if (isEditable) {
+					if (isPowerEditable) {
 						var detail = window.detailProfile_template(data);
 						document.getElementById("DetailProfile").innerHTML = detail;
 						$('#DetailProfile').show();
@@ -147,6 +149,10 @@ block script
 						//-  field['birthYear'], field['birthMonth'], field['birthDay'], field['gender'], field['phone'], field['attendDesc'], 
 						//-  field['tension'], field['tensionString'], field['part'], field['photo'] ,field['charge'] ,field['mail'] ,field['locate'] ,field['service'] );
 						//- };
+
+						first.onclick = function () {
+							ProfileBS(field['RowKey'], field['year'], field['branch'], field['attend'], field['charge']);
+						};
 						gender.innerHTML = field['gender'];
 						phone.innerHTML = field['phone'];
 						birth.innerHTML = (field['birthYear']+1900)+"."+field['birthMonth']+"."+field['birthDay'];
@@ -226,7 +232,7 @@ block script
 			}, 100);
 		}
 		
-		function SubMenuEditClicked (isEdit) {
+		function SubMenuEditClicked (isEdit, isPower) {
 			console.log("sub");
 			if (!isEdit) {
 				isEditable = false;
@@ -234,6 +240,7 @@ block script
 			if (isEdit) {
 				isEditable = true;
 			}
+			isPowerEditable = isPower;
 		}
 	
 		function AddMemberButton() {
@@ -297,6 +304,7 @@ block script
 		
 		function TypeSearch () {
 			var getSearch = document.getElementById('typeSearch').value;
+			getSearch = getSearch.replace(' ', '.');
 			console.log('search:' + getSearch);
 			
 			var date = new Date();
@@ -310,7 +318,7 @@ block script
 				$(setValue).show();
 				$(setValue).addClass('bMember');
 				
-				setValue = '.' + getSearch;
+				var setValue = '.' + getSearch;
 				$(setValue).show();
 				$(setValue).addClass('bMember');
 					
@@ -436,12 +444,16 @@ block content
 			//- a.sub.item(onclick="SubMenuFriendClicked(1)") 청2부 맴버
 			//- a.sub.item(onclick="SubMenuFriendClicked(2)") 청1부 맴버
 			//- a.sub.item(onclick="SubMenuFriendClicked(3)") 또래 친구들
-			div.ui.right.small.menu.buttons
-				button.ui.blue.item.active(onclick="SubMenuEditClicked(false)") show
-				button.ui.blue.item(onclick="SubMenuEditClicked(true)") edit
-			div.ui.right.floated.small.primary.labeled.icon.button(onclick="AddMemberButton()")
-				i.user.icon 
-				|Add Friend	
+			if auth=="manager" || auth=="developer" 
+				div.ui.right.small.menu.buttons
+					button.ui.blue.item.active(onclick="SubMenuEditClicked(false, false)") show
+					button.ui.blue.item(onclick="SubMenuEditClicked(true, false)") edit
+					if auth=="developer"
+						button.ui.blue.item(onclick="SubMenuEditClicked(true, true)") p_edit
+			if auth=="manager" || auth=="executive" || auth=="developer" 
+				div.ui.right.floated.small.primary.labeled.icon.button(onclick="AddMemberButton()")
+					i.user.icon 
+					|Add Friend	
 	div.main.ui.container(onload="Display()")
 		div.ui.grid
 			div.eleven.wide.streched.column
@@ -449,31 +461,52 @@ block content
 					h2.ui.header
 						|#{year}년도 청년부 맴버 리스트
 					div.ui.container
-						table.scrolled.ui.line.celled.table(style="width:100%;border-bottom-width: 5px; margin:0; padding: 5px;")
-							thead
-								tr
-									th.name(style="width:70px") 이름
-									th.gender(style="width:55px") 성별
-									th.phone(style="width:147px") 전화번호
-									th.birth(style="width:112px") 생년월일
-									th.branch(style="width:70px") 브랜치
-									th.part(style="width:65px") 소속
-									th.attend(style="width:89px") 출석
-									th.desc(style="width:105px") 비고
-						div.member(style="width:100%; height:340px; overflow:scroll; margin:0; padding-left:7px; padding-right:5px")
-							table.scroll.ui.celled.structured.striped.table
-								tbody
-									each member, i in memberList
-										tr.bMember(id="#{member.RowKey}" class="#{member.birthYear} #{parseInt(member.birthYear) - 1900} #{member.gender} #{member.part} #{member.branch} #{parseInt(member.birthMonth)} #{member.attendDesc}  #{member.attendString}")
-											td.name: label(style="width:70px", onclick="ProfileBS('#{member.RowKey}', #{year}, '#{member.branch || ''}', '#{member.attend}')") #{member.RowKey}
-											//- td.name: label(style="width:70px", onclick="ProfileBS(#{year}, '#{member.RowKey}', '#{member.PartitionKey}','#{member.branch || ''}','#{member.attendString}','#{member.attend}','#{member.birthYear}','#{member.birthMonth}','#{member.birthDay}','#{member.gender}','#{member.phone}','#{member.attendDesc || ''}','#{member.tension || 0}','#{member.tensionString || 0}','#{member.part || 0}', '#{member.photo || 0}', '#{member.charge || 'bm'}', '#{member.mail || ''}', '#{member.locate || ''}', '#{member.service || ''}')") #{member.RowKey}
-											td.gender(style="width:55px") #{member.gender || '모름'}
-											td.phone(style="width:147px") #{member.phone}
-											td.birth(style="width:112px") #{member.birthYear}.#{member.birthMonth}.#{member.birthDay}															
-											td.branch(style="width:70px") #{member.branch || '없음'}
-											td.part(style="width:65px") #{member.part || '없음'}
-											td.attend(style="width:89px") #{member.attendString || '없음'}
-											td.desc(style="width:105px") #{member.attendDesc || ''}
+						if auth == "manager" || auth == "executive" || auth=="developer"
+							table.scrolled.ui.line.celled.table(style="width:100%;border-bottom-width: 5px; margin:0; padding: 5px;")
+								thead
+									tr
+										th.name(style="width:70px") 이름
+										th.gender(style="width:55px") 성별
+										th.phone(style="width:147px") 전화번호
+										th.birth(style="width:112px") 생년월일
+										th.branch(style="width:70px") 브랜치
+										th.part(style="width:65px") 소속
+										th.attend(style="width:89px") 출석
+										th.desc(style="width:105px") 비고
+							div.member(style="width:100%; height:340px; overflow:scroll; margin:0; padding-left:7px; padding-right:5px")
+								table.scroll.ui.celled.structured.striped.table
+									tbody
+										each member, i in memberList
+											tr.bMember(id="#{member.RowKey}" class="#{member.RowKey.substring(1)} #{member.birthYear} #{parseInt(member.birthYear) - 1900} #{member.gender} #{member.part} #{member.branch} #{parseInt(member.birthMonth)} #{member.attendDesc}  #{member.attendString}")
+												td.name: label(style="width:70px", onclick="ProfileBS('#{member.RowKey}', #{year}, '#{member.branch || ''}', '#{member.attend}', '#{member.charge}')") #{member.RowKey}
+												//- td.name: label(style="width:70px", onclick="ProfileBS(#{year}, '#{member.RowKey}', '#{member.PartitionKey}','#{member.branch || ''}','#{member.attendString}','#{member.attend}','#{member.birthYear}','#{member.birthMonth}','#{member.birthDay}','#{member.gender}','#{member.phone}','#{member.attendDesc || ''}','#{member.tension || 0}','#{member.tensionString || 0}','#{member.part || 0}', '#{member.photo || 0}', '#{member.charge || 'bm'}', '#{member.mail || ''}', '#{member.locate || ''}', '#{member.service || ''}')") #{member.RowKey}
+												td.gender(style="width:55px") #{member.gender || '모름'}
+												td.phone(style="width:147px") #{member.phone}
+												td.birth(style="width:112px") #{member.birthYear}.#{member.birthMonth}.#{member.birthDay}															
+												td.branch(style="width:70px") #{member.branch || '없음'}
+												td.part(style="width:65px") #{member.part || '없음'}
+												td.attend(style="width:89px") #{member.attendString || '없음'}
+												td.desc(style="width:105px") #{member.attendDesc || ''}
+						else 
+							table.scrolled.ui.line.celled.table(style="width:100%;border-bottom-width: 5px; margin:0; padding: 5px;")
+								thead
+									tr
+										th.name 이름
+										th.gender 성별
+										th.birth 생년월일
+										th.branch 브랜치
+										th.part 소속
+							div.member(style="width:100%; height:340px; overflow:scroll; margin:0; padding-left:7px; padding-right:5px;")
+								table.scroll.ui.celled.structured.striped.table
+									tbody
+										each member, i in memberList
+											tr.bMember(id="#{member.RowKey}" class="#{member.RowKey.substring(1)} #{member.birthYear} #{parseInt(member.birthYear) - 1900} #{member.gender} #{member.part} #{member.branch} #{parseInt(member.birthMonth)} #{member.attendDesc}  #{member.attendString}")
+												td.name: label(onclick="ProfileBS('#{member.RowKey}', #{year}, '#{member.branch || ''}', '#{member.attend}', '#{member.charge}')") #{member.RowKey}
+												//- td.name: label(style="width:70px", onclick="ProfileBS(#{year}, '#{member.RowKey}', '#{member.PartitionKey}','#{member.branch || ''}','#{member.attendString}','#{member.attend}','#{member.birthYear}','#{member.birthMonth}','#{member.birthDay}','#{member.gender}','#{member.phone}','#{member.attendDesc || ''}','#{member.tension || 0}','#{member.tensionString || 0}','#{member.part || 0}', '#{member.photo || 0}', '#{member.charge || 'bm'}', '#{member.mail || ''}', '#{member.locate || ''}', '#{member.service || ''}')") #{member.RowKey}
+												td.gender #{member.gender || '모름'}
+												td.birth #{member.birthYear}.#{member.birthMonth}.#{member.birthDay}												
+												td.branch #{member.branch || '없음'}
+												td.part #{member.part || '없음'}
 						table.ui.celled.structured.striped.table(style="margin:0;border-up-width: 5px;")
 							tfoot
 								tr

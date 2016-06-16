@@ -496,6 +496,62 @@ module.exports.SaveMember = function (member, next) {
 	});
 }
 
+module.exports.SaveMemberAndLog = function (member, next) {
+    var keyList = ['RowKey', 'age', 'attend', 'birthYear', 'branch', 'charge', 'part', 'service'];
+    var branchLog = {}; 
+    for (var key in member) {
+        if (keyList.indexOf(key) >= 0) {
+            branchLog[key] = member[key];
+        }
+    }
+    branchLog.PartitionKey = member.year;
+    var year = member.year.replace('-2', '');
+    branchLog.age = (year - member.birthYear + 1) % 100;
+    var maxCount = 2;
+    var count = 0;
+    exports.SaveMember(member, function(error, result) {
+        if (!error) {
+            count++;
+            if (count >= maxCount) {
+                RemoveEntityGen(member);
+                SetTensionAndAttend(member);
+                next(null, member);
+            }
+        }
+        else 
+            next(error);
+    });
+    exports.SaveBranchLog(branchLog, function(error, result) {
+        if (!error) {
+            count++;
+            if (count >= maxCount) {
+                RemoveEntityGen(member);
+                SetTensionAndAttend(member);
+                next(null, member);
+            }
+        }
+        else 
+            next(error);
+    });
+
+
+}
+
+module.exports.SaveBranchLog = function (branchLog, next) {
+    if (branchLog.birthYear && branchLog.birthYear > 1900)
+        branchLog.birthYear = branchLog.birthYear - 1900;
+
+    SetEntityGen(branchLog);
+	tableService.insertOrMergeEntity('branchlog', branchLog, function(error, result) {
+		if (!error) {
+            next(null, result);
+		}
+		else {
+            next(error);
+		}
+	});
+}
+
 /***                                                                         ****
 ****                            Just Branch Log                              ****
 ****                                                                         ***/

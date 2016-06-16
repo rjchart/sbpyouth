@@ -4,6 +4,7 @@ var storageAccount = 'sbpccyouth';
 var util = require('util');
 var sbp_time = require('../models/sbp-time');
 var multiparty = require('multiparty');
+var title = '신반포 중앙교회 청년부';
 
 var tableService = azure.createTableService(storageAccount, accessKey);
 var blobService = azure.createBlobService(storageAccount, accessKey);
@@ -93,4 +94,16 @@ module.exports.MultipartyFunction = function (req, id, next) {
     });
 
 	form.parse(req);
+}
+
+module.exports.CheckLogin = function (req) {
+    if (!req.session.passport || !req.session.passport.user) {
+        return {
+			title: title
+		};
+    }
+    var entity = req.session.passport.user.entity;
+	entity.link.isLogin = true;
+	entity.link.title = title;
+	return entity.link;
 }
