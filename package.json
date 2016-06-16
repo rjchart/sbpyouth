@@ -81,7 +81,7 @@
     },
     "kakao": {
       "KAKAO_CLIENT_ID": "3220fb23f4da8a401da3ab94c219f848",
-      "callbackURL": "http://127.0.0.1:3000/auth/kakao/callback"
+      "callbackURL": "http://sbpyouth.azurewebsites.net/auth/kakao/callback"
     }
   },
   "sbp-data": {
