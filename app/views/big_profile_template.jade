@@ -3,67 +3,198 @@ div.ui.raised.segment
     - var authShow = false;
     - if (authShow == "developer" || authShow == "manager" || authShow == "executive") authShow = true;
     div.ui.grid
-        div.four.wide.streched.column
-            div.ui.card
-                div.image.outImg(style="background-color:#e5e5e5")
-                    if (data.usingPhoto == 'true')
-                        img#photo.fitImg(src="#{data.userPhoto||''}")
-                    else if (data.photo)
-                        img#photo.fitImg(src="#{data.photo||''}")
-                    else
-                        img.fitImg(src="/public/img/image.png")
-        div.twelve.wide.streched.column
-            div.ui.container
-                h3.ui.header
-                    div.content
-                        |#{data.RowKey}   
-                        div.sub.header #{data.birthYear}.#{data.birthMonth}.#{data.birthDay}
-                    div.ui.mini.relaxed.celled.list
-                        div.item
-                            i.big.heterosexual.middle.aligned.icon
-                            div.content
-                                div.header 성별
-                                    div.description(style="color:gray")
-                                        |#{data.gender}
-                        div.item
-                            i.big.tag.middle.aligned.icon
-                            if data.branch
+        div.two.column.computer.only.row
+            div.four.wide.streched.column
+                div.ui.card
+                    div.image.outImg(style="background-color:#e5e5e5")
+                        if (data.usingPhoto == 'true')
+                            img#photo.fitImg(src="#{data.userPhoto||''}")
+                        else if (data.photo)
+                            img#photo.fitImg(src="#{data.photo||''}")
+                        else
+                            img.fitImg(src="/public/img/image.png")
+            div.twelve.wide.streched.column
+                div.ui.container
+                    h3.ui.header
+                        div.content
+                            |#{data.RowKey}   
+                            div.sub.header #{data.birthYear}.#{data.birthMonth}.#{data.birthDay}
+                        div.ui.mini.relaxed.celled.list
+                            div.item
+                                i.big.heterosexual.middle.aligned.icon
                                 div.content
-                                    div.header 브랜치
+                                    div.header 성별
                                         div.description(style="color:gray")
-                                            |#{data.branch}
-                            else 
+                                            |#{data.gender}
+                            div.item
+                                i.big.tag.middle.aligned.icon
+                                if data.branch
+                                    div.content
+                                        div.header 브랜치
+                                            div.description(style="color:gray")
+                                                |#{data.branch}
+                                else 
+                                    div.content
+                                        div.header 봉사 부서
+                                            div.description(style="color:gray")
+                                                |#{data.service}
+                            div.item
+                                i.big.phone.middle.aligned.icon
                                 div.content
-                                    div.header 봉사 부서
+                                    div.header 전화번호
+                                        if data.showPhone || authShow
+                                            div.description(style="color:gray")
+                                                |#{data.phone}
+                                        else
+                                            div.description(style="color:gray") 
+                                                |비공개
+                            div.item
+                                i.big.mail.middle.aligned.icon
+                                div.content
+                                    div.header 메일
+                                        if data.showMail || authShow
+                                            div.description(style="color:gray") 
+                                                |#{data.mail}
+                                        else
+                                            div.description(style="color:gray") 
+                                                |비공개
+                            div.item
+                                i.big.building.middle.aligned.icon
+                                div.content
+                                    div.header 거주지
+                                        if data.showLocate || authShow
+                                            div.description(style="color:gray") 
+                                                |#{data.locate || '알수없음'}
+                                        else
+                                            div.description(style="color:gray") 
+                                                |비공개
+        div.two.column.tablet.only.row
+            div.six.wide.streched.column
+                div.ui.card
+                    div.image.outImg(style="background-color:#e5e5e5")
+                        if (data.usingPhoto == 'true')
+                            img#photo.fitImg(src="#{data.userPhoto||''}")
+                        else if (data.photo)
+                            img#photo.fitImg(src="#{data.photo||''}")
+                        else
+                            img.fitImg(src="/public/img/image.png")
+            div.ten.wide.streched.column
+                div.ui.container
+                    h3.ui.header
+                        div.content
+                            |#{data.RowKey}   
+                            div.sub.header #{data.birthYear}.#{data.birthMonth}.#{data.birthDay}
+                        div.ui.mini.relaxed.celled.list
+                            div.item
+                                i.big.heterosexual.middle.aligned.icon
+                                div.content
+                                    div.header 성별
                                         div.description(style="color:gray")
-                                            |#{data.service}
-                        div.item
-                            i.big.phone.middle.aligned.icon
-                            div.content
-                                div.header 전화번호
-                                    if data.showPhone || authShow
+                                            |#{data.gender}
+                            div.item
+                                i.big.tag.middle.aligned.icon
+                                if data.branch
+                                    div.content
+                                        div.header 브랜치
+                                            div.description(style="color:gray")
+                                                |#{data.branch}
+                                else 
+                                    div.content
+                                        div.header 봉사 부서
+                                            div.description(style="color:gray")
+                                                |#{data.service}
+                            div.item
+                                i.big.phone.middle.aligned.icon
+                                div.content
+                                    div.header 전화번호
+                                        if data.showPhone || authShow
+                                            div.description(style="color:gray")
+                                                |#{data.phone}
+                                        else
+                                            div.description(style="color:gray") 
+                                                |비공개
+                            div.item
+                                i.big.mail.middle.aligned.icon
+                                div.content
+                                    div.header 메일
+                                        if data.showMail || authShow
+                                            div.description(style="color:gray") 
+                                                |#{data.mail}
+                                        else
+                                            div.description(style="color:gray") 
+                                                |비공개
+                            div.item
+                                i.big.building.middle.aligned.icon
+                                div.content
+                                    div.header 거주지
+                                        if data.showLocate || authShow
+                                            div.description(style="color:gray") 
+                                                |#{data.locate || '알수없음'}
+                                        else
+                                            div.description(style="color:gray") 
+                                                |비공개
+        div.two.column.mobile.only.row
+            div.eight.wide.streched.column
+                div.ui.card
+                    div.image.outImg(style="background-color:#e5e5e5")
+                        if (data.usingPhoto == 'true')
+                            img#photo.fitImg(src="#{data.userPhoto||''}")
+                        else if (data.photo)
+                            img#photo.fitImg(src="#{data.photo||''}")
+                        else
+                            img.fitImg(src="/public/img/image.png")
+            div.eight.wide.streched.column
+                div.ui.container
+                    h3.ui.header
+                        div.content
+                            |#{data.RowKey}   
+                            div.sub.header #{data.birthYear}.#{data.birthMonth}.#{data.birthDay}
+                        div.ui.mini.relaxed.celled.list
+                            div.item
+                                i.big.heterosexual.middle.aligned.icon
+                                div.content
+                                    div.header 성별
                                         div.description(style="color:gray")
-                                            |#{data.phone}
-                                    else
-                                        div.description(style="color:gray") 
-                                            |비공개
-                        div.item
-                            i.big.mail.middle.aligned.icon
-                            div.content
-                                div.header 메일
-                                    if data.showMail || authShow
-                                        div.description(style="color:gray") 
-                                            |#{data.mail}
-                                    else
-                                        div.description(style="color:gray") 
-                                            |비공개
-                        div.item
-                            i.big.building.middle.aligned.icon
-                            div.content
-                                div.header 거주지
-                                    if data.showLocate || authShow
-                                        div.description(style="color:gray") 
-                                            |#{data.locate || '알수없음'}
-                                    else
-                                        div.description(style="color:gray") 
-                                            |비공개
+                                            |#{data.gender}
+                            div.item
+                                i.big.tag.middle.aligned.icon
+                                if data.branch
+                                    div.content
+                                        div.header 브랜치
+                                            div.description(style="color:gray")
+                                                |#{data.branch}
+                                else 
+                                    div.content
+                                        div.header 봉사 부서
+                                            div.description(style="color:gray")
+                                                |#{data.service}
+                            div.item
+                                i.big.phone.middle.aligned.icon
+                                div.content
+                                    div.header 전화번호
+                                        if data.showPhone || authShow
+                                            div.description(style="color:gray")
+                                                |#{data.phone}
+                                        else
+                                            div.description(style="color:gray") 
+                                                |비공개
+                            div.item
+                                i.big.mail.middle.aligned.icon
+                                div.content
+                                    div.header 메일
+                                        if data.showMail || authShow
+                                            div.description(style="color:gray") 
+                                                |#{data.mail}
+                                        else
+                                            div.description(style="color:gray") 
+                                                |비공개
+                            div.item
+                                i.big.building.middle.aligned.icon
+                                div.content
+                                    div.header 거주지
+                                        if data.showLocate || authShow
+                                            div.description(style="color:gray") 
+                                                |#{data.locate || '알수없음'}
+                                        else
+                                            div.description(style="color:gray") 
+                                                |비공개

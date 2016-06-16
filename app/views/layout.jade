@@ -16,6 +16,16 @@ html(lang='en')
 
       if ENV_DEVELOPMENT
         //- script(src='http://localhost:3000/livereload.js')
+    
+    script.
+      $(document).ready(function(){
+        $('.right.menu.open').on("click",function(e){
+            e.preventDefault();
+            $('.ui.vertical.menu').toggle();
+        });
+            
+        $('.ui.dropdown').dropdown();
+      });
     block script
     
     block style
@@ -57,42 +67,114 @@ html(lang='en')
           clip:rect(0,0,0,0);
           border: 0;
         }
+        
+        .ui.grid.main{
+          margin-top: 60px;
+        }
 
-  body#body
+        .mobile.row{
+          padding-top: 10px !important;
+          margin-top: 30px !important;
+        }
+
+        .mobile.row .ui.inverted.menu{
+          border-radius: 0px !important;
+        }
+
+        .padding-reset{
+          padding: 0px !important;
+        }
+
+        .ui.message{
+          padding: 40px !important;
+        }
+
+        @media (max-width: 767px) {
+            .ui.grid.main{
+              margin-top: 70px;
+        }
+
+        .ui.grid { margin: 0 !important; }
+          .ui.vertical.menu.navbar{
+            margin-top: 25px !important;
+          }
+        }
+
+        .ui.vertical.menu{
+          margin-top: -15px !important;
+          width: 100%;
+          display: none;
+        }
+
+  body
     block header
-      div.ui.top.fixed.inverted.menu
-        div.ui.container
-          header.item
-            img.logo(src="/public/img/logo.png")
-            | <p> <span style="color:olive"> &nbsp;&nbsp; 대한예수교장로회 </span><br/>
-            | &nbsp; 신반포 중앙교회 청년부 </p>
-          block header_item01
-            a.main.item(href="/")
-              i.home.icon
-              |Home  
-          block header_item02
-            a.main.item(href="/branch")
-              i.grid.layout.icon 
-              |Branchs
-          block header_item03
-            a.main.item(href="/friends")
-              i.child.icon 
-              |Friends
-          div.right.menu
-            //- div.item
-            //-   div.ui.icon.input
-            //-     input(type="text" placeholder="Search...")
-            //-     i.search.link.icon
-            block header_setting
-              a.ui.main.item(href="/setting")
-                i.settings.icon  
-                |Setting
-            if isLogin
-              a.ui.main.item(href="/auth/logout")
-                i.sign.out.icon  
-                |Logout
-            else
-              a.ui.main.item(href="/auth/login")
-                i.sign.in.icon  
-                |Login
-  block content
+        div.ui.grid
+            div.computer.tablet.only.row
+                div.ui.inverted.fixed.menu.navbar.page.grid
+                    header.item
+                      img.logo(src="/public/img/logo.png")
+                      | <p> <span style="color:olive"> &nbsp;&nbsp; 대한예수교장로회 </span><br/>
+                      | &nbsp; 신반포 중앙교회 청년부 </p>
+                    block header_item01
+                      a.main.item(href="/")
+                        i.home.icon
+                        |Home  
+                    block header_item02
+                      a.main.item(href="/branch")
+                        i.grid.layout.icon 
+                        |Branchs
+                    block header_item03
+                      a.main.item(href="/friends")
+                        i.child.icon 
+                        |Friends
+                    div.right.menu
+                        block header_setting
+                          a.ui.main.item(href="/setting")
+                            i.settings.icon  
+                            |Setting
+                        if isLogin
+                          a.ui.main.item(href="/auth/logout")
+                            i.sign.out.icon  
+                            |Logout
+                        else
+                          a.ui.main.item(href="/auth/login")
+                            i.sign.in.icon  
+                            |Login
+            div.mobile.only.row 
+                div.ui.fixed.inverted.navbar.menu 
+                    a.brand.item 
+                      img.logo(src="/public/img/logo.png")
+                      | <p> <span style="color:olive"> &nbsp;&nbsp; 대한예수교장로회 </span><br/>
+                      | &nbsp; 신반포 중앙교회 청년부 </p>
+                    div.right.menu.open 
+                        a.menu.item 
+                            i.content.icon
+                div.ui.vertical.navbar.menu
+                    block header_item01
+                      a.main.item(href="/")
+                        i.home.icon
+                        |Home  
+                    block header_item02
+                      a.main.item(href="/branch")
+                        i.grid.layout.icon 
+                        |Branchs
+                    block header_item03
+                      a.main.item(href="/friends")
+                        i.child.icon 
+                        |Friends
+                    block header_setting
+                      a.ui.main.item(href="/setting")
+                        i.settings.icon  
+                        |Setting
+                    if isLogin
+                      a.ui.main.item(href="/auth/logout")
+                        i.sign.out.icon  
+                        |Logout
+                    else
+                      a.ui.main.item(href="/auth/login")
+                        i.sign.in.icon  
+                        |Login
+    div.ui.page.grid.main
+        div.row
+            div.column.padding-reset
+              block content

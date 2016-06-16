@@ -62,6 +62,10 @@ router.get('/', function (req, res, next) {
     });
 });
 
+router.get('/test', function (req, res, next) {
+    res.render('layouttest', {});
+});
+
 router.get('/deacons', function (req, res, next) {
     var user = sbp_data.CheckLogin(req);
     

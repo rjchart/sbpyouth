@@ -16,5 +16,5 @@ $(function () {
   
   $('.ui.accordion')
     .accordion();
-  
+
 });

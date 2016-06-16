@@ -1,0 +1,30 @@
+extends layout
+block script
+    script.
+        $(document).ready(function(){
+        $('.right.menu.open').on("click",function(e){
+            e.preventDefault();
+            $('.ui.vertical.menu').toggle();
+        });
+            
+        $('.ui.dropdown').dropdown();
+        });
+div.ui.page.grid.main
+    div.row
+        div.column.padding-reset
+            block content
+                div.ui.large.message
+                    h1.ui.huge.header Navbar example
+                    p This example is a quick exercise to illustrate how the default, static and fixed to top navbar work. It includes the responsive CSS and HTML, so it also adapts to your viewport and device.
+                    p To see the difference between static and fixed top navbars, just scroll.
+                    br
+                    br
+                    br
+                    br
+                    br
+                    br
+                    br
+                    br
+                    br
+                    br
+                    a.ui.blue.button View navbar docs »

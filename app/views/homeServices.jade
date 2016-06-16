@@ -1,63 +1,62 @@
 extends index
 block sub_item06
-    a.active.sub.item(href="/services") 부서 사역자
+    div.ui.dropdown.sub.item 
+        strong 부서 사역자
+        i.dropdown.icon
+        div.menu
+            if service == '유치부' 
+                a.active.item(href="/services/유치부") 유치부
+            else
+                a.item(href="/services/유치부") 유치부
+            if service == '유년부'
+                a.active.item(href="/services/유년부") 유년부
+            else
+                a.item(href="/services/유년부") 유년부
+            if service == '초등부'
+                a.active.item(href="/services/초등부") 초등부
+            else
+                a.item(href="/services/초등부") 초등부
+            if service == '중고등부'
+                a.active.item(href="/services/중고등부") 중고등부
+            else
+                a.item(href="/services/중고등부") 중고등부
+            if service == '글로리아 찬양대'
+                a.active.item(href="/services/글로리아 찬양대") 글로리아 찬양대
+            else
+                a.item(href="/services/글로리아 찬양대") 글로리아 찬양대
+            if service == '할렐루야 찬양대'
+                a.active.item(href="/services/할렐루야 찬양대") 할렐루야 찬양대
+            else
+                a.item(href="/services/할렐루야 찬양대") 할렐루야 찬양대
 block sub_content
     div.main.ui.container
-        div.ui.grid
-            div.three.wide.column
-                div.ui.vertical.menu
-                    if service == '유치부' 
-                        a.active.item(href="/services/유치부") 유치부
-                    else
-                        a.item(href="/services/유치부") 유치부
-                    if service == '유년부'
-                        a.active.item(href="/services/유년부") 유년부
-                    else
-                        a.item(href="/services/유년부") 유년부
-                    if service == '초등부'
-                        a.active.item(href="/services/초등부") 초등부
-                    else
-                        a.item(href="/services/초등부") 초등부
-                    if service == '중고등부'
-                        a.active.item(href="/services/중고등부") 중고등부
-                    else
-                        a.item(href="/services/중고등부") 중고등부
-                    if service == '글로리아 찬양대'
-                        a.active.item(href="/services/글로리아 찬양대") 글로리아 찬양대
-                    else
-                        a.item(href="/services/글로리아 찬양대") 글로리아 찬양대
-                    if service == '할렐루야 찬양대'
-                        a.active.item(href="/services/할렐루야 찬양대") 할렐루야 찬양대
-                    else
-                        a.item(href="/services/할렐루야 찬양대") 할렐루야 찬양대
-            div.thirteen.wide.column
-                div.ui.segment 
-                    h3.ui.dividing.header #{service}
-                        div.sub.header #{header}
-                    if datas.length > 0
-                        div.ui.accordion
-                            each member, i in datas
-                                if (i == 0)
-                                    div.active.title
-                                        div.ui.blue.tag.label
-                                            i.dropdown.icon 
-                                            |#{service}
-                                            if service != '글로리아 찬양대' && service != '할렐루야 찬양대'
-                                                |&nbsp;교사
-                                        strong &nbsp;&nbsp;&nbsp;&nbsp;#{member.RowKey}
-                                    div.active.content
-                                        - var data = member; 
-                                        include big_profile_template02
-                                else
-                                    div.title
-                                        div.ui.blue.tag.label
-                                            i.dropdown.icon 
-                                            |#{service}
-                                            if service != '글로리아 찬양대' && service != '할렐루야 찬양대'
-                                                |&nbsp;교사
-                                        strong &nbsp;&nbsp;&nbsp;&nbsp;#{member.RowKey}
-                                    div.content
-                                        - var data = member; 
-                                        include big_profile_template02
-                    else
-                        p 현재 부서는 일하는 청년부가 없습니다.
+        div.ui.segment 
+            h3.ui.dividing.header #{service}
+                div.sub.header #{header}
+            if datas.length > 0
+                div.ui.accordion
+                    each member, i in datas
+                        if (i == 0)
+                            div.active.title
+                                div.ui.blue.tag.label
+                                    i.dropdown.icon 
+                                    |#{service}
+                                    if service != '글로리아 찬양대' && service != '할렐루야 찬양대'
+                                        |&nbsp;교사
+                                strong &nbsp;&nbsp;&nbsp;&nbsp;#{member.RowKey}
+                            div.active.content
+                                - var data = member; 
+                                include big_profile_template
+                        else
+                            div.title
+                                div.ui.blue.tag.label
+                                    i.dropdown.icon 
+                                    |#{service}
+                                    if service != '글로리아 찬양대' && service != '할렐루야 찬양대'
+                                        |&nbsp;교사
+                                strong &nbsp;&nbsp;&nbsp;&nbsp;#{member.RowKey}
+                            div.content
+                                - var data = member; 
+                                include big_profile_template
+            else
+                p 현재 부서는 일하는 청년부가 없습니다.

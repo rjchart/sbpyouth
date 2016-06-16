@@ -1,8 +1,8 @@
 extends layout
 block script
 	block script_part01
-		script(type="text/javascript", src="javascript/templates.js")
-		script(type="text/javascript", src="javascript/runtime.js")
+		script(type="text/javascript", src="/javascript/templates.js")
+		script(type="text/javascript", src="/javascript/runtime.js")
 		script.
 			function AddMemberButton() {
 				$('.ui.modal')
@@ -125,7 +125,15 @@ block content
 			block sub_item05
 				a.sub.item(href="/branchleader") 브랜치 리더
 			block sub_item06
-				a.sub.item(href="/services") 부서 사역자
+				div.ui.dropdown.sub.item 부서 사역자
+					i.dropdown.icon
+					div.menu
+						a.item(href="/services/유치부") 유치부
+						a.item(href="/services/유년부") 유년부
+						a.item(href="/services/초등부") 초등부
+						a.item(href="/services/중고등부") 중고등부
+						a.item(href="/services/글로리아 찬양대") 글로리아 찬양대
+						a.item(href="/services/할렐루야 찬양대") 할렐루야 찬양대
 			if auth=="manager" || auth=="developer"
 				div.ui.right.small.menu
 					button.ui.blue.primary.labeled.icon.button(onclick="AddMemberButton()")
