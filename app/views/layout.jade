@@ -59,39 +59,42 @@ html(lang='en')
 
   body#body
     block header
-      div.ui.top.fixed.inverted.menu
-          div.ui.container
-            header.item
-              img.logo(src="/public/img/logo.png")
-              | <p> <span style="color:olive"> &nbsp;&nbsp; 대한예수교장로회 </span><br/>
-              | &nbsp; 신반포 중앙교회 청년부 </p>
-            block header_item01
-              a.main.item(href="/")
-                i.home.icon
-                |Home  
-            block header_item02
-              a.main.item(href="/branch")
-                i.grid.layout.icon 
-                |Branchs
-            block header_item03
-              a.main.item(href="/friends")
-                i.child.icon 
-                |Friends
-            div.right.menu
-              //- div.item
-              //-   div.ui.icon.input
-              //-     input(type="text" placeholder="Search...")
-              //-     i.search.link.icon
-              block header_setting
-                a.ui.main.item(href="/setting")
-                  i.settings.icon  
-                  |Setting
-              if isLogin
-                a.ui.main.item(href="/auth/logout")
-                  i.sign.out.icon  
-                  |Logout
-              else
-                a.ui.main.item(href="/auth/login")
-                  i.sign.in.icon  
-                  |Login
-    block content
+      div.ui.top.fixed.stackable.inverted.menu
+        div.ui.container
+          header.item
+            img.logo(src="/public/img/logo.png")
+            | <p> <span style="color:olive"> &nbsp;&nbsp; 대한예수교장로회 </span><br/>
+            | &nbsp; 신반포 중앙교회 청년부 </p>
+          block header_item01
+            a.main.item(href="/")
+              i.home.icon
+              |Home  
+          block header_item02
+            a.main.item(href="/branch")
+              i.grid.layout.icon 
+              |Branchs
+          block header_item03
+            a.main.item(href="/friends")
+              i.child.icon 
+              |Friends
+          div.right.menu
+            //- div.item
+            //-   div.ui.icon.input
+            //-     input(type="text" placeholder="Search...")
+            //-     i.search.link.icon
+            block header_setting
+              a.ui.main.item(href="/setting")
+                i.settings.icon  
+                |Setting
+            if isLogin
+              a.ui.main.item(href="/auth/logout")
+                i.sign.out.icon  
+                |Logout
+            else
+              a.ui.main.item(href="/auth/login")
+                i.sign.in.icon  
+                |Login
+  br
+  br
+  br            
+  block content
