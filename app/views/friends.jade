@@ -374,6 +374,10 @@ block script
 				if(e.keyCode==13)
 					TypeSearch();
 			});
+
+			$('#typeSearch').focusout(function(){
+				TypeSearch();
+			});
 			$('#DetailProfile').hide();
 			$('#profileData').hide();
 		});
