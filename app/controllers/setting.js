@@ -33,17 +33,14 @@ router.get('/', function (req, res, next) {
     }
     // var session_name, entity;
     // session_name = req.session.passport.user.displayName;
-    var entity = req.session.passport.user.entity;
-    if (user.isLink) {
-        res.render('settingProfile', {
-                title: user.title,
-                isLogin: user.isLogin,
-                isLink: user.isLink,
-                auth: user.auth,
-                data: user
-            });
+    res.render('settingProfile', {
+            auth: user.auth,
+            title: user.title,
+            isLogin: user.isLogin,
+            isLink: user.isLink,
+            data: user
+        });
         // user.data = null;
-    }
 });
 
 router.get('/nolink', function (req, res, next) {
@@ -90,22 +87,21 @@ router.get('/amend', function (req, res, next) {
 
 
 router.post('/saveUserSet', function (req, res, next) {
-    var link;
-    var id = '';
-    if (req.session.passport && req.session.passport.user.entity.link) {
-        link = req.session.passport.user.entity.link;
-        id = link.RowKey;
-    }
-    else {
+    var user = sbp_data.CheckLogin(req);
+    if (!user.isLogin) {
         res.status(500).send('Your Log-in data is expired: Login again.');
         return;
     }
+    else if (!user.isLink) {
+        res.status(500).send('당신에게는 아직 청년부 정보가 존재하지 않습니다.');
+        return;
+    }
 
-    sbp_data.MultipartyFunction(req, id, function (error, result) {
+    sbp_data.MultipartyFunction(req, user.RowKey, function (error, result) {
         if (!error) {
-            if (link) {
+            if (user.isLogin) {
                 for (var key in result) {
-                    link[key] = result[key];
+                    user[key] = result[key];
                 }
             }
             sbp_member.SaveMember(result, function (error, result) {
@@ -193,6 +189,7 @@ router.get('/auth', function (req, res, next) {
                 input.members = result;
                 input.isLogin = user.isLogin;
                 input.isLink = user.isLink;
+                input.auth = user.auth;
                 input.title = title;
                 count++;
                 if (count >= maxCount)

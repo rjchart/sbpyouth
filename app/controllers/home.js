@@ -46,7 +46,6 @@ function CombineElements(one, two) {
 router.get('/', function (req, res, next) {
     var user = sbp_data.CheckLogin(req);
 
-    var tableService = azure.createTableService(storageAccount, accessKey);
     sbp_member.GetCurrentMemberWithGroup('교회', function (error, result) {
         if (!error) {
             var chargeOrder = ['청년부 목사', '청년부 전도사'];
@@ -56,13 +55,7 @@ router.get('/', function (req, res, next) {
                 inputData[value.RowKey] = value;
             }
             user.order = chargeOrder;
-            user.datas = inputData;        
-            // res.render('churchLeader', {
-            //     title: title,
-            //     // articles: articles,
-            //     order: chargeOrder,
-            //     datas: inputData
-            // });
+            user.datas = inputData;
                   
             res.render('churchLeader', user);
         }
@@ -72,7 +65,6 @@ router.get('/', function (req, res, next) {
 router.get('/deacons', function (req, res, next) {
     var user = sbp_data.CheckLogin(req);
     
-    var tableService = azure.createTableService(storageAccount, accessKey);
     sbp_member.GetCurrentMemberWithGroup('부장 집사', function (error, result) {
         if (!error) {
             var chargeOrder = ['청2 부장 집사', '청1 부장 집사'];
@@ -84,13 +76,6 @@ router.get('/deacons', function (req, res, next) {
             user.order = chargeOrder;
             user.datas = inputData;
             res.render('deacons', user);
-            
-            // res.render('deacons', {
-            //     title: title,
-            //     // articles: articles,
-            //     order: chargeOrder,
-            //     datas: inputData
-            // });
         }
     });
 });
@@ -98,14 +83,6 @@ router.get('/deacons', function (req, res, next) {
 router.get('/executives', function (req, res, next) {
     var user = sbp_data.CheckLogin(req);
     
-    // console.log("is Session: " + req.session.id);
-    // var session_name;
-    // if (req.user) {
-    //     session_name = req.user.displayName;
-    // }
-    // console.log(req.user);
-    
-    var tableService = azure.createTableService(storageAccount, accessKey);
     sbp_member.GetCurrentMemberWithGroup('임원', function (error, result) {
         if (!error) {
             var chargeOrder = ['청년부 회장', '청년2부 총무', '청년1부 총무', '청년2부 부총무', '청년1부 부총무', '청년2부 회계', '청년1부 회계', '청년부 서기'];
@@ -115,12 +92,6 @@ router.get('/executives', function (req, res, next) {
                 inputData[value.RowKey] = value;
             }
             
-            // res.render('excutives', {
-            //     title: title,
-            //     // articles: articles,
-            //     order: chargeOrder,
-            //     datas: inputData
-            // });
             user.order = chargeOrder;
             user.datas = inputData;
             res.render('executives', user);
@@ -131,7 +102,6 @@ router.get('/executives', function (req, res, next) {
 router.get('/teamleader', function (req, res, next) {
     var user = sbp_data.CheckLogin(req);
     
-    var tableService = azure.createTableService(storageAccount, accessKey);
     sbp_member.GetCurrentMemberWithGroup('팀장', function (error, result) {
         if (!error) {
             var chargeOrder = ['찬양 팀장', '사역 팀장', '새가족 팀장', '다과 팀장'];
@@ -141,12 +111,6 @@ router.get('/teamleader', function (req, res, next) {
                 inputData[value.RowKey] = value;
             }
             
-            // res.render('teamLeaders', {
-            //     title: title,
-            //     // articles: articles,
-            //     order: chargeOrder,
-            //     datas: inputData
-            // });
             user.order = chargeOrder;
             user.datas = inputData;
             res.render('teamLeaders', user);
@@ -157,7 +121,6 @@ router.get('/teamleader', function (req, res, next) {
 router.get('/branchleader', function (req, res, next) {
     var user = sbp_data.CheckLogin(req);
     
-    var tableService = azure.createTableService(storageAccount, accessKey);
     sbp_member.GetCurrentMemberWithGroup('BS', function (error, result) {
         if (!error) {
             var chargeOrder = [];
@@ -168,18 +131,54 @@ router.get('/branchleader', function (req, res, next) {
                 if (chargeOrder.indexOf(value.branch) < 0) 
                     chargeOrder.push(value.branch);
             }
-            
-            // res.render('branchLeaders', {
-            //     title: title,
-            //     // articles: articles,
-            //     order: chargeOrder,
-            //     datas: inputData
-            // });
+
             user.order = chargeOrder;
             user.datas = inputData;
             res.render('branchLeaders', user);
         }
     });
+});
+
+router.get('/services', function (req, res, next) {
+    res.redirect('/services/0');
+});
+
+router.get('/services/:id', function (req, res, next) {
+    var user = sbp_data.CheckLogin(req);
+    var year = sbp_time.getYear();
+    var service = req.params.id;
+    if (!service || service == '' || service == 0)
+        service = '유치부';
+
+    var queryString = "service eq '" + service + "'";
+    var header = '';
+    if (service == '영아부')
+        header = '신반포 중앙교회 영아부는 0~4세의 아이들을 돌보며 가르치는 부서입니다.';
+    else if (service == '유치부')
+        header = '신반포 중앙교회 유치부는 0~4세의 아이들을 돌보며 가르치는 부서입니다.';
+    else if (service == '유년부')
+        header = '신반포 중앙교회 유년부는 초등학교 1학년부터 3학년까지의 아이들과 예배하며 가르치는 부서입니다.';
+    else if (service == '초등부')
+        header = '신반포 중앙교회 초등부는 초등학교 4학년부터 6학년까지의 아이들과 예배하며 가르치는 부서입니다.';
+    else if (service == '중고등부')
+        header = '신반포 중앙교회 중고등부는 중학생과 고등학생들과 예배하며 가르치는 부서입니다.';
+    else if (service == '글로리아 찬양대')
+        header = '글로리아 찬양대는 신반포 중앙교회 2부 예배의 찬양을 맡고 있는 부서입니다.';
+    else if (service == '할렐루야 찬양대')
+        header = '할렐루야 찬양대는 신반포 중앙교회 3부 예배의 찬양을 맡고 있는 부서입니다.';
+
+    sbp_member.GetMembersAndLogWithQueryAndYear(queryString, year, function (error, result) {
+        if (!error) {
+            user.datas = result;
+            user.service = service;
+            user.header = header;
+            res.render('homeServices', user);
+
+        }
+        else 
+            res.status(500).send(service + ' 관련 데이터를 받아오는데 실패하였습니다.');
+    });
+    
 });
 
 router.get('/branch', function (req, res, next) {
@@ -291,6 +290,8 @@ router.post('/friend_profile', function (req, res, next) {
 });
 
 router.get('/friends', function (req, res, next) {
+    var query;
+    query = req.query.query;
     var user = sbp_data.CheckLogin(req);
     // var year = req.query.year;
     var year = sbp_time.getYear();
@@ -302,10 +303,31 @@ router.get('/friends', function (req, res, next) {
         if (!error) {
             var memberList2 = [];
             memberList.forEach(function (item, index) {
-                if (item.attend >= attendSet)
-                    memberList2.push(item);
+                if (item.attend >= attendSet) {
+                    if (query) {
+                        if (item.RowKey.includes(query))
+                            memberList2.push(item);
+                        if (item.PartitionKey == query)
+                            memberList2.push(item);
+                        if (item.birthYear.includes(query))
+                            memberList2.push(item);
+                        if (item.birthMonth.toString().includes(query))
+                            memberList2.push(item);
+                        if (item.birthDay.toString().includes(query))
+                            memberList2.push(item);
+                        if (item.branch == query)
+                            memberList2.push(item);
+                        if (item.gender == query)
+                            memberList2.push(item);
+                        if (item.attendString.includes(query))
+                            memberList2.push(item);
+                        if (item.part == query)
+                            memberList2.push(item);
+                    }
+                    else 
+                        memberList2.push(item);
+                }   
             });
-            
 
             // CombineElements(user, input)
             user.memberList = memberList2;
@@ -412,17 +434,63 @@ router.post('/saveProfile/:id', function (req, res, next) {
     });
 });
 
+function ChargeGroupListInput(group, year, item) {
+    if (!group[year.toString()])
+        group[year.toString()] = [];
+    else 
+        group[year.toString()].push(item);
+}
+
 router.post('/addCharge', function (req, res, next) {
     var add_name = req.body.add_name;
     var add_chargeName = req.body.add_chargeName;
     var add_chargeGroup = req.body.add_chargeGroup;
     var add_chargeYear = req.body.add_chargeYear;
-    
+
+    // var serviceList = {'영아부', '유치부', '유년부', '초등부', '중고등부', '글로리아 찬양대', '할렐루야 찬양대'};
+    // var baby = {};
+    // var babyhood = {};
+    // var childhood = {};
+    // var elemtary = {};
+    // var middlehight = {};
+    // var gloria = {};
+    // var halleluja = {};
+
     var addData = [];
     for (i = 0; i < add_name.length; i++) {
         var tmp = {};
         if (add_name[i] == null || add_name[i] == '')
             continue;
+        // var serviceIndex = serviceList.indexOf(add_chargeGroup[i]);
+        // if (serviceIndex >= 0 && serviceIndex < serviceList.length) {
+        //     switch (serviceIndex) {
+        //         case 0:
+        //             ChargeGroupListInput(baby,add_chargeYear[i], add_chargeName[i]);
+        //             break;
+        //         case 1:
+        //             ChargeGroupListInput(babyhood,add_chargeYear[i], add_chargeName[i]);
+        //             break;
+        //         case 2:
+        //             ChargeGroupListInput(childhood,add_chargeYear[i], add_chargeName[i]);
+        //             break;
+        //         case 3:
+        //             ChargeGroupListInput(elemtary,add_chargeYear[i], add_chargeName[i]);
+        //             break;
+        //         case 4:
+        //             ChargeGroupListInput(middlehight,add_chargeYear[i], add_chargeName[i]);
+        //             break;
+        //         case 5:
+        //             ChargeGroupListInput(gloria,add_chargeYear[i], add_chargeName[i]);
+        //             break;
+        //         case 6:
+        //             ChargeGroupListInput(halleluja,add_chargeYear[i], add_chargeName[i]);
+        //             break;
+            
+        //         default:
+        //             break;
+        //     }
+        //     continue;
+        // }
         tmp.name = add_name[i];
         tmp.chargeName = add_chargeName[i];
         tmp.chargeGroup = add_chargeGroup[i];
@@ -535,13 +603,25 @@ router.post('/makeBranch', function (req, res, next) {
 });
 
 router.post('/delete/:id', function (req, res, next) {
+    var user = sbp_data.CheckLogin(req);
+
     var id = req.params.id;
     var member = req.body.member;
     var target = req.body.target;
     var key = req.body.key;
     sbp_member.SetRelation(key, member, target, id, 'delete', function (error, result) {
         if (!error) {
-            res.send(req.body);
+            if (user.isLink && user.RowKey == member) {
+                if (id == "family") id = families;
+                else id += "s";
+                user[id] = result;
+                req.session.save(function(err) {
+                    res.send(req.body);
+                });
+                // req.session.passport.user.link[id] = result;
+            }
+            else
+                res.send(req.body);
         }
         else 
             console.log('error: ' + error);
@@ -549,6 +629,8 @@ router.post('/delete/:id', function (req, res, next) {
 });
 
 router.post('/insert/:id', function (req, res, next) {
+    var user = sbp_data.CheckLogin(req);
+
     var id = req.params.id;
     var member = req.body.member;
     var targets = req.body.target;
@@ -562,7 +644,17 @@ router.post('/insert/:id', function (req, res, next) {
     if (target.length > 0) {
         sbp_member.SetRelation(key, member, target, id, 'insert', function (error, result) {
             if (!error) {
-                res.send(req.body);
+                if (user.isLink && user.RowKey == member) {
+                    if (id == "family") id = families;
+                    else id += "s";
+                    user[id] = result;
+                    req.session.save(function(err) {
+                        res.send(req.body);
+                    });
+                    // req.session.passport.user.link[id] = result;
+                }
+                else
+                    res.send(req.body);
             }
             else 
                 console.log('error: ' + error);

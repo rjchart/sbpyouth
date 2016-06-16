@@ -1,9 +1,9 @@
 
 div.ui.raised.segment
-    - var authShow = false;
-    - if (authShow == "developer" || authShow == "manager" || authShow == "executive") authShow = true;
+    - var auth = false;
+    - if (auth == "developer" || auth == "manager" || auth == "executive") auth = true;
     div.ui.grid
-        div.four.wide.streched.column
+        div.five.wide.streched.column
             div.ui.card
                 div.image.outImg(style="background-color:#e5e5e5")
                     if (data.usingPhoto == 'true')
@@ -12,7 +12,7 @@ div.ui.raised.segment
                         img#photo.fitImg(src="#{data.photo||''}")
                     else
                         img.fitImg(src="/public/img/image.png")
-        div.twelve.wide.streched.column
+        div.eleven.wide.streched.column
             div.ui.container
                 h3.ui.header
                     div.content
@@ -41,7 +41,7 @@ div.ui.raised.segment
                             i.big.phone.middle.aligned.icon
                             div.content
                                 div.header 전화번호
-                                    if data.showPhone || authShow
+                                    if data.showPhone || auth
                                         div.description(style="color:gray")
                                             |#{data.phone}
                                     else
@@ -51,7 +51,7 @@ div.ui.raised.segment
                             i.big.mail.middle.aligned.icon
                             div.content
                                 div.header 메일
-                                    if data.showMail || authShow
+                                    if data.showMail || auth
                                         div.description(style="color:gray") 
                                             |#{data.mail}
                                     else
@@ -61,7 +61,7 @@ div.ui.raised.segment
                             i.big.building.middle.aligned.icon
                             div.content
                                 div.header 거주지
-                                    if data.showLocate || authShow
+                                    if data.showLocate || auth
                                         div.description(style="color:gray") 
                                             |#{data.locate || '알수없음'}
                                     else

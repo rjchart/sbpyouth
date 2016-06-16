@@ -811,7 +811,7 @@ module.exports.SetRelation = function (key, member, target, relationKey, setting
                         if (!error) {
                             count++;
                             if (count >= maxFunctionCount)
-                                next (null, 'done');
+                                next (null, relList);
                         }
                         else {
                             count++;
@@ -820,7 +820,7 @@ module.exports.SetRelation = function (key, member, target, relationKey, setting
                             if (errorCount >= maxFunctionCount)
                                 next(error);
                             else if (count >= maxFunctionCount)
-                                next (null, 'done');
+                                next (null, relList);
                         }
                     });
 
@@ -837,7 +837,7 @@ module.exports.SetRelation = function (key, member, target, relationKey, setting
                     if (!error) {
                         count++;
                         if (count >= maxFunctionCount)
-                            next (null, 'done');
+                            next (null, relList);
                     }
                     else {
                         count++;
@@ -846,7 +846,7 @@ module.exports.SetRelation = function (key, member, target, relationKey, setting
                         if (errorCount >= maxFunctionCount)
                             next(error);
                         else if (count >= maxFunctionCount)
-                            next (null, 'done');
+                            next (null, relList);
                     }
                 });
             }
@@ -854,7 +854,7 @@ module.exports.SetRelation = function (key, member, target, relationKey, setting
                 if (!error) {
                     count++;
                     if (count >= maxFunctionCount)
-                        next (null, 'done');
+                        next (null, relList);
                 }
                 else  {
                     count++;
@@ -863,7 +863,7 @@ module.exports.SetRelation = function (key, member, target, relationKey, setting
                     if (errorCount >= maxFunctionCount)
                         next(error);
                     else if (count >= maxFunctionCount)
-                        next (null, 'done');
+                        next (null, relList);
                 }
             });
         }

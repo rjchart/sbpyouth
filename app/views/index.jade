@@ -124,8 +124,8 @@ block content
 				a.sub.item(href="/teamleader") 팀장
 			block sub_item05
 				a.sub.item(href="/branchleader") 브랜치 리더
-			//- block sub_item06
-			//- 	a.sub.item(href="/") 그외 사역자
+			block sub_item06
+				a.sub.item(href="/services") 부서 사역자
 			if auth=="manager" || auth=="developer"
 				div.ui.right.small.menu
 					button.ui.blue.primary.labeled.icon.button(onclick="AddMemberButton()")
