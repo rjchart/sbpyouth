@@ -112,33 +112,32 @@ block header_item01
 		i.home.icon
 		|Home  
 block content
-	div.ui.secondary.pointing.menu.navbar.page.grid
-		div.ui.container
-			block sub_item01
-				a.sub.item(href="/") 청년부 지도자
-			block sub_item02
-				a.sub.item(href="/deacons") 부장 집사
-			block sub_item03
-				a.sub.item(href="/executives") 임원
-			block sub_item04
-				a.sub.item(href="/teamleader") 팀장
-			block sub_item05
-				a.sub.item(href="/branchleader") 브랜치 리더
-			block sub_item06
-				div.ui.dropdown.sub.item 부서 사역자
-					i.dropdown.icon
-					div.menu
-						a.item(href="/services/유치부") 유치부
-						a.item(href="/services/유년부") 유년부
-						a.item(href="/services/초등부") 초등부
-						a.item(href="/services/중고등부") 중고등부
-						a.item(href="/services/글로리아 찬양대") 글로리아 찬양대
-						a.item(href="/services/할렐루야 찬양대") 할렐루야 찬양대
-			if auth=="manager" || auth=="developer"
-				div.ui.right.small.menu
-					button.ui.blue.primary.labeled.icon.button(onclick="AddMemberButton()")
-						i.user.icon 
-						|Add Member
+	div.ui.secondary.pointing.menu.navbar.grid
+		block sub_item01
+			a.sub.item(href="/") 청년부 지도자
+		block sub_item02
+			a.sub.item(href="/deacons") 부장 집사
+		block sub_item03
+			a.sub.item(href="/executives") 임원
+		block sub_item04
+			a.sub.item(href="/teamleader") 팀장
+		block sub_item05
+			a.sub.item(href="/branchleader") 브랜치 리더
+		block sub_item06
+			div.ui.dropdown.sub.item 부서 사역자
+				i.dropdown.icon
+				div.menu
+					a.item(href="/services/유치부") 유치부
+					a.item(href="/services/유년부") 유년부
+					a.item(href="/services/초등부") 초등부
+					a.item(href="/services/중고등부") 중고등부
+					a.item(href="/services/글로리아 찬양대") 글로리아 찬양대
+					a.item(href="/services/할렐루야 찬양대") 할렐루야 찬양대
+		if auth=="manager" || auth=="developer"
+			div.ui.right.small.menu
+				button.ui.blue.primary.labeled.icon.button(onclick="AddMemberButton()")
+					i.user.icon 
+					|Add Member
 	block sub_content
 	block modal_content
 		div.ui.modal
