@@ -21,7 +21,9 @@ html(lang='en')
       $(document).ready(function(){
         $('.right.menu.open').on("click",function(e){
             e.preventDefault();
-            $('.ui.vertical.menu').toggle();
+            //- $('.ui.vertical.menu').toggle();
+            $('.ui.sidebar')
+            .sidebar('toggle');
         });
             
         $('.ui.dropdown').dropdown();
@@ -74,7 +76,7 @@ html(lang='en')
 
         .mobile.row{
           padding-top: 10px !important;
-          margin-top: 30px !important;
+          margin-top: 0px !important;
         }
 
         .mobile.row .ui.inverted.menu{
@@ -83,6 +85,10 @@ html(lang='en')
 
         .padding-reset{
           padding: 0px !important;
+        }
+
+        .ui.secondary.pointing.menu.navbar.grid.tablet.only.row {
+          margin-top: 0px !important;
         }
 
         .ui.message{
@@ -94,29 +100,19 @@ html(lang='en')
               margin-top: 70px;
             }
 
-            .ui.grid { margin: 0 !important; }
+            .ui.grid { margin:  0 !important; }
 
             .ui.vertical.menu.navbar{
               margin-top: 25px !important;
             }
 
             .ui.main.container {
-              margin-top: 10px;
-            }
-
-            .ui.secondary.pointing.menu.navbar.page.grid {
-              margin: 0 !important;
+              margin-top: 50px;
             }
 
             .ui.cards {
-              margin-top: -30px;
+              margin-top: 0px;
             }
-        }
-
-        .ui.vertical.menu{
-          margin-top: -15px !important;
-          width: 100%;
-          display: none;
         }
 
   body
@@ -153,20 +149,23 @@ html(lang='en')
                           a.ui.main.item(href="/auth/login")
                             i.sign.in.icon  
                             |Login
-            div.mobile.only.row 
-                div.ui.fixed.inverted.navbar.menu 
-                    a.brand.item 
-                      img.logo(src="/public/img/logo.png")
-                      | <p> <span style="color:olive"> &nbsp;&nbsp; 대한예수교장로회 </span><br/>
-                      | &nbsp; 신반포 중앙교회 청년부 </p>
-                    div.right.menu.open 
-                        a.menu.item 
-                            i.content.icon
-                div.ui.vertical.navbar.menu
-                    block header_item01
-                      a.main.item(href="/")
-                        i.home.icon
-                        |Home  
+            div.mobile.only.row
+                div.ui.left.inverted.vertical.thin.sidebar.menu
+                    div.main.item(href="/")
+                      i.home.icon
+                      |Home
+                      div.menu
+                        a.item(href="/") 청년부 지도자 
+                        a.item(href="/deacons") 부장 집사
+                        a.item(href="/executives") 임원
+                        a.item(href="/teamleader") 팀장
+                        a.item(href="/branchleader") 브랜치 리더
+                        a.item(href="/services/유치부") 유치부 교사
+                        a.item(href="/services/유년부") 유년부 교사
+                        a.item(href="/services/초등부") 초등부 교사
+                        a.item(href="/services/중고등부") 중고등부 교사
+                        a.item(href="/services/글로리아 찬양대") 글로리아 찬양대
+                        a.item(href="/services/할렐루야 찬양대") 할렐루야 찬양대
                     block header_item02
                       a.main.item(href="/branch")
                         i.grid.layout.icon 
@@ -187,7 +186,20 @@ html(lang='en')
                       a.ui.main.item(href="/auth/login")
                         i.sign.in.icon  
                         |Login
-    div.ui.page.grid.main
+                div.ui.top.fixed.inverted.navbar.menu 
+                    a.brand.item 
+                      img.logo(src="/public/img/logo.png")
+                      | <p> <span style="color:olive"> &nbsp;&nbsp; 대한예수교장로회 </span><br/>
+                      | &nbsp; 신반포 중앙교회 청년부 </p>
+                    div.right.menu.open 
+                        a.menu.item 
+                            i.content.icon
+                div.pusher
+                  div.ui.page.grid.main
+                    div.row
+                        div.column.padding-reset
+                          block content
+    div.ui.page.grid.main.computer.tablet.only.row
         div.row
             div.column.padding-reset
               block content

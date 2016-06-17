@@ -166,7 +166,7 @@ block header_item02
 block content
 	//- script(src="/javascript/menu.js")
 	//- div.ui.masthead.vertical.tab.segment
-	div.ui.secondary.pointing.menu.navbar.grid
+	div.ui.secondary.pointing.menu.navbar.grid.computer.only.row
 		block sub_item01
 			a.sub.item(href="/branch") 전체 브랜치 현황
 		block sub_item02
@@ -174,14 +174,21 @@ block content
 				a.sub.item(href="/branch_segment/#{item.branch}?year=#{year}&tag=#{branchTag}") #{item.branch}
 			- });
 		if auth=="manager" || auth=="executive" || auth=="developer" 
-			div.ui.right.small.menu
-				if auth=="manager" || auth=="developer" || auth=="executive"
-					button.ui.blue.primary.labeled.icon.button(onclick="AddBranchButton()")
-						i.user.icon 
-						|Edit Branch
-				if auth=="manager" || auth=="developer"
-					button.ui.red.button(onclick="MakeBranchButton()")
-						|Make Branch
+			div.ui.right.menu
+			if auth=="manager" || auth=="developer" || auth=="executive"
+				button.ui.blue.primary.labeled.icon.button(onclick="AddBranchButton()")
+					i.user.icon 
+					|Edit Branch
+				//- if auth=="manager" || auth=="developer"
+				//- 	button.ui.red.button(onclick="MakeBranchButton()")
+				//- 		|Make Branch
+	div.ui.secondary.pointing.menu.navbar.grid.tablet.only.row
+		block sub_item01
+			a.sub.item(href="/branch") 전체 브랜치 현황
+		block sub_item02
+			- bsList.forEach( function(item,index) {
+				a.sub.item(href="/branch_segment/#{item.branch}?year=#{year}&tag=#{branchTag}") #{item.branch}
+			- });
 	block sub_content
 	block modal_content
 		div.ui.edit.modal

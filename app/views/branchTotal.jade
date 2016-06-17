@@ -150,7 +150,7 @@ block sub_content
 								tbody
 									each item in bsList
 										tr
-											td: div.ui.blue.ribbon.label #{item.branch}
+											td: a.ui.blue.ribbon.label(href="/branch_segment/#{item.branch}?year=#{year}&tag=#{branchTag}") #{item.branch}
 											td: div.ui.red.horizontal.label BS: #{item.RowKey}
 											td
 												each member, i in item.two

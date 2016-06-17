@@ -336,7 +336,7 @@ router.get('/friends', function (req, res, next) {
             // CombineElements(user, input)
             user.memberList = memberList2;
             user.year = year;
-            res.render('friends', user);
+            res.render('friendSearch', user);
             // 정리된 정보를 건내고 ejs 랜더링 하여 보여줌.
             // res.render('friends', 
             //     {	
