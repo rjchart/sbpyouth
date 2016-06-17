@@ -1,7 +1,7 @@
 
 div.ui.raised.segment
     - var authShow = false;
-    - if (auth == "developer" || auth == "manager" || auth == "executive") auth = true;
+    - if (auth == "developer" || auth == "manager" || auth == "executive") authShow = true;
     div.ui.grid
         div.two.column.computer.only.row
             div.four.wide.streched.column
@@ -9,7 +9,7 @@ div.ui.raised.segment
                     div.image.outImg(style="background-color:#e5e5e5")
                         if (data.usingPhoto == 'true')
                             img#photo.fitImg(src="#{data.userPhoto||''}")
-                        else if (data.photo)
+                        else if (data.photo) 
                             img#photo.fitImg(src="#{data.photo||''}")
                         else
                             img.fitImg(src="/public/img/image.png")
@@ -17,7 +17,7 @@ div.ui.raised.segment
                 div.ui.container
                     h3.ui.header
                         div.content
-                            |#{data.RowKey}   
+                            |#{data.RowKey}
                             div.sub.header #{data.birthYear}.#{data.birthMonth}.#{data.birthDay}
                         div.ui.mini.relaxed.celled.list
                             div.item
