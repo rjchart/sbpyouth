@@ -73,13 +73,13 @@ block sub_content
 									- }
 				div#profileData.four.wide.column
 					include profile
-			div.column.tablet.only.row
+			div.column.tablet.mobile.only.row
 				div.sixteen.wide.streched.column
 					div.ui.segment
 						h2.ui.header
 							|#{year}년도 브랜치 편성
 						div.ui.container
-							table.ui.celled.striped.structured.table
+							table.ui.celled.striped.structured.unstackable.table
 								thead
 									tr
 										th 브랜치
@@ -140,27 +140,27 @@ block sub_content
 												if item.out.length > i 
 													label #{item.out[i].RowKey}
 									- }
-			div.column.mobile.only.row
-				div.sixteen.wide.streched.column
-					div.ui.segment
-						h2.ui.header
-							|#{year}년도 브랜치 편성
-						div.ui.container
-							table.ui.celled.striped.structured.table
-								tbody
-									each item in bsList
-										tr
-											td: a.ui.blue.ribbon.label(href="/branch_segment/#{item.branch}?year=#{year}&tag=#{branchTag}") #{item.branch}
-											td: div.ui.red.horizontal.label BS: #{item.RowKey}
-											td
-												each member, i in item.two
-													if i == 0
-														|#{member.RowKey}
-													else
-														|, #{member.RowKey}
-												each member in item.one
-													|, #{member.RowKey}
-												each member in item.arm
-													|, #{member.RowKey}
-												each member in item.out
-													|, #{member.RowKey}
+			//- div.column.mobile.only.row
+			//- 	div.sixteen.wide.streched.column
+			//- 		div.ui.segment
+			//- 			h2.ui.header
+			//- 				|#{year}년도 브랜치 편성
+			//- 			div.ui.container
+			//- 				table.ui.celled.striped.structured.table
+			//- 					tbody
+			//- 						each item in bsList
+			//- 							tr
+			//- 								td: a.ui.blue.ribbon.label(href="/branch_segment/#{item.branch}?year=#{year}&tag=#{branchTag}") #{item.branch}
+			//- 								td: div.ui.red.horizontal.label BS: #{item.RowKey}
+			//- 								td
+			//- 									each member, i in item.two
+			//- 										if i == 0
+			//- 											|#{member.RowKey}
+			//- 										else
+			//- 											|, #{member.RowKey}
+			//- 									each member in item.one
+			//- 										|, #{member.RowKey}
+			//- 									each member in item.arm
+			//- 										|, #{member.RowKey}
+			//- 									each member in item.out
+			//- 										|, #{member.RowKey}
