@@ -7,8 +7,16 @@ block sub_item02
 			a.sub.item(href="/branch_segment/#{item}?year=#{year}&tag=#{branchTag}") #{item}
 	- });
 block sub_content
-	div.ui.container
-		div.ui.three.stackable.cards
-			each data in datas
-				include profile_temp02
+	div.ui.main.container
+		div.ui.grid
+			div.column.computer.tablet.only.row
+				div.sixteen.wide.streched.column
+					div.ui.three.stackable.cards
+						each data in datas
+							include profile_temp02
+			div.column.mobile.only.row
+				div.sixteen.wide.streched.column
+					div.ui.cards
+						each data in datas
+							include profile_temp02
 	
