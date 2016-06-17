@@ -20,6 +20,9 @@ block script
 				xhttp.open("POST", "branch_profile", true);
 				xhttp.send(JSON.stringify(data));
 				xhttp.onreadystatechange = function() {
+					var getTest = document.getElementById('profileData');
+					var getValue = xhttp.responseText;
+					getTest.innerHTML = "";
 					document.getElementById('profileData').innerHTML = xhttp.responseText;
 					$('#profileData').show();
 				}
@@ -64,6 +67,9 @@ block script
 					
 			}
 
+			//- window.onload = function () {
+			//- 	//- Display();
+			//- }
 			$(document).ready(function(){
 				$('#profileData').hide();
 			});

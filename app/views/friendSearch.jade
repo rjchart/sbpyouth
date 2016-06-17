@@ -70,6 +70,8 @@ block sub_content
             div.column.tablet.mobile.only.row
                 div.sixteen.wide.streched.column
                     div.ui.segment
+                        h2.ui.header
+                            |#{year}년도 청년부 맴버 리스트
                         if auth == "manager" || auth == "executive" || auth=="developer"
                             table.scrolled.ui.line.celled.table(style="width:100%;border-bottom-width: 5px; margin:0; padding: 5px;")
                                 thead
