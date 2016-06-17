@@ -5,7 +5,7 @@ block sub_content
     div.main.ui.container
         div.ui.segment
             h3.ui.dividing.header 임원단
-                div.sub.header 신반포 중앙교회 청년부 전반적인 일을 맡고 있으며 매주 토요일 회의를 통해 청년부의 할일을 계획하고 정리한다.
+                div.sub.header 신반포 중앙교회 청년부 전반적인 일을 맡고 있으며 매주 토요일 회의를 통해 청년부의 할일을 계획하고 정리합니다.
             div.ui.accordion
                 each chargeName, i in order
                     if datas[chargeName]
@@ -16,7 +16,7 @@ block sub_content
                                     |#{chargeName}
                                 strong &nbsp;&nbsp;&nbsp;&nbsp;#{datas[chargeName].name}
                             div.active.content
-                                p(style="color:gray") 청년부의 모든 일에 참여하며 지시를 내리고 참여를 북돋우는 역할을 한다. 매주 (혹은 격주) 토요일 회의를 주도하고 청년부의 일에 항상 앞장선다.
+                                p(style="color:gray") #{chargeDesc[i]}
                                 - var data = datas[chargeName]; 
                                 include big_profile_template
                         else
@@ -26,7 +26,7 @@ block sub_content
                                     |#{chargeName}
                                 strong &nbsp;&nbsp;&nbsp;&nbsp;#{datas[chargeName].name}
                             div.content
-                                p(style="color:gray") 청년부의 모든 일에 참여하며 지시를 내리고 참여를 북돋우는 역할을 한다. 매주 (혹은 격주) 토요일 회의를 주도하고 청년부의 일에 항상 앞장선다.
+                                p(style="color:gray") #{chargeDesc[i]}
                                 - var data = datas[chargeName]; 
                                 include big_profile_template
                         

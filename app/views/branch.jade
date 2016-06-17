@@ -72,6 +72,7 @@ block script
 			//- }
 			$(document).ready(function(){
 				$('#profileData').hide();
+				$('.small.button').popup();
 			});
 			
 			var addMemberNumber = 1;
@@ -168,7 +169,7 @@ block script
 block header_item02
 	a.main.item.active(href="/branch")
 		i.grid.layout.icon
-		|Branchs
+		|Branches
 block content
 	//- script(src="/javascript/menu.js")
 	//- div.ui.masthead.vertical.tab.segment
@@ -179,15 +180,15 @@ block content
 			- bsList.forEach( function(item,index) {
 				a.sub.item(href="/branch_segment/#{item.branch}?year=#{year}&tag=#{branchTag}") #{item.branch}
 			- });
-		if auth=="manager" || auth=="executive" || auth=="developer" 
+		if auth=="manager" || auth=="developer" 
 			div.ui.right.secondary.menu
 				div.item
-					button.ui.blue.primary.labeled.icon.button(onclick="AddBranchButton()")
-						i.user.icon 
-						|Edit Branch
-				//- if auth=="manager" || auth=="developer"
-				//- 	button.ui.red.button(onclick="MakeBranchButton()")
-				//- 		|Make Branch
+					div.ui.buttons
+						button.ui.blue.small.button(onclick="AddBranchButton()", data-content="브랜치원의 브랜치 정보를 추가하거나 수정할 수 있다.")
+							|Edit B
+						div.divier.or
+						button.ui.red.small.button(onclick="MakeBranchButton()", data-content="다음에 만들 브랜치를 생성해볼 수 있습니다.")
+							|Make B
 	div.ui.secondary.pointing.menu.navbar.grid.tablet.only.row
 		block sub_item01
 			a.sub.item(href="/branch") 전체 브랜치 현황

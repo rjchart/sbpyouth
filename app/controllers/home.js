@@ -49,6 +49,10 @@ router.get('/', function (req, res, next) {
     sbp_member.GetCurrentMemberWithGroup('교회', function (error, result) {
         if (!error) {
             var chargeOrder = ['청년부 목사', '청년부 전도사'];
+            var chargeDesc = [
+                '청년부의 예배를 맡고 있으며 전체적인 지도와 교육을 담당합니다.', 
+                '청년부 목사님을 보조하며 청년부의 지도와 교육을 함께 합니다.'
+                ];
             var inputData = {};
             for (var index in result) {
                 var value = result[index];
@@ -56,6 +60,7 @@ router.get('/', function (req, res, next) {
             }
             user.order = chargeOrder;
             user.datas = inputData;
+            user.chargeDesc = chargeDesc;
                   
             res.render('churchLeader', user);
         }
@@ -90,6 +95,16 @@ router.get('/executives', function (req, res, next) {
     sbp_member.GetCurrentMemberWithGroup('임원', function (error, result) {
         if (!error) {
             var chargeOrder = ['청년부 회장', '청년2부 총무', '청년1부 총무', '청년2부 부총무', '청년1부 부총무', '청년2부 회계', '청년1부 회계', '청년부 서기'];
+            var chargeDesc = [
+                '청년부의 모든 일에 참여하며 지시를 내리고 참여를 북돋우는 역할을 한다. 매주 (혹은 격주) 토요일 회의를 주도하고 청년부의 일에 항상 앞장섭니다.', 
+                '청년부 회장의 일을 도우며 매주 토요일 대부분의 청년부 행사를 함께 계획하고 실행하며 청년2부의 행사에 주로 참여합니다.', 
+                '청년부 회장의 일을 도우며 매주 토요일 대부분의 청년부 행사를 함께 계획하고 실행하며 청년1부의 행사에 주로 참여합니다.',
+                '청년2부 총무의 일을 도우며 청년2부의 행사에 주로 참여합니다.',  
+                '청년1부 총무의 일을 도우며 청년1부의 행사에 주로 참여합니다.', 
+                '청년2부의 회계를 담당하며 청년2부에서 사용되는 금액의 계산과 영수증 처리를 담당합니다.',
+                '청년1부의 회계를 담당하며 청년1부에서 사용되는 금액의 계산과 영수증 처리를 담당합니다.',
+                '매주 토요일 청년부 회의의 내용과 그외 중요한 회의 내용을 기록하며 그 내용을 임원끼리 공유합니다.'
+                ];
             var inputData = {};
             for (var index in result) {
                 var value = result[index];
@@ -98,6 +113,7 @@ router.get('/executives', function (req, res, next) {
             
             user.order = chargeOrder;
             user.datas = inputData;
+            user.chargeDesc = chargeDesc;
             res.render('executives', user);
         }
     });
