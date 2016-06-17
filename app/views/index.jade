@@ -133,11 +133,12 @@ block content
 					a.item(href="/services/중고등부") 중고등부
 					a.item(href="/services/글로리아 찬양대") 글로리아 찬양대
 					a.item(href="/services/할렐루야 찬양대") 할렐루야 찬양대
-		if auth=="manager" || auth=="developer"
-			div.ui.right.small.menu
-				button.ui.blue.primary.labeled.icon.button(onclick="AddMemberButton()")
-					i.user.icon 
-					|Add Member
+		if auth=="manager" || auth=="developer" 
+			div.ui.right.secondary.menu
+				div.item
+					button.ui.blue.primary.labeled.icon.button(onclick="AddMemberButton()")
+						i.user.icon 
+						|Add Member
 	block sub_content
 	block modal_content
 		div.ui.modal

@@ -180,11 +180,11 @@ block content
 				a.sub.item(href="/branch_segment/#{item.branch}?year=#{year}&tag=#{branchTag}") #{item.branch}
 			- });
 		if auth=="manager" || auth=="executive" || auth=="developer" 
-			div.ui.right.menu
-			if auth=="manager" || auth=="developer" || auth=="executive"
-				button.ui.blue.primary.labeled.icon.button(onclick="AddBranchButton()")
-					i.user.icon 
-					|Edit Branch
+			div.ui.right.secondary.menu
+				div.item
+					button.ui.blue.primary.labeled.icon.button(onclick="AddBranchButton()")
+						i.user.icon 
+						|Edit Branch
 				//- if auth=="manager" || auth=="developer"
 				//- 	button.ui.red.button(onclick="MakeBranchButton()")
 				//- 		|Make Branch
