@@ -24,7 +24,7 @@ module.exports = function (app) {
 router.get('/', function (req, res, next) {
     var user = sbp_data.CheckLogin(req);
     if (!user.isLogin) {
-        res.redirect('/auth/login?ret=setting');
+        res.redirect('/auth/login?ret=/setting');
         return;
     }
     else if (!user.isLink) {
@@ -46,7 +46,7 @@ router.get('/', function (req, res, next) {
 router.get('/nolink', function (req, res, next) {
     var user = sbp_data.CheckLogin(req);
     if (!user.isLogin) {
-        res.redirect('/auth/login?ret=setting');
+        res.redirect('/auth/login?ret=/setting');
         return;
     }
     else if (user.isLink) {
@@ -60,7 +60,7 @@ router.get('/nolink', function (req, res, next) {
 router.get('/secret', function (req, res, next) {
     var user = sbp_data.CheckLogin(req);
     if (!user.isLogin) {
-        res.redirect('/auth/login?ret=setting/secret');
+        res.redirect('/auth/login?ret=/setting/secret');
         return;
     }
     else if (!user.isLink) {
@@ -74,7 +74,7 @@ router.get('/amend', function (req, res, next) {
     var user = sbp_data.CheckLogin(req);
     
     if (!user.isLogin) {
-        res.redirect('/auth/login?ret=setting/amend');
+        res.redirect('/auth/login?ret=/setting/amend');
         return;
     }
     else if (!user.isLink) {

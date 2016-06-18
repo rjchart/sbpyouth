@@ -20,12 +20,13 @@ block sub_content
 								tfoot
 									tr
 										th(colspan="#{bsList.length+1}") 
-											div.ui.borderless.small.right.floated.pagination.menu
-												a.item(href="/branch?year=#{year}") <i class="child icon"></i> all
-												a.item(href="/branch?year=#{year}&attendValue=1") <i class="frown icon"></i> not bad
-												a.item(href="/branch?year=#{year}&attendValue=2") <i class="meh icon"></i> well
-												a.item(href="/branch?year=#{year}&attendValue=3") <i class="smile icon"></i> good
-												a.item(href="/branch?year=#{year}&attendValue=4") <i class="thumbs outline up icon"></i> perfect
+											if auth=="manager" || auth=="developer" || auth=="executive" 
+												div.ui.borderless.small.right.floated.pagination.menu
+													a.item(href="/branch?year=#{year}") <i class="child icon"></i> all
+													a.item(href="/branch?year=#{year}&attendValue=1") <i class="frown icon"></i> not bad
+													a.item(href="/branch?year=#{year}&attendValue=2") <i class="meh icon"></i> well
+													a.item(href="/branch?year=#{year}&attendValue=3") <i class="smile icon"></i> good
+													a.item(href="/branch?year=#{year}&attendValue=4") <i class="thumbs outline up icon"></i> perfect
 								tbody
 									tr
 										td: div.ui.ribbon.label 브랜치장
@@ -71,6 +72,11 @@ block sub_content
 												if item.out.length > i 
 													label#profile(onclick="ProfileBS('#{item.out[i].RowKey}','#{year}','#{item.out[i].branch}','#{item.out[i].attend}')") #{item.out[i].RowKey}
 									- }
+							if !isLogin
+								br
+								br
+						if !isLogin
+							div.ui.bottom.attached.label 간단하니 가능하면 <a href="/auth/login?ret=/branch" style="color:red">로그인</a> 해주세요.
 				div#profileData.four.wide.column
 					include profile
 			div.column.tablet.mobile.only.row
@@ -140,6 +146,11 @@ block sub_content
 												if item.out.length > i 
 													label #{item.out[i].RowKey}
 									- }
+							if !isLogin
+								br
+								br
+						if !isLogin
+							div.ui.bottom.attached.label 간단하니 가능하면 <a href="/auth/login?ret=/branch" style="color:red">로그인</a> 해주세요.
 			//- div.column.mobile.only.row
 			//- 	div.sixteen.wide.streched.column
 			//- 		div.ui.segment

@@ -154,7 +154,7 @@ html(lang='en')
                             i.sign.out.icon  
                             |Logout
                         else
-                          a.ui.main.item(href="/auth/login")
+                          a.ui.main.item(href="/auth/login?ret=#{base}")
                             i.sign.in.icon  
                             |Login
             div.mobile.only.row
@@ -191,7 +191,7 @@ html(lang='en')
                         i.sign.out.icon  
                         |Logout
                     else
-                      a.ui.main.item(href="/auth/login")
+                      a.ui.main.item(href="/auth/login?ret=#{base}")
                         i.sign.in.icon  
                         |Login
                 div.ui.top.fixed.inverted.navbar.menu 

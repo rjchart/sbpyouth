@@ -60,3 +60,8 @@ block sub_content
                                 include big_profile_template
             else
                 p 현재 부서는 일하는 청년부가 없습니다.
+            if !isLogin
+                br
+                br
+        if !isLogin
+            div.ui.bottom.attached.label 간단하니 가능하면 <a href="/auth/login?ret=/branchleader" style="color:red">로그인</a> 해주세요.

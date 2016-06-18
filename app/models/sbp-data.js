@@ -99,19 +99,22 @@ module.exports.MultipartyFunction = function (req, id, next) {
 module.exports.CheckLogin = function (req) {
     if (!req.session.passport || !req.session.passport.user) {
         return {
-			title: title
+			title: title,
+			base: req.url
 		};
     }
 	if (!req.session.passport.user.link) {
 		return {
 			title: title,
 			isLogin: true,
-			isLink: false
+			isLink: false,
+			base: req.url
 		};
 	}
     var link = req.session.passport.user.link;
 	link.isLogin = true;
 	link.isLink = true;
 	link.title = title;
+	link.base = req.url;
 	return link;
 }

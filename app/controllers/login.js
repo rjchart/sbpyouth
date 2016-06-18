@@ -132,7 +132,7 @@ module.exports = function (app) {
 router.get('/twitter', passport.authenticate('twitter'));
 router.get('/facebook', passport.authenticate('facebook'), 
     function (req, res) {
-        ;
+        // res.redirect(redirectURL);
     }
 );
 router.get('/google', passport.authenticate('google', {
@@ -168,7 +168,7 @@ router.get('/google/callback', passport.authenticate('google', {
 // redirect 실패/성공의 주소를 기입한다.
 //
 router.get('/facebook/callback', passport.authenticate('facebook', {
-    successRedirect: redirectURL,
+    successRedirect: '/auth/loginSuccess',
     failureRedirect: redirectURL
 }));
 
@@ -186,6 +186,10 @@ router.get('/kakao/callback', passport.authenticate('kakao', {
     }
 );
 
+router.get('/loginSuccess', function (req, res) {
+    res.redirect(redirectURL);
+});
+
 router.get('/setting', function (req, res) {
     res.redirect('../setting');
 })
@@ -196,13 +200,17 @@ router.get('/logout', function(req, res){
 // req.session.passport 의 정보를 삭제한다.
 //
     req.logout();
-    res.redirect('/');
+    res.redirect('back');
 });
 
 router.get('/login', function (req, res) {
     var getReturn = req.query.ret;
-    if (getReturn)
-        redirectURL = "../" + getReturn;
+    if (getReturn) {
+        redirectURL = getReturn;
+        redirectURL = redirectURL.replace("//","/");
+    }
+    else 
+        redirectURL = '/setting';
     var session_name;
     if (req.session.passport && req.session.passport.user) {
         if (redirectURL != "/auth/login") {
