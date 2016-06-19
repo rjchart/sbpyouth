@@ -306,12 +306,13 @@ block script
 		function TypeSearch () {
 			var device = (/android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini/i.test(navigator.userAgent.toLowerCase()));
 			var getSearch = document.getElementById('typeSearch').value;
-			if (device && getSearch) {
-				if (getSearch != '')
-					location.href="/friends?query=" + getSearch;
-				else 
-					location.href="/friends";
-				return;
+			if (device) {
+				getSearch = document.getElementById('typeSearchMobile').value;
+				//- if (getSearch != '')
+				//- 	location.href="/friends?query=" + getSearch;
+				//- else 
+				//- 	location.href="/friends";
+				//- return;
 			}
 			getSearch = getSearch.replace(' ', '.');
 			console.log('search:' + getSearch);
