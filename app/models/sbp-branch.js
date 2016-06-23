@@ -1,182 +1,3 @@
-
-module.exports.getOldBM = function(branchData, members, attendValue) {
-	var branchArray = [];
-	members.forEach (function (item, index) {
-		var attendOk = false;
-		if (item.hasOwnProperty("attend")) {
-			if (item.attend._ >= attendValue)
-				attendOk = true;
-		}
-		else if (attendValue == 0)
-			attendOk = true;
-
-		if (attendOk && item.hasOwnProperty('branch') && item.branch._ == branchData.branch._ && item.RowKey._ != branchData.RowKey._ && item.part._ == "청2부") {
-				branchArray.push(item);
-		}
-	});
-	return branchArray;
-}
-
-module.exports.getYoungBM = function(branchData, members, attendValue) {
-	var branchArray = [];
-	members.forEach (function (item, index) {
-		var attendOk = false;
-		if (item.hasOwnProperty("attend")) {
-			if (item.attend._ >= attendValue)
-				attendOk = true;
-		}
-		else if (attendValue == 0)
-			attendOk = true;
-
-		if (attendOk && item.hasOwnProperty('branch') && item.branch._ == branchData.branch._ && item.RowKey._ != branchData.RowKey._ && item.part._ == "청1부") {
-				branchArray.push(item);
-		}
-	});
-	return branchArray;
-}
-
-module.exports.makeOldBranchMember = function(branchData, members, attendValue) {
-	var branchArray = [];
-	members.forEach (function (item, index) {
-		var attendOk = false;
-		if (item.hasOwnProperty("attend")) {
-			if (item.attend._ >= attendValue)
-				attendOk = true;
-		}
-		else if (attendValue == 0)
-			attendOk = true;
-
-		if (attendOk && item.branch._ == branchData.branch._ && item.RowKey._ != branchData.RowKey._ && item.age._ > 26) {
-			if (item.hasOwnProperty("attendDesc") && item.attendDesc._ != '유학' && item.attendDesc._ != '직장' && item.attendDesc._ != '군대')
-				branchArray.push(item);
-			if (!item.hasOwnProperty("attendDesc"))
-				branchArray.push(item);
-		}
-	});
-	return branchArray;
-}
-
-module.exports.makeYoungBranchMember = function(branchData, members, attendValue) {
-	var branchArray = [];
-	members.forEach (function (item, index) {
-		var attendOk = false;
-		if (item.hasOwnProperty("attend")) {
-			if (item.attend._ >= attendValue)
-				attendOk = true;
-		}
-		else if (attendValue == 0)
-			attendOk = true;
-
-		if (attendOk && item.branch._ == branchData.branch._ && item.RowKey._ != branchData.RowKey._ && item.age._ <= 26) {
-			if (item.hasOwnProperty("attendDesc") && item.attendDesc._ != '유학' && item.attendDesc._ != '직장' && item.attendDesc._ != '군대')
-				branchArray.push(item);
-			if (!item.hasOwnProperty("attendDesc"))
-				branchArray.push(item);
-		}
-	});
-	return branchArray;
-}
-
-module.exports.makeAllBranchMember = function(branchData, members, attendValue) {
-	var branchArray = [];
-	members.forEach (function (item, index) {
-		var attendOk = false;
-		if (item.hasOwnProperty("attend")) {
-			if (item.attend._ >= attendValue)
-				attendOk = true;
-		}
-		else if (attendValue == 0)
-			attendOk = true;
-
-		if (attendOk && item.branch._ == branchData.branch._) {
-				branchArray.push(item);
-		}
-	});
-	return branchArray;
-}
-
-module.exports.getEtcOldMember = function(members, attendValue) {
-	var branchArray = [];
-	members.forEach (function (item, index) {
-		var attendOk = false;
-		if (item.hasOwnProperty("attend")) {
-			if (item.attend._ >= attendValue)
-				attendOk = true;
-		}
-		else if (attendValue == 0)
-			attendOk = true;
-
-		if (attendOk && item.hasOwnProperty('branch') && item.branch._ == '기타' && item.age._ > 26) {
-			branchArray.push(item);
-		}
-	});
-	return branchArray;
-}
-
-module.exports.getEtcYoungMember = function(members, attendValue) {
-	var branchArray = [];
-	members.forEach (function (item, index) {
-		var attendOk = false;
-		if (item.hasOwnProperty("attend")) {
-			if (item.attend._ >= attendValue)
-				attendOk = true;
-		}
-		else if (attendValue == 0)
-			attendOk = true;
-
-		if (attendOk && item.hasOwnProperty('branch') && item.branch._ == '기타' && item.age._ <= 26) {
-			branchArray.push(item);
-		}
-	});
-	return branchArray;
-}
-
-module.exports.getArmyBM = function(branchData, members) {
-	var branchArray = [];
-	members.forEach (function (item, index) {
-		// if (item.keys().indexof('attend') <= -1)
-		// 	continue;
-		if (item.hasOwnProperty('branch') && item.branch._ == branchData.branch._ && item.RowKey._ != branchData.RowKey._ && item.part._ == "군대") {
-				branchArray.push(item);
-		}
-	});
-	return branchArray;
-}
-
-module.exports.getOtherBM = function(branchData, members) {
-	var branchArray = [];
-	members.forEach (function (item, index) {
-		// if (item.keys().indexof('attend') <= -1)
-		// 	continue;
-		if (item.hasOwnProperty('branch') && item.branch._ == branchData.branch._ && item.RowKey._ != branchData.RowKey._ && item.part._ == "유학") {
-				branchArray.push(item);
-		}
-	});
-	return branchArray;
-}
-
-module.exports.makeArmyMember = function(branchData, members) {
-	var branchArray = [];
-	members.forEach (function (item, index) {
-		if (item.hasOwnProperty("attendDesc") && item.branch._ == branchData.branch._ && item.RowKey._ != branchData.RowKey._ && item.attendDesc._ == '군대') {
-			branchArray.push(item);
-		}
-	});
-	return branchArray;
-}
-
-module.exports.makeOtherMember = function(branchData, members) {
-	var branchArray = [];
-	members.forEach (function (item, index) {
-		// if (item.keys().indexof('attend') <= -1)
-		// 	continue;
-		if (item.hasOwnProperty("attendDesc") && item.branch._ == branchData.branch._ && item.RowKey._ != branchData.RowKey._ && (item.attendDesc._ == '유학' || item.attendDesc._ == '직장')) {
-			branchArray.push(item);
-		}
-	});
-	return branchArray;
-}
-
 module.exports.GetTable = function (branchLogs, attendValue) {
 	var getBSList = [];
 	branchLogs.forEach (function (item, index) {
@@ -265,20 +86,7 @@ function GetList (item, key) {
 	return list;
 }
 
-function SetBasicComponent(item) {
-
-	item['friends'] = GetList(item,'friends');
-	item['haters'] = GetList(item, 'haters');
-	item['hopers'] = GetList(item, 'hopers');
-	item['families'] = GetList(item, 'families');
-
-	item['happy'] = 0;
-	item['order'] = 0;
-	item['important'] = 0;
-	item.countSameOld = 0;
-	item.countSameYear = 0;
-	item.oldbranch = item.branch;
-
+function SetMemberPower(item) {
 	var powerValue = 0;
 	switch (parseInt(item.attend)) {
 		case 0:
@@ -307,24 +115,58 @@ function SetBasicComponent(item) {
 			powerValue = item.important * 0.1;
 			break;
 		case 1:
-			powerValue = item.important * 0.7;
+			powerValue = item.important * 0.8;
 			break;
 		case 2:
 			powerValue = item.important * 1;
 			break;
 		case 3:
-			powerValue = item.important * 1.5;
+			powerValue = item.important * 1.2;
 			break;
 		case 4:
-			powerValue = item.important * 2;
+			powerValue = item.important * 1.3;
 			break;
 	
 		default:
 			break;
 	}
 	item.power = powerValue;
+}
 
-	return powerValue;
+function SetBasicComponent(item) {
+
+	// item['friends'] = GetList(item,'friends');
+	// item['haters'] = GetList(item, 'haters');
+	// item['hopers'] = GetList(item, 'hopers');
+	// item['families'] = GetList(item, 'families');
+
+	item['happy'] = 0;
+	item['order'] = 0;
+	item['important'] = 0;
+	item.countSameOld = 0;
+	item.countSameYear = 0;
+	item.oldbranch = item.branch;
+	SetMemberPower(item);
+
+	return item.power;
+}
+
+
+function SetBasicComponentNotBranchSetting(item) {
+
+	// item['friends'] = GetList(item,'friends');
+	// item['haters'] = GetList(item, 'haters');
+	// item['hopers'] = GetList(item, 'hopers');
+	// item['families'] = GetList(item, 'families');
+
+	item['happy'] = 0;
+	item['order'] = 0;
+	item['important'] = 0;
+	item.countSameOld = 0;
+	item.countSameYear = 0;
+	SetMemberPower(item);
+
+	return item.pow;
 }
 
 function SetMemberBS(item, bsList) {
@@ -411,7 +253,7 @@ function SetHappinessTwoMember(member, member2, tmp) {
 	tmp2.countSameOld = member2.countSameOld;
 	tmp2.countSameYear = member2.countSameYear;
 		
-	console.log(member.RowKey + ":" + member2.RowKey);
+	//console.log(member.RowKey + ":" + member2.RowKey);
 
 	var isFriend = member.friends.some(function(item, index3, array) {
 		if (item == member2.RowKey)
@@ -428,7 +270,7 @@ function SetHappinessTwoMember(member, member2, tmp) {
 	});
 	
 	if (isHater) {
-		console.log(member.RowKey + " hates " + member2.RowKey);
+		//console.log(member.RowKey + " hates " + member2.RowKey);
 		tmp.happy -= 50;
 		tmp2.order -= 20;
 	}
@@ -438,7 +280,7 @@ function SetHappinessTwoMember(member, member2, tmp) {
 			return true;
 	});
 	if (isFamily) {
-		console.log(member.RowKey + ", " + member2.RowKey + " are family");
+		//console.log(member.RowKey + ", " + member2.RowKey + " are family");
 		tmp.order -= 20;
 		tmp2.order -= 20;
 	}
@@ -449,19 +291,19 @@ function SetHappinessTwoMember(member, member2, tmp) {
 	});
 	
 	if (isHater2) {
-		console.log(member.RowKey + " is hater from " + member2.RowKey);
+		//console.log(member.RowKey + " is hater from " + member2.RowKey);
 		tmp.order -= 20;
 		tmp2.happy -= 50;
 	}
 
-	if (member.oldbranch == member2.oldbranch) {
+	if (member != member2 && member.oldbranch == member2.oldbranch) {
 		tmp.countSameOld++;
 		tmp2.countSameOld++;
-		console.log(member.RowKey + ", " + member2.RowKey + " are same old branch: " + tmp.countSameOld + ", " + tmp2.countSameOld);
-		var degree = 1 * Math.min(member2.attend, member.attend);
-		if (tmp.countSameOld > 1)
+		//console.log(member.RowKey + ", " + member2.RowKey + " are same old branch: " + tmp.countSameOld + ", " + tmp2.countSameOld);
+		var degree = 3.4 * Math.min(member2.attend, member.attend);
+		// if (tmp.countSameOld > 1)
 			tmp.order -= degree;
-		if (tmp2.countSameOld > 1)
+		// if (tmp2.countSameOld > 1)
 			tmp2.order -= degree;
 	}
 
@@ -469,7 +311,7 @@ function SetHappinessTwoMember(member, member2, tmp) {
 
 		tmp.countSameYear++;
 		tmp2.countSameYear++;
-		console.log(member.RowKey + ", " + member2.RowKey + " are same year branch");
+		//console.log(member.RowKey + ", " + member2.RowKey + " are same year branch");
 		var degree = 1.2 * Math.min(member2.attend, member.attend);
 		if (tmp.countSameYear > 2)
 			tmp.order -= degree;
@@ -477,7 +319,7 @@ function SetHappinessTwoMember(member, member2, tmp) {
 			tmp2.order -= degree;
 	}
 	
-	if (tmp2.order < -10 || tmp2.happy < -10 || tmp.order < -10 || tmp.happy < -10)
+	if (tmp2.order <= -10 || tmp2.happy <= -10 || tmp.order <= -10 || tmp.happy <= -10)
 		tmp.isOk = false;
 		
 	if (member2.attend >= 3)
@@ -486,8 +328,8 @@ function SetHappinessTwoMember(member, member2, tmp) {
 		tmp2.state = 'disabled';
 	// else if (tmp2.happy > 0)
 	// 	tmp2.state = 'positive';
-	else if (tmp2.order < 0)
-		tmp2.state = 'warning';
+	// else if (tmp2.order < 0)
+	// 	tmp2.state = 'warning';
 	else
 		tmp2.state = '';
 		
@@ -504,24 +346,32 @@ function CheckBMHappiness(member, bs) {
 	tmp.isOk = true;
 	
 	tmpfriendList = [];
-	console.log("length:" + bs.one.length + ", " + bs.two.length);
+	//console.log("length:" + bs.one.length + ", " + bs.two.length);
 	var isOk = true;
 	isOk = bs.two.every(function (member2, index) {
-		var tmp2 = SetHappinessTwoMember(member, member2, tmp, tmp2);
-		tmp2.youth = 'two';
-		tmp2.friendIndex = index;
-		tmpfriendList.push(tmp2);
-		return tmp.isOk
+		if (member != member2) {
+			var tmp2 = SetHappinessTwoMember(member, member2, tmp, tmp2);
+			tmp2.youth = 'two';
+			tmp2.friendIndex = index;
+			tmpfriendList.push(tmp2);
+			return tmp.isOk
+		}
+		else 
+			return true; 
 	});
 	if (!isOk) 
 		return false;
 
 	isOk = bs.one.every(function (member2, index) {
-		var tmp2 = SetHappinessTwoMember(member, member2, tmp, tmp2);
-		tmp2.youth = 'one';
-		tmp2.friendIndex = index;
-		tmpfriendList.push(tmp2);
-		return tmp.isOk
+		if (member != member2) {
+			var tmp2 = SetHappinessTwoMember(member, member2, tmp, tmp2);
+			tmp2.youth = 'one';
+			tmp2.friendIndex = index;
+			tmpfriendList.push(tmp2);
+			return tmp.isOk
+		}
+		else 
+			return true;
 	});
 	if (!isOk) 
 		return false;
@@ -547,8 +397,8 @@ function CheckBMHappiness(member, bs) {
 		member.state = 'disabled';
 	// else if (member.happy > 0)
 	// 	member.state = 'positive';
-	else if (member.order < 0)
-		member.state = 'warning';
+	// else if (member.order < 0)
+	// 	member.state = 'warning';
 	else
 		member.state = '';
 	
@@ -556,31 +406,45 @@ function CheckBMHappiness(member, bs) {
 	return true;
 }
 
-function GetIndexOfBM(bsList, member) {
+function GetBSOfBM(bsList, member, inputBSName) {
 
 	var selectedIndex = 0;
-	var isDecide = false;
+	var isBSHoper = false;
 
 	var notHateBSList = bsList.slice(0);
 
 	RemoveOldBranchHateBS(notHateBSList, member);
 
-	member.hopers.forEach(function (hoper, index) {
+	if (inputBSName) {
 		notHateBSList.forEach(function (bs, index2) {
-			if (hoper == bs.RowKey) {
-				i = index2;
-				isDecide = true;
+			if (inputBSName == bs.RowKey) {
+				selectedIndex = index2;
+				isBSHoper = true;
 			}
 		});
-	});
+		if (!isBSHoper) {
+			isVeryVeryNotGood = true;
+			return null;
+		} 
+	}
+	else {
+		member.hopers.forEach(function (hoper, index) {
+			notHateBSList.forEach(function (bs, index2) {
+				if (hoper == bs.RowKey) {
+					selectedIndex = index2;
+					isBSHoper = true;
+				}
+			});
+		});
+	}
 
-	if (isDecide) {
-		var selectedBS = notHateBSList[i];
+	if (isBSHoper) {
+		var selectedBS = notHateBSList[selectedIndex];
 		var isGoodBranch = CheckBMHappiness(member, selectedBS);
 		if (!isGoodBranch) {
-			console.log("not very good");
+			//console.log("not very good");
 			isVeryVeryNotGood = true;
-			return -1;
+			return null;
 		}
 	}
 	else {
@@ -589,27 +453,27 @@ function GetIndexOfBM(bsList, member) {
 		while (1) {
 			countcount++;
 			if (countcount > 8) {
-				console.log("countcount: not very good");
+				//console.log("countcount: not very good");
 				isVeryVeryNotGood = true;
 				break;
 			}
 			var randomNumberFromNotHateList = randomIntInc(0,notHateBSList.length-1);
-			// console.log("member check:" + member.RowKey._ + "(" + member.oldbranch._ +")");
-			// console.log("index check:" + JSON.stringify(notHateBSList[randomNumberFromNotHateList]));
+			// //console.log("member check:" + member.RowKey._ + "(" + member.oldbranch._ +")");
+			// //console.log("index check:" + JSON.stringify(notHateBSList[randomNumberFromNotHateList]));
 
-			// console.log("member check:" + member.RowKey._ + "(" + member.oldbranch._ +")");
-			// console.log("member index:" + randomNumberFromNotHateList);
-			// console.log("index check:" + JSON.stringify(notHateBSList));
-			// console.log("index check2:" + JSON.stringify(notHateBSList[randomNumberFromNotHateList]));
+			// //console.log("member check:" + member.RowKey._ + "(" + member.oldbranch._ +")");
+			// //console.log("member index:" + randomNumberFromNotHateList);
+			// //console.log("index check:" + JSON.stringify(notHateBSList));
+			// //console.log("index check2:" + JSON.stringify(notHateBSList[randomNumberFromNotHateList]));
 			selectedIndex = randomNumberFromNotHateList;
 			var selectedBS = notHateBSList[selectedIndex];
-			console.log("branch check1");
+			//console.log("branch check1");
 
 			var youthKey = 'one';
 			if (member.age > 26)
 				youthKey = 'two';
 
-			console.log("branch check2");
+			//console.log("branch check2");
 
 			notHateBSList.forEach (function (bs, index) {
 				if (selectedBS[youthKey].length > bs[youthKey].length) {
@@ -617,12 +481,12 @@ function GetIndexOfBM(bsList, member) {
 					selectedBS = bs;
 				}
 			});
-			console.log("branch check3: " + selectedBS.RowKey);
+			//console.log("branch check3: " + selectedBS.RowKey);
 
 			var isGoodBranch = CheckBMHappiness(member, selectedBS);
 			if (!isGoodBranch) {
 				if (notHateBSList.length == 1) {
-					console.log("not very good");
+					//console.log("not very good");
 					isVeryVeryNotGood = true;
 					break;
 				}
@@ -634,29 +498,52 @@ function GetIndexOfBM(bsList, member) {
 				break;
 		}
 	}
-	console.log("branch check last:" + notHateBSList[selectedIndex].RowKey);
+	//console.log("branch check last:" + notHateBSList[selectedIndex].RowKey);
 	if (isVeryVeryNotGood)
-		return -1;
+		return null;
 
-	return notHateBSList[selectedIndex]['index'];
+	return notHateBSList[selectedIndex];
+}
+
+function GetBSWithHoper (doneMembers, member) {
+	var selectedBSName;
+	var isHoperOK = false;
+	var isMoreHoperInOtherBranch = false;
+	// 만약 맴버가 원하는 BS가 있다면 선택한다.
+	member.hopers.forEach(function (hoper, index) {
+		doneMembers.some(function (member2, index2) {
+			if (hoper == member2.RowKey && member2.oldbranch != member.oldbranch) {
+				if (isHoperOK && selectedBSName != member2.branch)
+					isMoreHoperInOtherBranch = true;
+				selectedBSName = member2.branch;
+				isHoperOK = true;
+				return true;
+			}
+			else
+				return false;
+		});
+	});
+
+	if (isHoperOK)
+		return selectedBSName;
 }
 
 function GetIndexOfLessPeople(bsList, member) {
 
 	var selectedBranchIndex = 0;
-	var isDecide = false;
+	var isBSHoper = false;
 
 	// 만약 맴버가 원하는 BS가 있다면 선택한다.
 	member.hopers.forEach(function (hoper, index) {
 		bsList.forEach(function (bs, index2) {
 			if (hoper == bs.RowKey && bs.oldbranch != member.oldbranch) {
 				selectedBranchIndex = index2;
-				isDecide = true;
+				isBSHoper = true;
 			}
 		});
 	});
 
-	if (!isDecide) {
+	if (!isBSHoper) {
 		// 맴버가 싫어하지 않고 이전에 같지 않은 BS를 랜덤하게 선택한다.
 		while (1) {
 			selectedBranchIndex = randomIntInc(0,bsList.length-1);
@@ -822,18 +709,18 @@ module.exports.MakeNewBranch = function (members, bsList, type) {
 				member.countSameOld = 0;
 				member.countSameYear = 0;
 			});
-			console.log("pow:" + powerAver);
+			//console.log("pow:" + powerAver);
 			var newMembers = members.slice(0);
 			var branchList = {}, youngList = {}, pow = {};
 			var isNotGood = false;
 			
 			// branchList 만들기.
 			newBSList.forEach( function (bs, index) {
-				bs['index'] = index;
+				// bs['index'] = index;
 				bs.one = [];
 				bs.two = [];
 				bs.pow = 0;
-				bs.two.push(bs); // ?
+				bs.two.push(bs); // 리스트에 두어 비교 대상으로 하기
 				// branchList[bs.RowKey._] = [];
 				// youngList[bs.RowKey._] = [];
 				// pow[bs.RowKey._] = 0;
@@ -846,18 +733,18 @@ module.exports.MakeNewBranch = function (members, bsList, type) {
 				var randomValue = randomIntInc(0, newMembers.length-1);
 				var member = newMembers[randomValue];
 				newMembers.splice(randomValue,1);
-				// console.log("check 2:" + member.RowKey);
+				// //console.log("check 2:" + member.RowKey);
 				// var member = newMembers[j];
 
-				console.log(member.RowKey + " start!!")
+				//console.log(member.RowKey + " start!!")
 				// BS가 아닌 경우 임의로 처리
 				if (member.isok) {
-					var selectedIndex = GetIndexOfBM(newBSList, member);
-					if (selectedIndex == -1) {
+					var selectedBS = GetBSOfBM(newBSList, member);
+					if (selectedBS == null) {
 						isNotGood = true;
 						break;	
 					}
-					var selectedBS = newBSList[selectedIndex];
+					// var selectedBS = newBSList[selectedIndex];
 					member['branch'] = selectedBS.RowKey;
 					var youthKey = 'one';
 					if (member.age > 26)
@@ -865,6 +752,88 @@ module.exports.MakeNewBranch = function (members, bsList, type) {
 					selectedBS[youthKey].push(member);
 					
 					selectedBS.pow += member['power'];
+				}
+			}
+			if (isNotGood)
+				continue;
+
+			var isPowAverBad = false;
+			// branchList 만들기.
+			newBSList.forEach( function (bs, index) {
+				bs.two.splice(0,1);
+				// delete bs.two[0];
+				if (bs.pow < powerAver * .85) {
+					isPowAverBad = true 
+					return true;
+				}
+
+				if (bs.pow > powerAver * 1.15) {
+					isPowAverBad = true 
+					return true;
+				}
+			});
+			if (!isPowAverBad)
+				break;
+		}
+	}
+	else if (type == 3) {
+		powerSum = SetMembersForMakeBranch(newBSList, bsList, members);
+		var powerAver = powerSum / bsList.length;
+
+		while (1) {
+			members.forEach(function(member) {
+				member.happy = 0;
+				member.order = 0;
+				member.countSameOld = 0;
+				member.countSameYear = 0;
+			});
+			//console.log("pow:" + powerAver);
+			var newMembers = members.slice(0);
+			var doneMembers = [];
+			var branchList = {}, youngList = {}, pow = {};
+			var isNotGood = false;
+			
+			// branchList 만들기.
+			newBSList.forEach( function (bs, index) {
+				// bs['index'] = index;
+				bs.one = [];
+				bs.two = [];
+				bs.pow = 0;
+				doneMembers.push(bs);
+				bs.two.push(bs); // 리스트에 두어 비교 대상으로 하기
+				// branchList[bs.RowKey._] = [];
+				// youngList[bs.RowKey._] = [];
+				// pow[bs.RowKey._] = 0;
+				
+				// branchList[bs.RowKey._].push(bs);
+			});
+
+			
+			for (var j = 0; j < members.length; j++) {
+				var randomValue = randomIntInc(0, newMembers.length-1);
+				var member = newMembers[randomValue];
+				newMembers.splice(randomValue,1);
+				// //console.log("check 2:" + member.RowKey);
+				// var member = newMembers[j];
+
+				//console.log(member.RowKey + " start!!")
+				// BS가 아닌 경우 임의로 처리
+				if (member.isok) {
+					var selectedBS;
+					var getBSName = GetBSWithHoper(doneMembers, member)
+					selectedBS = GetBSOfBM(newBSList, member, getBSName);
+					if (selectedBS == null) {
+						isNotGood = true;
+						break;	
+					}
+					// var selectedBS = newBSList[selectedIndex];
+					member['branch'] = selectedBS.RowKey;
+					var youthKey = 'one';
+					if (member.age > 26)
+						youthKey = 'two';
+					selectedBS[youthKey].push(member);
+					selectedBS.pow += member['power'];
+					doneMembers.push(member);
 				}
 			}
 			if (isNotGood)
@@ -909,3 +878,27 @@ module.exports.MakeNewBranch = function (members, bsList, type) {
 	return returnValue;
 }
 
+module.exports.SetBSListDetail = function(bsList) {
+	bsList.forEach (function (item) {
+		item.pow = 0;
+		item.one.forEach(function (member) {
+			SetBasicComponentNotBranchSetting(member);
+			item.pow += member.power;
+		});
+
+		item.two.forEach(function (member) {
+			SetBasicComponentNotBranchSetting(member);
+			item.pow += member.power;
+		});
+	});
+
+	bsList.forEach (function (item) {
+		item.one.forEach(function (member) {
+			CheckBMHappiness(member, item);
+		});
+
+		item.two.forEach(function (member) {
+			CheckBMHappiness(member, item);
+		});
+	});
+}

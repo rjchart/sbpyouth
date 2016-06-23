@@ -57,6 +57,7 @@ block script
 								},
 								success: function (response) {
 									alert('등록 성공했습니다.');
+									document.location.reload();
 								}
 							});
 							//- window.alert('Approved!');
@@ -200,7 +201,7 @@ block content
 	block modal_content
 		div.ui.edit.modal
 			i.close.icon 
-			div.header Add Member 
+			div.header 브랜치에 맴버 추가 혹은 수정 
 			div.ui.content
 				form#addMember.ui.fluid.form(action="/addBranch" method="post")
 					div.four.fields

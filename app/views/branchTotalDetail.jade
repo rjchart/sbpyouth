@@ -1,0 +1,177 @@
+extends branch
+block sub_item01
+	a.active.sub.item(href="/branch") 전체 브랜치 현황
+block sub_content
+	div.ui.main.container
+		div.ui.grid
+			div.two.column.computer.only.row
+				div.twelve.wide.streched.column
+					div.ui.segment
+						h2.ui.header
+							|#{year}년도 브랜치 편성
+						div.ui.container
+							table.ui.celled.striped.structured.table
+								thead
+									tr
+										th 브랜치
+										- bsList.forEach( function(item,index) {
+										th #{item.branch}	
+										- });
+								tfoot
+									tr
+										th(colspan="#{bsList.length+1}") 
+											if auth=="manager" || auth=="developer" || auth=="executive" 
+												div.ui.borderless.small.right.floated.pagination.menu
+													a.item(href="/branch?year=#{year}") <i class="child icon"></i> all
+													a.item(href="/branch?year=#{year}&attendValue=1") <i class="frown icon"></i> not bad
+													a.item(href="/branch?year=#{year}&attendValue=2") <i class="meh icon"></i> well
+													a.item(href="/branch?year=#{year}&attendValue=3") <i class="smile icon"></i> good
+													a.item(href="/branch?year=#{year}&attendValue=4") <i class="thumbs outline up icon"></i> perfect
+								tbody
+									tr
+										td: div.ui.ribbon.label 브랜치장
+										each item in bsList
+											td: label#profile(onclick="ProfileBS('#{item.RowKey}','#{year}','#{item.branch}','#{item.attend}')") #{item.RowKey}
+									- for(var i = 0; i < maxLength.two; i++) {
+									tr 
+										if i == 0
+											td(rowspan="#{maxLength.two}")
+												div.ui.ribbon.label 청 2부
+										each item in bsList
+											td 
+												if item.two.length > i
+													label#profile(onclick="ProfileBS('#{item.two[i].RowKey}','#{year}','#{item.two[i].branch}','#{item.two[i].attend}')") #{item.two[i].RowKey}(#{item.one[i].order})
+									- }
+									- for(var i = 0; i < maxLength.one; i++) {
+									tr 
+										if i == 0
+											td(rowspan="#{maxLength.one}") 
+												div.ui.ribbon.label 청 1부
+										each item in bsList
+											td
+												if item.one.length > i 
+													label#profile(onclick="ProfileBS('#{item.one[i].RowKey}','#{year}','#{item.one[i].branch}','#{item.one[i].attend}')") #{item.one[i].RowKey}(#{item.one[i].order})
+									- }
+									- for(var i = 0; i < maxLength.arm; i++) {
+									tr 
+										if i == 0
+											td(rowspan="#{maxLength.arm}") 
+												div.ui.ribbon.label 군입대자
+										each item in bsList
+											td
+												if item.arm.length > i 
+													label#profile(onclick="ProfileBS('#{item.arm[i].RowKey}','#{year}','#{item.arm[i].branch}','#{item.arm[i].attend}')") #{item.arm[i].RowKey}
+									- }
+									- for(var i = 0; i < maxLength.out; i++) {
+									tr 
+										if i == 0
+											td(rowspan="#{maxLength.out}") 
+												div.ui.ribbon.label 유학자 및 지방근무자
+										each item in bsList
+											td
+												if item.out.length > i 
+													label#profile(onclick="ProfileBS('#{item.out[i].RowKey}','#{year}','#{item.out[i].branch}','#{item.out[i].attend}')") #{item.out[i].RowKey}
+									- }
+							if !isLogin
+								br
+								br
+						if !isLogin
+							div.ui.bottom.attached.label 간단하니 가능하면 <a href="/auth/login?ret=/branch" style="color:red">로그인</a> 해주세요.
+				div#profileData.four.wide.column
+					include profile
+			div.column.tablet.mobile.only.row
+				div.sixteen.wide.streched.column
+					div.ui.segment
+						h2.ui.header
+							|#{year}년도 브랜치 편성
+						div.ui.container
+							table.ui.celled.striped.structured.unstackable.table
+								thead
+									tr
+										th 브랜치
+										- bsList.forEach( function(item,index) {
+										th #{item.branch}	
+										- });
+								tfoot
+									tr
+										th(colspan="#{bsList.length+1}") 
+											div.ui.borderless.small.right.floated.pagination.menu
+												a.item(href="/branch?year=#{year}") <i class="child icon"></i> all
+												a.item(href="/branch?year=#{year}&attendValue=1") <i class="frown icon"></i> not bad
+												a.item(href="/branch?year=#{year}&attendValue=2") <i class="meh icon"></i> well
+												a.item(href="/branch?year=#{year}&attendValue=3") <i class="smile icon"></i> good
+												a.item(href="/branch?year=#{year}&attendValue=4") <i class="thumbs outline up icon"></i> perfect
+								tbody
+									tr
+										td: div.ui.ribbon.label 브랜치장
+										each item in bsList
+											td: label #{item.RowKey}
+									- for(var i = 0; i < maxLength.two; i++) {
+									tr 
+										if i == 0
+											td(rowspan="#{maxLength.two}")
+												div.ui.ribbon.label 청 2부
+										each item in bsList
+											td 
+												if item.two.length > i
+													label #{item.two[i].RowKey}
+									- }
+									- for(var i = 0; i < maxLength.one; i++) {
+									tr 
+										if i == 0
+											td(rowspan="#{maxLength.one}") 
+												div.ui.ribbon.label 청 1부
+										each item in bsList
+											td
+												if item.one.length > i 
+													label #{item.one[i].RowKey}
+									- }
+									- for(var i = 0; i < maxLength.arm; i++) {
+									tr 
+										if i == 0
+											td(rowspan="#{maxLength.arm}") 
+												div.ui.ribbon.label 군입대자
+										each item in bsList
+											td
+												if item.arm.length > i 
+													label #{item.arm[i].RowKey}
+									- }
+									- for(var i = 0; i < maxLength.out; i++) {
+									tr 
+										if i == 0
+											td(rowspan="#{maxLength.out}") 
+												div.ui.ribbon.label 유학자 및 지방근무자
+										each item in bsList
+											td
+												if item.out.length > i 
+													label #{item.out[i].RowKey}
+									- }
+							if !isLogin
+								br
+								br
+						if !isLogin
+							div.ui.bottom.attached.label 간단하니 가능하면 <a href="/auth/login?ret=/branch" style="color:red">로그인</a> 해주세요.
+			//- div.column.mobile.only.row
+			//- 	div.sixteen.wide.streched.column
+			//- 		div.ui.segment
+			//- 			h2.ui.header
+			//- 				|#{year}년도 브랜치 편성
+			//- 			div.ui.container
+			//- 				table.ui.celled.striped.structured.table
+			//- 					tbody
+			//- 						each item in bsList
+			//- 							tr
+			//- 								td: a.ui.blue.ribbon.label(href="/branch_segment/#{item.branch}?year=#{year}&tag=#{branchTag}") #{item.branch}
+			//- 								td: div.ui.red.horizontal.label BS: #{item.RowKey}
+			//- 								td
+			//- 									each member, i in item.two
+			//- 										if i == 0
+			//- 											|#{member.RowKey}
+			//- 										else
+			//- 											|, #{member.RowKey}
+			//- 									each member in item.one
+			//- 										|, #{member.RowKey}
+			//- 									each member in item.arm
+			//- 										|, #{member.RowKey}
+			//- 									each member in item.out
+			//- 										|, #{member.RowKey}

@@ -603,6 +603,8 @@ router.post('/addBranch', function (req, res, next) {
             }
             res.send(data);
         }
+        else 
+            res.status(500).send("branch save error: " + error);
     });
     
 });
@@ -613,14 +615,61 @@ router.post('/makeBranch', function (req, res, next) {
         if (!error) {
             // index: 1 -- 간단히 브랜치원이 원하는 BS 싫어하지 않는 BS 정도를 결정하고 나머지 랜덤. 
             // index: 2 -- 브랜치의 밸런스를 맞추고 팀원들의 행복도를 통해 최적의 브랜치 편성
-            var newList = sbp_branch.MakeNewBranch(members, bsList, 2);
+            var newList = sbp_branch.MakeNewBranch(members, bsList, 3);
             // newList.year = '2016';
-            newList.year = pkginfo['sbp-data'].year;
+            newList.year = 'temp';
             console.log("done");
             res.render('branchTemp', newList);
         }    
     });
 });
+
+router.post('/saveTempBranch', function (req, res, next) {
+    // var bsList = req.body['make_nameBS'];
+    // sbp_member.GetMembersAndLogWithYear(null, function (error, members) {
+    //     if (!error) {
+    //         // index: 1 -- 간단히 브랜치원이 원하는 BS 싫어하지 않는 BS 정도를 결정하고 나머지 랜덤. 
+    //         // index: 2 -- 브랜치의 밸런스를 맞추고 팀원들의 행복도를 통해 최적의 브랜치 편성
+    //         var newList = sbp_branch.MakeNewBranch(members, bsList, 2);
+    //         // newList.year = '2016';
+    //         newList.year = pkginfo['sbp-data'].year;
+    //         console.log("done");
+    //         res.render('branchTemp', newList);
+    //     }    
+    // });
+
+
+    // req.body['m_name'].forEach(function (member, index) {
+    //     if (member == "")
+            
+    // });
+    var inputData = [];
+    for (var i = 0; i < req.body.m_name.length; i++) {
+        if (req.body.m_name[i] == "")
+            continue;
+        var entity = {
+            PartitionKey: 'temp',
+            RowKey: req.body.m_name[i],
+            branch: req.body.m_branch[i],
+            age: req.body.m_age[i],
+            charge: req.body.m_charge[i],
+            part: req.body.m_part[i],
+            before: req.body.m_before[i],
+            attend: req.body.m_attend[i]
+        }
+        inputData.push(entity);
+    }
+    sbp_member.SaveBranch(inputData, function (error, result) {
+        if (!error) {
+            res.redirect('branch?year=temp');
+        }
+        else {
+            res.status(500).send("저장에 실패했습니다. Cannot save the branch data: " + error);
+        }
+    });
+
+});
+
 
 router.post('/delete/:id', function (req, res, next) {
     var user = sbp_data.CheckLogin(req);
@@ -680,4 +729,41 @@ router.post('/insert/:id', function (req, res, next) {
                 console.log('error: ' + error);
         });
     }
+});
+
+router.get('/branchDetail', function (req, res, next) {
+    var user = sbp_data.CheckLogin(req);
+
+    var year = req.query.year;
+	var attendSet = req.query['attendValue'];
+	if (!attendSet)
+		attendSet = 0;  
+    
+    var getTable = sbp_member.GetMembersAndLogWithYear(year, function (error, log) {
+        if (!error) {
+            var result = [];
+            log.forEach (function (item) {
+                if (item.branchYear == year)
+                    result.push(item);
+            });
+
+            var getTable = sbp_branch.GetTable(result, attendSet);
+            getTable.year = year;
+
+            var branchs = [];
+            getTable.bsList.forEach (function (item) {
+                branchs.push(item.branch);
+            });
+            sbp_branch.SetBSListDetail(getTable.bsList);
+            getTable.branchTag = JSON.stringify(branchs);
+            getTable.title = title;
+            
+            
+            CombineElements(user, getTable);
+            res.render('branchTemp', user);
+        }
+        else 
+            console.log(error);
+    }, attendSet);
+  
 });

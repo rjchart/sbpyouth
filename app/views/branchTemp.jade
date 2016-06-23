@@ -1,4 +1,11 @@
 extends branch
+block script_part02
+	script.
+		function SaveTemp () {
+			//- var $getAdd = $('#SaveTemp');
+			$('#SaveTemp').submit();
+			console.log("save");
+		}
 block sub_item02
 	a.active.sub.item 임시 생성 브랜치
 block sub_content
@@ -9,6 +16,7 @@ block sub_content
 					h2.ui.header
 						|#{year}년도 다음 학기 임시 생성 브랜치 편성
 					div.ui.container
+						- var bmKeys = ['one', 'two', 'arm', 'out']; 
 						table.ui.celled.striped.structured.table
 							thead
 								tr
@@ -17,14 +25,36 @@ block sub_content
 									th #{item.branch}	
 									- });
 							tfoot
-								tr
-									th(colspan="#{bsList.length+1}") 
-										div.ui.borderless.small.right.floated.pagination.menu
-											a.item(href="/branch?year=#{year}") <i class="child icon"></i> all
-											a.item(href="/branch?year=#{year}&attendValue=1") <i class="frown icon"></i> not bad
-											a.item(href="/branch?year=#{year}&attendValue=2") <i class="meh icon"></i> well
-											a.item(href="/branch?year=#{year}&attendValue=3") <i class="smile icon"></i> good
-											a.item(href="/branch?year=#{year}&attendValue=4") <i class="thumbs outline up icon"></i> perfect
+								form#SaveTemp(action="/saveTempBranch" method="post")
+									-var index = 0;
+									each item in bsList
+										input(type="hidden" name="m_name[#{index}]" value="#{item.RowKey}")
+										input(type="hidden" name="m_key[#{index}]" value="#{item.PartitionKey}")
+										input(type="hidden" name="m_branch[#{index}]" value="#{item.branch}")
+										input(type="hidden" name="m_age[#{index}]" value="#{item.age}")
+										input(type="hidden" name="m_attendDesc[#{index}]" value="#{item.attendDesc}")
+										input(type="hidden" name="m_charge[#{index}]" value="bs")
+										input(type="hidden" name="m_part[#{index}]" value="#{item.part}")
+										input(type="hidden" name="m_before[#{index}]" value="#{item.oldbranch}")
+										input(type="hidden" name="m_attend[#{index}]" value="#{item.attend}")
+										- index++;
+										each key in bmKeys
+											if (item[key])
+												each mem in item[key]
+													input(type="hidden" name="m_name[#{index}]" value="#{mem.RowKey}")
+													input(type="hidden" name="m_key[#{index}]" value="#{mem.PartitionKey}")
+													input(type="hidden" name="m_branch[#{index}]" value="#{mem.branch}")
+													input(type="hidden" name="m_age[#{index}]" value="#{mem.age}")
+													input(type="hidden" name="m_attendDesc[#{index}]" value="#{mem.attendDesc}")
+													input(type="hidden" name="m_charge[#{index}]" value="bm")
+													input(type="hidden" name="m_part[#{index}]" value="#{mem.part}")
+													input(type="hidden" name="m_before[#{index}]" value="#{mem.oldbranch}")
+													input(type="hidden" name="m_attend[#{index}]" value="#{mem.attend}")
+													- index++;
+									tr
+										th(colspan="#{bsList.length+1}") 
+											div.ui.borderless.small.right.floated.pagination.menu
+												label.primary.blue.item(onclick="SaveTemp()", style="cursor: pointer") <i class="save icon"></i> 저장
 							tbody
 								tr
 									td: div.ui.ribbon.label 브랜치장
@@ -38,7 +68,7 @@ block sub_content
 									each item in bsList
 										td(class="#{item.two.length > i && item.two[i] ? item.two[i].state : ''}")
 											if item.two.length > i && item.two[i]
-												label#profile(onclick="ProfileBS('#{item.two[i].RowKey}','#{year}','#{item.two[i].branch}','#{item.two[i].attend}')") #{item.two[i].RowKey}
+												label#profile(onclick="ProfileBS('#{item.two[i].RowKey}','#{year}','#{item.two[i].branch}','#{item.two[i].attend}')") #{item.two[i].RowKey}(#{item.two[i].order})
 								- }
 								- for(var i = 0; i < maxLength.one; i++) {
 								tr 
@@ -48,7 +78,7 @@ block sub_content
 									each item in bsList
 										td(class="#{item.one.length > i && item.one[i] ? item.one[i].state : ''}")
 											if item.one.length > i 
-												label#profile(onclick="ProfileBS('#{item.one[i].RowKey}','#{year}','#{item.one[i].branch}','#{item.one[i].attend}')") #{item.one[i].RowKey}
+												label#profile(onclick="ProfileBS('#{item.one[i].RowKey}','#{year}','#{item.one[i].branch}','#{item.one[i].attend}')") #{item.one[i].RowKey}(#{item.one[i].order})
 								- }
 								tr
 									td: div.ui.ribbon.label 벨런스표

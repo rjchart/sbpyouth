@@ -145,6 +145,7 @@ function CombineLogToMember(logList, memberList) {
                         continue;
                     oneMember[key] = oneLog[key];   
                 }
+                oneMember.branchYear = oneLog.PartitionKey; 
             }
         }
         SetBirthFormat(oneMember);
@@ -677,6 +678,8 @@ module.exports.AddBranch = function (addData, next) {
         exports.GetMemberWithName(data.RowKey, function (error, result) {
             if (!error) {
                 data.age = data.PartitionKey - result.birthYear + 1;
+                if (isNaN(data.age))
+                    data.age = new Date().getFullYear() - result.birthYear + 1;
                 data.attend = result.attend;
                 data.birthYear = result.birthYear - 1900;
                 if (data.age >= 27)
@@ -711,6 +714,28 @@ module.exports.AddBranch = function (addData, next) {
             }
         });
 
+    });
+    
+}
+
+
+module.exports.SaveBranch = function (addData, next) {
+    var maxLength = addData.length;
+    var count = 0;
+    addData.forEach(function(data, index) {
+        SetEntityGen(data);
+        // 데이터베이스에 entity를 추가합니다.
+        tableService.insertOrMergeEntity('branchlog', data, function(error, result) {
+            count++;
+            if (!error) {
+                if (count >= maxLength)
+                    next(null, result);
+            }
+            else {
+                console.log("error in member save:" + error);
+                next(error);
+            }
+        }); 
     });
     
 }

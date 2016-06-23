@@ -458,13 +458,13 @@ block content
 		//- a.sub.item(onclick="SubMenuFriendClicked(1)") 청2부 맴버
 		//- a.sub.item(onclick="SubMenuFriendClicked(2)") 청1부 맴버
 		//- a.sub.item(onclick="SubMenuFriendClicked(3)") 또래 친구들
-		if auth=="manager" || auth=="developer" || auth=="executive" 
-			div.ui.right.secondary.menu
-				if auth=="manager" || auth=="developer"
-					button.ui.blue.item.active(onclick="SubMenuEditClicked(false, false)") show
-					button.ui.blue.item(onclick="SubMenuEditClicked(true, false)") edit
-					if auth=="developer"
-						button.ui.blue.item(onclick="SubMenuEditClicked(true, true)") p_edit
+		//- if auth=="manager" || auth=="developer" || auth=="executive" 
+		div.ui.right.secondary.menu
+			if auth=="manager" || auth=="developer"
+				button.ui.blue.item.active(onclick="SubMenuEditClicked(false, false)") show
+				button.ui.blue.item(onclick="SubMenuEditClicked(true, false)") edit
+				if auth=="developer"
+					button.ui.blue.item(onclick="SubMenuEditClicked(true, true)") p_edit
 				div.item
 					div.ui.right.floated.small.primary.labeled.icon.button(onclick="AddMemberButton()")
 						i.user.icon 
