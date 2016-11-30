@@ -294,10 +294,10 @@ block script
 				empty[key] = '';
 			})
 			document.getElementById("addMember").innerHTML = innerText + window.addPerson_second(empty);
-			$('.ui.modal')
-				.modal('hide');
-			$('.ui.modal')
-				.modal('show');
+			//- $('.ui.modal')
+			//- 	.modal('hide');
+			//- $('.ui.modal')
+			//- 	.modal('show');
 			
 			addMemberNumber++;
 			
@@ -460,7 +460,7 @@ block content
 		//- a.sub.item(onclick="SubMenuFriendClicked(3)") 또래 친구들
 		//- if auth=="manager" || auth=="developer" || auth=="executive" 
 		div.ui.right.secondary.menu
-			if auth=="manager" || auth=="developer"
+			if auth!="manager" || auth=="developer"
 				button.ui.blue.item.active(onclick="SubMenuEditClicked(false, false)") show
 				button.ui.blue.item(onclick="SubMenuEditClicked(true, false)") edit
 				if auth=="developer"
@@ -488,7 +488,7 @@ block content
 							input(name="add_phone[0]", placeholder="소속", type="text")
 						div.field
 							label 출생년도
-							input(name="add_birthYear[0]", placeholder="년도", type="text")
+							input(name="add_birthYear[0]", placeholder="년도 (2자리)", type="text")
 						div.field
 							label 출생 월
 							input(name="add_birthMonth[0]", placeholder="월", type="text")

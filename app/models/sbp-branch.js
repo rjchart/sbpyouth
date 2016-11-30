@@ -12,6 +12,7 @@ module.exports.GetTable = function (branchLogs, attendValue) {
 		if (aa > bb) return 1;
 		return 0;
 	});
+	
 	var maxLength = {one: 0, two: 0, arm: 0, out: 0};
 	getBSList.forEach (function (item, index) {
 		var getTable = exports.GetBranchTable(item, branchLogs, attendValue);
@@ -189,7 +190,7 @@ function SetMemberIsOK(item) {
 		var isOK = false;
 		var attendDesc = item.attendDesc; 
 		if (attendDesc != '유학' && attendDesc != '직장' && attendDesc != '군대'
-		 && attendDesc != '결혼' && attendDesc != '전도사' && attendDesc != '목사' 
+		 && attendDesc != '결혼' && attendDesc != '전도사' && attendDesc != '강도사' && attendDesc != '목사' 
 		 && attendDesc != '부장 집사' && attendDesc != '제외' && attendDesc != '장기결석' 
 		 && attendDesc != '타교회' && item.attend != 0)
 			isOK = true;

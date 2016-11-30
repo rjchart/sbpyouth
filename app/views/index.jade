@@ -133,7 +133,7 @@ block content
 					a.item(href="/services/중고등부") 중고등부
 					a.item(href="/services/글로리아 찬양대") 글로리아 찬양대
 					a.item(href="/services/할렐루야 찬양대") 할렐루야 찬양대
-		if auth=="manager" || auth=="developer" 
+		if auth!="manager" || auth=="developer" 
 			div.ui.right.secondary.menu
 				div.item
 					button.ui.blue.primary.labeled.icon.button(onclick="AddMemberButton()")
@@ -152,10 +152,10 @@ block content
 							input(name="add_name[0]", placeholder="이름", type="text")
 						div.field
 							label 직책
-							input(name="add_chargeName[0]", placeholder="직책", type="text")
+							input(name="add_chargeName[0]", placeholder="직책, 혹은 브랜치", type="text")
 						div.field
 							label 소속
-							input(name="add_chargeGroup[0]", placeholder="소속", type="text")
+							input(name="add_chargeGroup[0]", placeholder="소속 (회장, 총부, BS 등)", type="text")
 						div.field
 							label 년도
 							input(name="add_chargeYear[0]", placeholder="년도", type="text")

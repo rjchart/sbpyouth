@@ -48,10 +48,10 @@ router.get('/', function (req, res, next) {
 
     sbp_member.GetCurrentMemberWithGroup('교회', function (error, result) {
         if (!error) {
-            var chargeOrder = ['청년부 목사', '청년부 전도사'];
+            var chargeOrder = ['청년1부 목사', '청년2부 강도사'];
             var chargeDesc = [
-                '청년부의 예배를 맡고 있으며 전체적인 지도와 교육을 담당합니다.', 
-                '청년부 목사님을 보조하며 청년부의 지도와 교육을 함께 합니다.'
+                '청년부의 예배를 맡고 있으며 청1부의 전체적인 지도와 교육을 담당합니다.', 
+                '청년부의 예배를 맡고 있으며 청2부의 전체적인 지도와 교육을 담당합니다.'
                 ];
             var inputData = {};
             for (var index in result) {
@@ -141,7 +141,7 @@ router.get('/teamleader', function (req, res, next) {
 router.get('/branchleader', function (req, res, next) {
     var user = sbp_data.CheckLogin(req);
     
-    sbp_member.GetCurrentMemberWithGroup('BS', function (error, result) {
+    sbp_member.GetDetailCurrentMemberWithGroup('BS', function (error, result) {
         if (!error) {
             var chargeOrder = [];
             var inputData = {};
@@ -323,7 +323,10 @@ router.get('/friends', function (req, res, next) {
         if (!error) {
             var memberList2 = [];
             memberList.forEach(function (item, index) {
-                if (item.attend >= attendSet) {
+                var isOut = false;
+                if (item.attendDesc == "결혼" || item.attendDesc == "제외" || item.attendDesc == "장기결석")
+                    isOut = true;
+                if (item.attend >= attendSet && !isOut) {
                     if (query) {
                         if (item.RowKey.includes(query))
                             memberList2.push(item);
@@ -604,7 +607,7 @@ router.post('/addBranch', function (req, res, next) {
             res.send(data);
         }
         else 
-            res.status(500).send("branch save error: " + error);
+            res.status(500).send("" + error);
     });
     
 });

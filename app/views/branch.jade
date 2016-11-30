@@ -53,7 +53,7 @@ block script
 							var $getAdd = $('#addMember');
 							$('#addMember').ajaxSubmit({
 								error: function (xhr) {
-									alert('등록 실패했습니다.');
+									alert('등록 실패했습니다.\n' + xhr.responseText);
 								},
 								success: function (response) {
 									alert('등록 성공했습니다.');
@@ -66,6 +66,8 @@ block script
 				$('.ui.edit.modal')
 					.modal('show');
 					
+				$('.ui.dropdown')
+					.dropdown();
 			}
 
 			//- window.onload = function () {
@@ -82,6 +84,7 @@ block script
 				var innerText = "";
 				var lastYear = "";
 				var lastBranch = "";
+				var lastDesc = "";
 				var keys = ['name', 'branch', 'year', 'attendDesc'];
 				for (var i = 0; i < bmNumber; i++) {
 					var getData = {};
@@ -89,6 +92,7 @@ block script
 					keys.forEach (function (key, index) {
 						var keyValue = "add_" + key + "[" + i + "]";
 						getData[key] = document.getElementsByName(keyValue)[0].value;
+						var check = document.getElementsByName(keyValue)[0];
 					});
 					
 					if (i == 0)
@@ -98,6 +102,7 @@ block script
 					
 					lastBranch = getData.branch;
 					lastYear = getData.year;
+				var lastDesc = getData.attendDesc;
 				}
 				var empty = { num: bmNumber };
 				keys.forEach (function (key, index) {
@@ -105,12 +110,15 @@ block script
 				})
 				empty.year = lastYear;
 				empty.branch = lastBranch;
+				empty.attendDesc = lastDesc;
 				
 				document.getElementById("addMember").innerHTML = innerText + window.addBranch_second(empty);
-				$('.ui.edit.modal')
-					.modal('hide');
-				$('.ui.edit.modal')
-					.modal('show');
+				//- $('.ui.edit.modal')
+				//- 	.modal('hide');
+				//- $('.ui.edit.modal')
+				//- 	.modal('show');
+				$('.ui.dropdown')
+					.dropdown();
 				
 				addMemberNumber++;
 				
@@ -161,6 +169,9 @@ block script
 				//- 	.modal('hide');
 				//- $('.ui.make.modal')
 				//- 	.modal('show');
+
+				$('.ui.dropdown')
+					.dropdown();
 				
 				makeBSNumber++;
 				
@@ -181,7 +192,7 @@ block content
 			- bsList.forEach( function(item,index) {
 				a.sub.item(href="/branch_segment/#{item.branch}?year=#{year}&tag=#{branchTag}") #{item.branch}
 			- });
-		if auth=="manager" || auth=="developer" 
+		if auth!="manager" || auth=="developer" 
 			div.ui.right.secondary.menu
 				div.item
 					div.ui.buttons
@@ -213,7 +224,18 @@ block content
 							input(name="add_branch[0]", placeholder="브랜치", type="text")
 						div.field
 							label 비고
-							input(name="add_attendDesc[0]", placeholder="비고", type="text")
+							div.center.aligned: div.ui.selection.dropdown
+								//- input(name="add_attendDesc[0]", placeholder="비고", type="text")
+								input(type="hidden", name="add_attendDesc[0]", value="기본")
+								i.dropdown.icon
+								div.text 기본
+								div.menu
+									div.item(data-value="기본", style="min-width:100px; max-height:30px") 기본
+									div.item(data-value="청1부", style="min-width:100px; max-height:30px") 청1부
+									div.item(data-value="청2부", style="min-width:100px; max-height:30px") 청2부
+									div.item(data-value="군대", style="min-width:100px; max-height:30px") 군대
+									div.item(data-value="유학", style="min-width:100px; max-height:30px") 유학
+									div.item(data-value="bs", style="min-width:100px; max-height:30px") bs
 						div.field
 							label 년도
 							input(name="add_year[0]", placeholder="년도", type="text" value="#{year}")

@@ -43,11 +43,18 @@ function SetBirthFormat (data) {
     if (!data)
         return;
     var year = parseInt(data.birthYear);
+    // var yu = false;
+    // if (data.RowKey == "유진열")
+    //     yu = true;
     var cur_year = new Date().getYear();
-    if (cur_year - year >= 26)
-        data.part = '청2부';
-    else 
-        data.part = '청1부';
+    if (data.part != '교회') {
+        if (cur_year - year == 25 && data.birthMonth < 3)
+            data.part = '청2부';
+        else if (cur_year - year >= 26)
+            data.part = '청2부';
+        else 
+            data.part = '청1부';
+    }
     year += 1900; 
     data.birthYear = year.toString();
     data.birthMonth = FormatNumberLength(data.birthMonth, 2);
@@ -233,10 +240,13 @@ module.exports.GetMemberWithName = function (name, next) {
             var getData = result.entries[0];
             RemoveEntityGen(getData);
             SetBirthFormat(getData);
-            getData.tensionString = TensionToString(getData.tension);
-            SetFriendsWithObject(getData); 
-            
-            return next(null, getData);
+            if (getData != null) {
+                getData.tensionString = TensionToString(getData.tension);
+                SetFriendsWithObject(getData); 
+                return next(null, getData);
+            }
+            else
+                return next(0);
         }    
     });
 }
@@ -434,6 +444,15 @@ module.exports.MemberSave = function(fields) {
 module.exports.GetCurrentMemberWithGroup = function (group, next) {
     var getDate = new Date();
     var year = getDate.getFullYear().toString();
+    // var year = sbp_time.getYear();
+    
+    exports.GetMemberWithGroup(year, group, next);
+}
+
+module.exports.GetDetailCurrentMemberWithGroup = function (group, next) {
+    var getDate = new Date();
+    // var year = getDate.getFullYear().toString();
+    var year = sbp_time.getYear();
     
     exports.GetMemberWithGroup(year, group, next);
 }
@@ -677,35 +696,47 @@ module.exports.AddBranch = function (addData, next) {
     addData.forEach(function(data, index) {
         exports.GetMemberWithName(data.RowKey, function (error, result) {
             if (!error) {
-                data.age = data.PartitionKey - result.birthYear + 1;
-                if (isNaN(data.age))
-                    data.age = new Date().getFullYear() - result.birthYear + 1;
-                data.attend = result.attend;
-                data.birthYear = result.birthYear - 1900;
-                if (data.age >= 27)
-                    data.part = "청2부";
-                else     
-                    data.part = "청1부";
-                if (data.attendDesc == "bs" || data.attendDesc == "BS") {
-                    data.charge = 'bs';
-                    data.attendDesc = '';
-                }
-                else
-                    data.charge = 'bm';
-                    
-                SetEntityGen(data);
-                // 데이터베이스에 entity를 추가합니다.
-                tableService.insertOrMergeEntity('branchlog', data, function(error, result) {
+                if (result == null) {
                     count++;
-                    if (!error) {
-                        if (count >= maxLength)
-                            next(null, result);
+                    console.log("error in branch save:" + data.RowKey);
+                    next(data.RowKey + " 청년이 청년부 목록에 없습니다.");
+                }
+                else {
+                    data.age = data.PartitionKey - result.birthYear + 1;
+                    if (isNaN(data.age))
+                        data.age = new Date().getFullYear() - result.birthYear + 1;
+                    data.attend = result.attend;
+                    data.birthYear = result.birthYear - 1900;
+                    if (data.attendDesc == "기본") {
+                        if (data.age >= 27)
+                            data.part = "청2부";
+                        else     
+                            data.part = "청1부";
                     }
-                    else {
-                        console.log("error in member save:" + error);
-                        next(error);
+                    if (data.attendDesc != "기본")
+                        data.part = data.attendDesc;
+                    
+                    if (data.attendDesc == "bs" || data.attendDesc == "BS") {
+                        data.charge = 'bs';
+                        data.attendDesc = '';
                     }
-                }); 
+                    else
+                        data.charge = 'bm';
+                        
+                    SetEntityGen(data);
+                    // 데이터베이스에 entity를 추가합니다.
+                    tableService.insertOrMergeEntity('branchlog', data, function(error, result) {
+                        count++;
+                        if (!error) {
+                            if (count >= maxLength)
+                                next(null, result);
+                        }
+                        else {
+                            console.log("error in member save:" + error);
+                            next(error);
+                        }
+                    }); 
+                }
             } 
             else {
                 count++;

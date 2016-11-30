@@ -7,7 +7,17 @@ div.four.fields
         input(name="add_branch[#{num}]", placeholder="브랜치", type="text", value="#{branch}")
     div.field
         label 비고
-        input(name="add_attendDesc[#{num}]", placeholder="비고", type="text", value="#{attendDesc}")
+        div.center.aligned: div.ui.selection.dropdown
+            input(type="hidden", name="add_attendDesc[#{num}]", value="#{attendDesc}")
+            i.dropdown.icon
+            div.text #{attendDesc}
+            div.menu
+                div.item(data-value="기본", style="min-width:100px; max-height:30px") 기본
+                div.item(data-value="청1부", style="min-width:100px; max-height:30px") 청1부
+                div.item(data-value="청2부", style="min-width:100px; max-height:30px") 청2부
+                div.item(data-value="군대", style="min-width:100px; max-height:30px") 군대
+                div.item(data-value="유학", style="min-width:100px; max-height:30px") 유학
+                div.item(data-value="bs", style="min-width:100px; max-height:30px") bs
     div.field
         label 년도
         input(name="add_year[#{num}]", placeholder="년도", type="text", value="#{year}")
