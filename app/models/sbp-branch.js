@@ -32,6 +32,38 @@ module.exports.GetTable = function (branchLogs, attendValue) {
 	return returnValue;
 }
 
+module.exports.GetUnionTable = function (branchLogs, attendValue) {
+	var getBSList = [];
+	branchLogs.forEach (function (item, index) {
+		if (item.charge == "bs")
+			getBSList.push(item);
+	});
+	
+	branchLogs = branchLogs.sort(function(a,b){
+		var aa = a.birthYear;
+		var bb = b.birthYear;
+		if (aa < bb) return -1;
+		if (aa > bb) return 1;
+		return 0;
+	});
+	
+	var maxLength = {one: 0, two: 0, arm: 0, out: 0};
+	getBSList.forEach (function (item, index) {
+		var getTable = exports.GetUnionBranchTable(item, branchLogs, attendValue);
+		item.one = getTable.one;
+		item.arm = getTable.arm;
+		item.out = getTable.out;
+		if (maxLength.one < getTable.one.length) maxLength.one = getTable.one.length;
+		if (maxLength.arm < getTable.arm.length) maxLength.arm = getTable.arm.length;
+		if (maxLength.out < getTable.out.length) maxLength.out = getTable.out.length;
+	});
+	var returnValue = { 
+			bsList: getBSList,
+			maxLength: maxLength
+		} 
+	return returnValue;
+}
+
 module.exports.GetBranchTable = function(bsMember, members, attendValue) {
 	if (!attendValue) attendValue = 0;
 	var oneList = [];
@@ -61,6 +93,48 @@ module.exports.GetBranchTable = function(bsMember, members, attendValue) {
 			else if (item.part == "청2부")
 				twoList.push(item);
 			else if (item.part == "청1부")
+				oneList.push(item);
+			else if (item.part == "군대")
+				armList.push(item);
+			else
+				outList.push(item);
+			removeList.push(item);
+		}
+	});
+	
+	removeList.forEach(function (item, index) {
+		var getID = members.indexOf(item);
+		if (getID >= 0)
+			members.splice(getID,1);
+	});
+	return branchTable;
+}
+
+module.exports.GetUnionBranchTable = function(bsMember, members, attendValue) {
+	if (!attendValue) attendValue = 0;
+	var oneList = [];
+	var armList = [];
+	var outList = [];
+	var removeList = [];
+	var branchTable = {
+		one: oneList,
+		arm: armList,
+		out: outList
+	};
+	members.forEach (function (item, index) {
+		var attendOk = false;
+		if (attendValue == 0 || (item.attend && item.attend >= attendValue)) {
+			attendOk = true;
+		}
+
+		if (attendOk && item.branch == bsMember.branch && item.RowKey != bsMember.RowKey) {
+			if (item.attendDesc == "결혼" || item.attendDesc == "제외")
+				;
+			else if (item.attendDesc == "유학" || item.attendDesc == "지방")
+				outList.push(item);
+			else if (item.attendDesc == "군대")
+				armList.push(item);
+			else if (item.part == "청1부" || item.part == "청2부")
 				oneList.push(item);
 			else if (item.part == "군대")
 				armList.push(item);

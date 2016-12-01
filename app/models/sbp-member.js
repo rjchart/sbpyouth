@@ -598,6 +598,26 @@ module.exports.GetBranchMembers = function (year, next, attendValue) {
     });
 }
 
+module.exports.GetUnionBranchMembers = function (year, next, attendValue) {
+    if (year == null || year == '' || year == 0)
+        year = sbp_time.getYear();
+    var query = new azure.TableQuery()
+        .where("PartitionKey eq ?", year.toString());
+    
+    tableService.queryEntities('branchlog', query, null, function (error, log) {
+        if (!error) {
+            RemoveEntityGenList(log.entries);
+            var getTable = sbp_branch.GetUnionTable(log.entries, attendValue);
+            getTable.year = year;
+            // getData.log = log.entries
+            return next(null, getTable);
+        }
+        else {
+            return next(error);
+        }
+    });
+}
+
 function SetBranchSort (branch) {
     branch = branch.sort(function(a,b){
         var aa = a.birthYear;
@@ -690,7 +710,9 @@ module.exports.RemoveMember = function (data, next) {
     });
 }
 
+var resultTest;
 module.exports.AddBranch = function (addData, next) {
+    resultTest = "";
     var maxLength = addData.length;
     var count = 0;
     addData.forEach(function(data, index) {
@@ -699,7 +721,8 @@ module.exports.AddBranch = function (addData, next) {
                 if (result == null) {
                     count++;
                     console.log("error in branch save:" + data.RowKey);
-                    next(data.RowKey + " 청년이 청년부 목록에 없습니다.");
+                    // next(data.RowKey + " 청년이 청년부 목록에 없습니다.");
+                    resultTest = " \n - error: " + data.RowKey + " 청년은 청년부 목록에 없습니다."
                 }
                 else {
                     data.age = data.PartitionKey - result.birthYear + 1;
@@ -729,7 +752,7 @@ module.exports.AddBranch = function (addData, next) {
                         count++;
                         if (!error) {
                             if (count >= maxLength)
-                                next(null, result);
+                                next(null, resultTest);
                         }
                         else {
                             console.log("error in member save:" + error);

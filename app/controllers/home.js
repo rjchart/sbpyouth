@@ -207,9 +207,9 @@ router.get('/branch', function (req, res, next) {
     var year = req.query.year;
 	var attendSet = req.query['attendValue'];
 	if (!attendSet)
-		attendSet = 0;  
-    
-    var getTable = sbp_member.GetBranchMembers(year, function (error, result) {
+		attendSet = 0;
+          
+    var getTable = sbp_member.GetUnionBranchMembers(year, function (error, result) {
         if (!error) {
             var branchs = [];
             result.bsList.forEach (function (item) {
@@ -219,11 +219,14 @@ router.get('/branch', function (req, res, next) {
             result.title = title;
             
             CombineElements(user, result)
-            res.render('branchTotal', user);
+            res.render('branchUnionTotal', user);
         }
         else 
             console.log(error);
     }, attendSet);
+
+
+
   
 });
 
@@ -236,7 +239,7 @@ router.get('/branch_segment/:id', function (req, res, next) {
     var branchs = JSON.parse(branchTag);
     if (year == null || year == '')
         year = sbp_time.getYear();  
-    
+
     var getTable = sbp_member.GetBranchMembersWithBranch(year, getID, function (error, result) {
         if (!error) {
             var input = {
@@ -602,7 +605,7 @@ router.post('/addBranch', function (req, res, next) {
     sbp_member.AddBranch(addData, function (error, result) {
         if (!error) {
             var data = {
-                result:true
+                result:result
             }
             res.send(data);
         }
