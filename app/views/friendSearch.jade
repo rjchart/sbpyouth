@@ -25,7 +25,7 @@ block sub_content
                                         tbody
                                             each member, i in memberList
                                                 tr.bMember(id="#{member.RowKey}" class="#{member.RowKey.substring(1)} #{member.birthYear} #{parseInt(member.birthYear) - 1900} #{member.gender} #{member.part} #{member.branch} #{parseInt(member.birthMonth)} #{member.attendDesc}  #{member.attendString}")
-                                                    td.name(style="width:70px"): label(onclick="ProfileBS('#{member.RowKey}', #{year}, '#{member.branch || ''}', '#{member.attend}', '#{member.charge || ''}')") #{member.RowKey}
+                                                    td.name(style="width:70px"): label(onclick="ProfileBS('#{member.RowKey}', '#{year}', '#{member.branch || ''}', '#{member.attend}', '#{member.charge || ''}')") #{member.RowKey}
                                                     //- td.name: label(style="width:70px", onclick="ProfileBS(#{year}, '#{member.RowKey}', '#{member.PartitionKey}','#{member.branch || ''}','#{member.attendString}','#{member.attend}','#{member.birthYear}','#{member.birthMonth}','#{member.birthDay}','#{member.gender}','#{member.phone}','#{member.attendDesc || ''}','#{member.tension || 0}','#{member.tensionString || 0}','#{member.part || 0}', '#{member.photo || 0}', '#{member.charge || 'bm'}', '#{member.mail || ''}', '#{member.locate || ''}', '#{member.service || ''}')") #{member.RowKey}
                                                     td.gender(style="width:55px") #{member.gender || '모름'}
                                                     td.phone(style="width:147px") #{member.phone}
@@ -48,7 +48,7 @@ block sub_content
                                         tbody
                                             each member, i in memberList
                                                 tr.bMember(id="#{member.RowKey}" class="#{member.RowKey.substring(1)} #{member.birthYear} #{parseInt(member.birthYear) - 1900} #{member.gender} #{member.part} #{member.branch} #{parseInt(member.birthMonth)} #{member.attendDesc}  #{member.attendString}")
-                                                    td.name: label(onclick="ProfileBS('#{member.RowKey}', #{year}, '#{member.branch || ''}', '#{member.attend}', '#{member.charge || ''}')") #{member.RowKey}
+                                                    td.name: label(onclick="ProfileBS('#{member.RowKey}', '#{year}', '#{member.branch || ''}', '#{member.attend}', '#{member.charge || ''}')") #{member.RowKey}
                                                     //- td.name: label(style="width:70px", onclick="ProfileBS(#{year}, '#{member.RowKey}', '#{member.PartitionKey}','#{member.branch || ''}','#{member.attendString}','#{member.attend}','#{member.birthYear}','#{member.birthMonth}','#{member.birthDay}','#{member.gender}','#{member.phone}','#{member.attendDesc || ''}','#{member.tension || 0}','#{member.tensionString || 0}','#{member.part || 0}', '#{member.photo || 0}', '#{member.charge || 'bm'}', '#{member.mail || ''}', '#{member.locate || ''}', '#{member.service || ''}')") #{member.RowKey}
                                                     td.gender #{member.gender || '모름'}
                                                     td.birth #{member.birthYear}.#{member.birthMonth}.#{member.birthDay}												
@@ -88,7 +88,7 @@ block sub_content
                                     tbody
                                         each member, i in memberList
                                             tr.bMember(id="#{member.RowKey}" class="#{member.RowKey.substring(1)} #{member.birthYear} #{parseInt(member.birthYear) - 1900} #{member.gender} #{member.part} #{member.branch} #{parseInt(member.birthMonth)} #{member.attendDesc}  #{member.attendString}")
-                                                td.name(style="min-width:70px"): label(onclick="ProfileBS('#{member.RowKey}', #{year}, '#{member.branch || ''}', '#{member.attend}', '#{member.charge || ''}')") #{member.RowKey}
+                                                td.name(style="min-width:70px"): label(onclick="ProfileBS('#{member.RowKey}', '#{year}', '#{member.branch || ''}', '#{member.attend}', '#{member.charge || ''}')") #{member.RowKey}
                                                 //- td.name: label(style="width:70px", onclick="ProfileBS(#{year}, '#{member.RowKey}', '#{member.PartitionKey}','#{member.branch || ''}','#{member.attendString}','#{member.attend}','#{member.birthYear}','#{member.birthMonth}','#{member.birthDay}','#{member.gender}','#{member.phone}','#{member.attendDesc || ''}','#{member.tension || 0}','#{member.tensionString || 0}','#{member.part || 0}', '#{member.photo || 0}', '#{member.charge || 'bm'}', '#{member.mail || ''}', '#{member.locate || ''}', '#{member.service || ''}')") #{member.RowKey}
                                                 td.gender(style="width:55px") #{member.gender || '모름'}
                                                 td.phone(style="width:147px") #{member.phone}
@@ -111,7 +111,7 @@ block sub_content
                                     tbody
                                         each member, i in memberList
                                             tr.bMember(id="#{member.RowKey}" class="#{member.RowKey.substring(1)} #{member.birthYear} #{parseInt(member.birthYear) - 1900} #{member.gender} #{member.part} #{member.branch} #{parseInt(member.birthMonth)} #{member.attendDesc}  #{member.attendString}")
-                                                td.name: label(onclick="ProfileBS('#{member.RowKey}', #{year}, '#{member.branch || ''}', '#{member.attend}', '#{member.charge || ''}')") #{member.RowKey}
+                                                td.name: label(onclick="ProfileBS('#{member.RowKey}', '#{year}', '#{member.branch || ''}', '#{member.attend}', '#{member.charge || ''}')") #{member.RowKey}
                                                 //- td.name: label(style="width:70px", onclick="ProfileBS(#{year}, '#{member.RowKey}', '#{member.PartitionKey}','#{member.branch || ''}','#{member.attendString}','#{member.attend}','#{member.birthYear}','#{member.birthMonth}','#{member.birthDay}','#{member.gender}','#{member.phone}','#{member.attendDesc || ''}','#{member.tension || 0}','#{member.tensionString || 0}','#{member.part || 0}', '#{member.photo || 0}', '#{member.charge || 'bm'}', '#{member.mail || ''}', '#{member.locate || ''}', '#{member.service || ''}')") #{member.RowKey}
                                                 td.gender #{member.gender || '모름'}
                                                 td.birth #{member.birthYear}.#{member.birthMonth}.#{member.birthDay}												

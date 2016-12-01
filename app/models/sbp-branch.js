@@ -190,12 +190,12 @@ function SetMemberIsOK(item) {
 		var isOK = false;
 		var attendDesc = item.attendDesc; 
 		if (attendDesc != '유학' && attendDesc != '직장' && attendDesc != '군대'
-		 && attendDesc != '결혼' && attendDesc != '전도사' && attendDesc != '강도사' && attendDesc != '목사' 
+		 && attendDesc != '결혼' && attendDesc != '전도사' && attendDesc != '강도사' && attendDesc != '목사' && attendDesc != '목사님' 
 		 && attendDesc != '부장 집사' && attendDesc != '제외' && attendDesc != '장기결석' 
-		 && attendDesc != '타교회' && item.attend != 0)
+		 && attendDesc != '타교회' && item.age <= 40) // && attendDesc != '목사'
 			isOK = true;
-		if (item.age > 40)
-			isOK = false;
+		// if (item.age > 40)
+		// 	isOK = false;
 		if (isOK) {
 			item.isok = true;
 		}
@@ -789,9 +789,9 @@ module.exports.MakeNewBranch = function (members, bsList, type) {
 				member.countSameYear = 0;
 			});
 			//console.log("pow:" + powerAver);
-			var newMembers = members.slice(0);
-			var doneMembers = [];
-			var branchList = {}, youngList = {}, pow = {};
+			var newMembers = members.slice(0); // 맴버 복사
+			var doneMembers = []; // 이미 배치된 맴버 변수
+			var branchList = {}, youngList = {}, pow = {}; 
 			var isNotGood = false;
 			
 			// branchList 만들기.
@@ -845,12 +845,12 @@ module.exports.MakeNewBranch = function (members, bsList, type) {
 			newBSList.forEach( function (bs, index) {
 				bs.two.splice(0,1);
 				// delete bs.two[0];
-				if (bs.pow < powerAver * .85) {
+				if (bs.pow < powerAver * .65) {
 					isPowAverBad = true 
 					return true;
 				}
 
-				if (bs.pow > powerAver * 1.15) {
+				if (bs.pow > powerAver * 1.35) {
 					isPowAverBad = true 
 					return true;
 				}
