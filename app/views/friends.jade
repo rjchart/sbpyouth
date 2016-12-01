@@ -462,7 +462,7 @@ block content
 		//- a.sub.item(onclick="SubMenuFriendClicked(3)") 또래 친구들
 		//- if auth=="manager" || auth=="developer" || auth=="executive" 
 		div.ui.right.secondary.menu
-			if auth!="manager" || auth=="developer"
+			if auth=="manager" || auth=="developer"
 				button.ui.blue.item.active(onclick="SubMenuEditClicked(false, false)") show
 				button.ui.blue.item(onclick="SubMenuEditClicked(true, false)") edit
 				if auth=="developer"

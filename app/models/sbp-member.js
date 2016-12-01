@@ -707,7 +707,7 @@ module.exports.AddBranch = function (addData, next) {
                         data.age = new Date().getFullYear() - result.birthYear + 1;
                     data.attend = result.attend;
                     data.birthYear = result.birthYear - 1900;
-                    if (data.attendDesc == "기본") {
+                    if (data.attendDesc == "기본" && data.part == null) {
                         if (data.age >= 27)
                             data.part = "청2부";
                         else     
