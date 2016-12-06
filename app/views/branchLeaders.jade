@@ -3,7 +3,28 @@ block sub_item05
     a.active.sub.item(href="/branchleader") 브랜치 리더
 block sub_content
     div.main.ui.container
-        div.ui.segment
+        div.ui.five.top.attached.buttons
+            if (year == '2017')
+                a.ui.button.active(href="branchleader?year=2017") 2017
+            else 
+                a.ui.button(href="branchleader?year=2017") 2017
+            if (year == '2016-2')
+                a.ui.button.active(href="branchleader?year=2016-2") 2016-2
+            else
+                a.ui.button(href="branchleader?year=2016-2") 2016-2
+            if (year == '2016')
+                a.ui.button.active(href="branchleader?year=2016") 2016
+            else
+                a.ui.button(href="branchleader?year=2016") 2016
+            if (year == '2015-2')
+                a.ui.button.active(href="branchleader?year=2015-2") 2015-2
+            else
+                a.ui.button(href="branchleader?year=2015-2") 2015-2
+            if (year == '2015')
+                a.ui.button.active(href="branchleader?year=2015") 2015
+            else
+                a.ui.button(href="branchleader?year=2015") 2015
+        div.ui.attached.segment
             h3.ui.dividing.header 브랜치 리더 명단
                 div.sub.header 신반포 중앙교회 청년부의 브랜치 그룹의 리더로 예배 후, 각자 맡은 브랜치의 교육을 맡으며 각 브랜치원을 돕습니다.
             div.ui.accordion

@@ -47,14 +47,16 @@ function SetBirthFormat (data) {
     // if (data.RowKey == "유진열")
     //     yu = true;
     var cur_year = new Date().getYear();
+    var age = cur_year - year + 1;
+    if (data.birthMonth < 3) //Check!!
+        age = age + 1; 
     if (data.part != '교회') {
-        if (cur_year - year == 25 && data.birthMonth < 3)
-            data.part = '청2부';
-        else if (cur_year - year >= 26)
+        if (age >= 27)
             data.part = '청2부';
         else 
             data.part = '청1부';
     }
+    data.age = age;
     year += 1900; 
     data.birthYear = year.toString();
     data.birthMonth = FormatNumberLength(data.birthMonth, 2);
@@ -526,9 +528,16 @@ module.exports.SaveMemberAndLog = function (member, next) {
             branchLog[key] = member[key];
         }
     }
-    branchLog.PartitionKey = member.year;
-    var year = member.year.replace('-2', '');
-    branchLog.age = (year - member.birthYear + 1) % 100;
+    if (member.year) {
+        branchLog.PartitionKey = member.year;
+        var year = member.year.replace('-2', '');
+        branchLog.age = (year - member.birthYear + 1) % 100;
+    }
+    else {
+        var getYear = sbp_time.getYear();
+        branchLog.PartitionKey = getYear;
+        // var year = member.year.replace('-2', '');
+    }
     var maxCount = 2;
     var count = 0;
     exports.SaveMember(member, function(error, result) {

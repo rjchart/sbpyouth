@@ -1,0 +1,360 @@
+form#editMember.form(action="/saveProfile/#{data.RowKey}", enctype="multipart/form-data", method="post")
+	div.ui.raised.segment
+		div.ui.grid
+			div.two.column.computer.only.row
+				div.four.wide.streched.column
+					div.ui.card
+						input(type="hidden", name="PartitionKey", value="#{data.PartitionKey}")
+						input(type="hidden", name="RowKey", value="#{data.name}")
+						label.image.outImg(style="background-color:#e5e5e5", for="uploadInput")
+							if (data.usingPhoto == 'true')
+								img#photo.fitImg(src="#{data.userPhoto||''}")
+							else if (data.photo)
+								img#updateImage.fitImg(src="#{data.photo||''}") 
+								input(type="hidden", name="photo", value="#{data.photo||''}")
+							else
+								img#updateImage.fitImg(src="/public/img/image.png")
+					div
+						table.ui.center.aligned.very.basic.small.table
+							tbody
+								tr
+									td 교회 출석
+									td.center.aligned: div.ui.selection.dropdown
+										input(type="hidden", name="attend", value="#{data.attend || 0}")
+										i.dropdown.icon
+										div.text
+										div.menu
+											div.item(data-value="0") 안나옴
+											div.item(data-value="1") 잘 모름
+											div.item(data-value="2") 종종 나옴
+											div.item(data-value="3") 잘 나옴
+											div.item(data-value="4") 매주 나옴
+								tr
+									td 사교성
+									td.center.aligned: div.ui.selection.dropdown
+										input(type="hidden", name="tension", value="#{data.tension || 0}")
+										i.dropdown.icon
+										div.text
+										div.menu
+											div.item(data-value="0") 알수없음
+											div.item(data-value="1") 모자람
+											div.item(data-value="2") 평범함
+											div.item(data-value="3") 좋음
+											div.item(data-value="4") 특출남
+								tr
+									td 행사 참여
+									td.center.aligned: div.ui.selection.dropdown
+										input(type="hidden", name="attendEvent", value="#{data.attendEvent || 0}")
+										i.dropdown.icon
+										div.text
+										div.menu
+											div.item(data-value="0") 안나옴
+											div.item(data-value="1") 잘 모름
+											div.item(data-value="2") 종종 참여
+											div.item(data-value="3") 잘 참여
+											div.item(data-value="4") 거의 참여
+								tr
+									td 신앙 지식
+									td.center.aligned: div.ui.selection.dropdown
+										input(type="hidden", name="theology", value="#{data.theology || 0}")
+										i.dropdown.icon
+										div.text
+										div.menu
+											div.item(data-value="0") 알수없음
+											div.item(data-value="1") 모자람
+											div.item(data-value="2") 평범함
+											div.item(data-value="3") 좋음
+											div.item(data-value="4") 특출남
+								tr
+									td 성실함
+									td.center.aligned: div.ui.selection.dropdown
+										input(type="hidden", name="faithful", value="#{data.faithful || 0}")
+										i.dropdown.icon
+										div.text
+										div.menu
+											div.item(data-value="0") 알수없음
+											div.item(data-value="1") 모자람
+											div.item(data-value="2") 평범함
+											div.item(data-value="3") 좋음
+											div.item(data-value="4") 특출남
+								tr
+									td 배려심
+									td.center.aligned: div.ui.selection.dropdown
+										input(type="hidden", name="care", value="#{data.care || 0}")
+										i.dropdown.icon
+										div.text
+										div.menu
+											div.item(data-value="0") 알수없음
+											div.item(data-value="1") 모자람
+											div.item(data-value="2") 평범함
+											div.item(data-value="3") 좋음
+											div.item(data-value="4") 특출남
+								tr
+									td 운동 능력
+									td.center.aligned: div.ui.selection.dropdown
+										input(type="hidden", name="physical", value="#{data.physical || 0}")
+										i.dropdown.icon
+										div.text
+										div.menu
+											div.item(data-value="0") 알수없음
+											div.item(data-value="1") 모자람
+											div.item(data-value="2") 평범함
+											div.item(data-value="3") 좋음
+											div.item(data-value="4") 특출남
+								tr
+									td 지혜
+									td.center.aligned: div.ui.selection.dropdown
+										input(type="hidden", name="wisdom", value="#{data.wisdom || 0}")
+										i.dropdown.icon
+										div.text
+										div.menu
+											div.item(data-value="0") 알수없음
+											div.item(data-value="1") 모자람
+											div.item(data-value="2") 평범함
+											div.item(data-value="3") 좋음
+											div.item(data-value="4") 특출남
+								tr
+									td 순발력
+									td.center.aligned: div.ui.selection.dropdown
+										input(type="hidden", name="impulse", value="#{data.impulse || 0}")
+										i.dropdown.icon
+										div.text
+										div.menu
+											div.item(data-value="0") 알수없음
+											div.item(data-value="1") 모자람
+											div.item(data-value="2") 평범함
+											div.item(data-value="3") 좋음
+											div.item(data-value="4") 특출남
+								tr
+									td 유머
+									td.center.aligned: div.ui.selection.dropdown
+										input(type="hidden", name="sociality", value="#{data.sociality || 0}")
+										i.dropdown.icon
+										div.text
+										div.menu
+											div.item(data-value="0") 알수없음
+											div.item(data-value="1") 모자람
+											div.item(data-value="2") 평범함
+											div.item(data-value="3") 좋음
+											div.item(data-value="4") 특출남
+								tr
+									td 인내력(멘탈)
+									td.center.aligned: div.ui.selection.dropdown
+										input(type="hidden", name="endurance", value="#{data.endurance || 0}")
+										i.dropdown.icon
+										div.text
+										div.menu
+											div.item(data-value="0") 알수없음
+											div.item(data-value="1") 모자람
+											div.item(data-value="2") 평범함
+											div.item(data-value="3") 좋음
+											div.item(data-value="4") 특출남
+								tr
+									td 세심함
+									td.center.aligned: div.ui.selection.dropdown
+										input(type="hidden", name="careful", value="#{data.careful || 0}")
+										i.dropdown.icon
+										div.text
+										div.menu
+											div.item(data-value="0") 알수없음
+											div.item(data-value="1") 모자람
+											div.item(data-value="2") 평범함
+											div.item(data-value="3") 좋음
+											div.item(data-value="4") 특출남
+								tr
+									td 기억력
+									td.center.aligned: div.ui.selection.dropdown
+										input(type="hidden", name="memory", value="#{data.memory || 0}")
+										i.dropdown.icon
+										div.text
+										div.menu
+											div.item(data-value="0") 알수없음
+											div.item(data-value="1") 모자람
+											div.item(data-value="2") 평범함
+											div.item(data-value="3") 좋음
+											div.item(data-value="4") 특출남
+								tr
+									td 감수성
+									td.center.aligned: div.ui.selection.dropdown
+										input(type="hidden", name="sensitivity", value="#{data.sensitivity || 0}")
+										i.dropdown.icon
+										div.text
+										div.menu
+											div.item(data-value="0") 알수없음
+											div.item(data-value="1") 모자람
+											div.item(data-value="2") 평범함
+											div.item(data-value="3") 좋음
+											div.item(data-value="4") 특출남
+
+				div.twelve.wide.streched.column
+					div.ui.container
+						h3.ui.header
+							div.content.ui.grid(style="width:100%")
+								div.two.column.row
+									div.twelve.wide.streched.column
+										|#{data.RowKey}
+										div.sub.header #{data.birthYear}.#{data.birthMonth}.#{data.birthDay}
+									div.four.wide.streched.column
+										a.ui.big.red.label(onclick="EditSubmit()" style="position:absolute; right:0px")
+											i.write.icon 
+											|수정
+
+										//- |#{data.RowKey}
+										//- div.sub.header #{data.birthYear}.#{data.birthMonth}.#{data.birthDay}
+							div.ui.mini.relaxed.celled.list
+								div.item
+									div.ui.blue.image.label
+										i.big.calendar.middle.aligned.icon(style="width:15px; padding-left:2px")
+									div.content
+										div.header 나이 (수정 불가)
+										div
+											//- div.ui.input
+											//-     input(type="text", name="age", value="#{data.age}")
+											h3.description(style="color:gray") 
+												|#{data.age}
+
+								div.item
+									div.ui.blue.image.label
+										i.big.heterosexual.middle.aligned.icon(style="width:15px; padding-left:0px")
+									div.content
+										div.header 성별
+										div
+											div.ui.input
+												input(type="text", name="gender", value="#{data.gender || ''}", placeholder="알수없음")
+											//- h3.description(style="color:gray")
+											//-     |#{data.gender}
+								div.item
+									div.ui.blue.image.label
+										i.big.theme.middle.aligned.icon(style="width:15px; padding-left:6px")
+									div.content
+										div.header 혈액형
+										div
+											div.ui.input
+												input(type="text", name="blood", value="#{data.blood || ''}", placeholder="알수없음")
+								div.item
+									div.ui.blue.image.label
+										i.big.certificate.middle.aligned.icon(style="width:15px; padding-left:3px")
+									div.content
+										div.header 브랜치
+										div
+											div.ui.input
+												input(type="text", name="branch", value="#{data.branch || ''}", placeholder="알수없음")
+										//- div
+										//-     h3.description(style="color:gray")
+										//-         |#{data.branch}
+								div.item
+									div.ui.blue.image.label
+										i.big.phone.middle.aligned.icon(style="width:15px; padding-left:3px")
+									div.content
+										div.header 전화번호
+										div
+											div.ui.input
+												input(type="text", name="phone", value="#{data.phone || ''}")
+								div.item
+									div.ui.blue.image.label
+										i.big.mail.middle.aligned.icon(style="width:15px; padding-left:1px")
+									div.content
+										div.header 메일
+										div
+											div.ui.input
+												input(type="text", name="mail", value="#{data.mail || ''}", placeholder="알수없음")
+								div.item
+									div.ui.blue.image.label
+										i.big.music.middle.aligned.icon(style="width:15px; padding-left:1px")
+									div.content
+										div.header 연주 가능 악기
+										div
+											div.ui.input
+												input(type="text", name="instrument", value="#{data.instrument || ''}", placeholder="알수없음")
+								div.item
+									div.ui.blue.image.label
+										i.big.tag.middle.aligned.icon(style="width:15px; padding-left:3px")
+									div.content
+										div.header 봉사 부서
+										div
+											div.ui.input
+												input(type="text", name="service", value="#{data.service || ''}", placeholder="없음")
+								div.item
+									div.ui.blue.image.label
+										i.big.browser.middle.aligned.icon(style="width:15px; padding-left:1px")
+									div.content
+										div.header 봉사 이력
+										div
+											div.ui.input
+												input(type="text", name="serviceHistory", value="#{data.serviceHistory || ''}", placeholder="없음")
+										//- div
+										//-     h3.description(style="color:gray")
+										//-         |청년1부 부총부, 유년부 교사
+								//- div.item
+								//-     div.ui.blue.image.label
+								//-         i.big.birthday.middle.aligned.icon(style="width:15px; padding-left:1px")
+								//-     div.content
+								//-         div.header 생일
+								//-         div
+								//-             h3.description(style="color:gray") 
+								//-                 |4월 14일
+								div.item
+									div.ui.blue.image.label
+										i.big.write.middle.aligned.icon(style="width:15px; padding-left:3px")
+									div.content
+										div.header 학과
+										div
+											div.ui.input
+												input(type="text", name="major", value="#{data.major || ''}", placeholder="알수없음")
+										//- div
+										//-     h3.description(style="color:gray") 
+										//-         |말레이시아 전공
+								div.item
+									div.ui.blue.image.label
+										i.big.soccer.middle.aligned.icon(style="width:15px; padding-left:1px")
+									div.content
+										div.header 좋아하는 운동
+										div
+											div.ui.input
+												input(type="text", name="likeSports", value="#{data.likeSports || ''}", placeholder="알수없음")
+										//- div
+										//-     h3.description(style="color:gray") 
+										//-         |배드민턴
+								div.item
+									div.ui.blue.image.label
+										i.big.game.middle.aligned.icon(style="width:15px; padding-left:1px")
+									div.content
+										div.header 좋아하는 게임
+										div
+											div.ui.input
+												input(type="text", name="likeGames", value="#{data.likeGames || ''}", placeholder="알수없음")
+										//- div
+										//-     h3.description(style="color:gray") 
+										//-         |없음
+								div.item
+									div.ui.blue.image.label
+										i.big.male.middle.aligned.icon(style="width:15px; padding-left:6px")
+									div.content
+										div.header 단짝 친구
+										div
+											div.ui.input
+												input(type="text", name="likeFriends", value="#{data.likeFriends || ''}", placeholder="알수없음")
+										//- div
+										//-     h3.description(style="color:gray") 
+										//-         |박연주
+								div.item
+									div.ui.blue.image.label
+										i.big.home.middle.aligned.icon(style="width:15px; padding-left:2px")
+									div.content
+										div.header 거주지
+										div
+											div.ui.input
+												input(type="text", name="locate", value="#{data.locate || ''}", placeholder="알수없음")
+										//- div
+										//-     h3.description(style="color:gray") 
+										//-         |멀리
+								div.item
+									div.ui.blue.image.label
+										i.big.info.middle.aligned.icon(style="width:15px; padding-left:9px")
+									div.content
+										div.header 특이사항
+										div
+											div.ui.input
+												input(type="text", name="attendDesc", value="#{data.attendDesc || ''}", placeholder="")
+					input#uploadInput.filebox.upload(type="file", name="upload", accept="image/*", onchange="ReadURL(this)")
+		

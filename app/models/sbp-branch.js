@@ -266,7 +266,7 @@ function SetMemberIsOK(item) {
 		if (attendDesc != '유학' && attendDesc != '직장' && attendDesc != '군대'
 		 && attendDesc != '결혼' && attendDesc != '전도사' && attendDesc != '강도사' && attendDesc != '목사' && attendDesc != '목사님' 
 		 && attendDesc != '부장 집사' && attendDesc != '제외' && attendDesc != '장기결석' 
-		 && attendDesc != '타교회' && item.age <= 40) // && attendDesc != '목사'
+		 && attendDesc != '타교회' && attendDesc != '교회 옮김' && item.age <= 40) // && attendDesc != '목사'
 			isOK = true;
 		// if (item.age > 40)
 		// 	isOK = false;

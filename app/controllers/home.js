@@ -28,9 +28,11 @@ var jsFunctionString7 = jade.compileFileClient('app/views/addBranch_template.jad
 var jsFunctionString8 = jade.compileFileClient('app/views/addBranch_second.jade', {name: "addBranch_second"});
 var jsFunctionString9 = jade.compileFileClient('app/views/addNameBS_template.jade', {name: "addNameBS_template"});
 var jsFunctionString10 = jade.compileFileClient('app/views/detailProfile_template.jade', {name: "detailProfile_template"});
+var jsFunctionString11 = jade.compileFileClient('app/views/modalMemberProfile.jade', {name: "modalMemberProfile"});
 jsFunctionString += "\n" + jsFunctionString2 + "\n" + jsFunctionString3 + "\n"
  + jsFunctionString4 + "\n" + jsFunctionString5 + "\n" + jsFunctionString6 + "\n" 
- + jsFunctionString7 + "\n" + jsFunctionString8 + "\n" + jsFunctionString9 + "\n" + jsFunctionString10;
+ + jsFunctionString7 + "\n" + jsFunctionString8 + "\n" + jsFunctionString9 + "\n"
++ jsFunctionString10 + "\n" + jsFunctionString11;
 fs.writeFileSync("javascript/templates.js", jsFunctionString);
 
 module.exports = function (app) {
@@ -44,11 +46,23 @@ function CombineElements(one, two) {
 }
 
 router.get('/', function (req, res, next) {
+    // var user = sbp_data.CheckLogin(req);
+
+    res.redirect('/churchLeader');
+    return;
+});
+
+router.get('/churchLeader', function (req, res, next) {
     var user = sbp_data.CheckLogin(req);
 
-    sbp_member.GetCurrentMemberWithGroup('교회', function (error, result) {
+    var year = req.query.year;
+    var getDate = new Date();
+    if (year == null)
+        year = getDate.getFullYear().toString();
+
+    sbp_member.GetMemberWithGroup(year, '교회', function (error, result) {
         if (!error) {
-            var chargeOrder = ['청년1부 목사', '청년2부 강도사'];
+            var chargeOrder = ['청년부 목사', '청년1부 목사', '청년1부 강도사', '청년1부 전도사', '청년2부 목사', '청년2부 강도사', '청년2부 전도사'];
             var chargeDesc = [
                 '청년부의 예배를 맡고 있으며 청1부의 전체적인 지도와 교육을 담당합니다.', 
                 '청년부의 예배를 맡고 있으며 청2부의 전체적인 지도와 교육을 담당합니다.'
@@ -61,10 +75,37 @@ router.get('/', function (req, res, next) {
             user.order = chargeOrder;
             user.datas = inputData;
             user.chargeDesc = chargeDesc;
+            user.year = year;
                   
             res.render('churchLeader', user);
         }
     });
+});
+
+router.get('/checkMember', function (req, res, next) {
+    var checkName = req.query.name;
+
+    sbp_member.GetMemberAndLogWithName(checkName, function (error, getData) {
+        if (!error) {
+            if (getData.length > 0) {
+                res.render('memberProfile', {
+                    title: title,
+                    data: getData[0]
+                }); 
+            }
+        }
+    });  
+
+    // var session_name, entity;
+    // session_name = req.session.passport.user.displayName;
+    // res.render('settingProfile', {
+    //         auth: user.auth,
+    //         title: user.title,
+    //         isLogin: user.isLogin,
+    //         isLink: user.isLink,
+    //         data: user
+    //     });
+        // user.data = null;
 });
 
 router.get('/test', function (req, res, next) {
@@ -74,7 +115,12 @@ router.get('/test', function (req, res, next) {
 router.get('/deacons', function (req, res, next) {
     var user = sbp_data.CheckLogin(req);
     
-    sbp_member.GetCurrentMemberWithGroup('부장 집사', function (error, result) {
+    var year = req.query.year;
+    var getDate = new Date();
+    if (year == null)
+        year = getDate.getFullYear().toString();
+
+    sbp_member.GetMemberWithGroup(year, '부장 집사', function (error, result) {
         if (!error) {
             var chargeOrder = ['청2 부장 집사', '청1 부장 집사'];
             var inputData = {};
@@ -84,6 +130,7 @@ router.get('/deacons', function (req, res, next) {
             }
             user.order = chargeOrder;
             user.datas = inputData;
+            user.year = year;
             res.render('deacons', user);
         }
     });
@@ -91,8 +138,13 @@ router.get('/deacons', function (req, res, next) {
 
 router.get('/executives', function (req, res, next) {
     var user = sbp_data.CheckLogin(req);
+
+    var year = req.query.year;
+    var getDate = new Date();
+    if (year == null)
+        year = getDate.getFullYear().toString();
     
-    sbp_member.GetCurrentMemberWithGroup('임원', function (error, result) {
+    sbp_member.GetMemberWithGroup(year, '임원', function (error, result) {
         if (!error) {
             var chargeOrder = ['청년부 회장', '청년2부 총무', '청년1부 총무', '청년2부 부총무', '청년1부 부총무', '청년2부 회계', '청년1부 회계', '청년부 서기'];
             var chargeDesc = [
@@ -114,6 +166,7 @@ router.get('/executives', function (req, res, next) {
             user.order = chargeOrder;
             user.datas = inputData;
             user.chargeDesc = chargeDesc;
+            user.year = year;
             res.render('executives', user);
         }
     });
@@ -122,7 +175,12 @@ router.get('/executives', function (req, res, next) {
 router.get('/teamleader', function (req, res, next) {
     var user = sbp_data.CheckLogin(req);
     
-    sbp_member.GetCurrentMemberWithGroup('팀장', function (error, result) {
+    var year = req.query.year;
+    var getDate = new Date();
+    if (year == null)
+        year = getDate.getFullYear().toString();
+    
+    sbp_member.GetMemberWithGroup(year, '팀장', function (error, result) {
         if (!error) {
             var chargeOrder = ['찬양 팀장', '사역 팀장', '새가족 팀장', '다과 팀장'];
             var inputData = {};
@@ -133,6 +191,7 @@ router.get('/teamleader', function (req, res, next) {
             
             user.order = chargeOrder;
             user.datas = inputData;
+            user.year = year;
             res.render('teamLeaders', user);
         }
     });
@@ -141,19 +200,25 @@ router.get('/teamleader', function (req, res, next) {
 router.get('/branchleader', function (req, res, next) {
     var user = sbp_data.CheckLogin(req);
     
-    sbp_member.GetDetailCurrentMemberWithGroup('BS', function (error, result) {
+    var year = req.query.year;
+    // var getDate = new Date();
+    if (year == null)
+        year = sbp_time.getYear();
+
+    sbp_member.GetMemberWithGroup(year, 'BS', function (error, result) {
         if (!error) {
             var chargeOrder = [];
             var inputData = {};
             for (var index in result) {
                 var value = result[index];
                 inputData[value.RowKey] = value;
-                if (chargeOrder.indexOf(value.branch) < 0) 
-                    chargeOrder.push(value.branch);
+                if (chargeOrder.indexOf(value.RowKey) < 0) 
+                chargeOrder.push(value.RowKey);
             }
 
             user.order = chargeOrder;
             user.datas = inputData;
+            user.year = year;
             res.render('branchLeaders', user);
         }
     });
@@ -327,7 +392,7 @@ router.get('/friends', function (req, res, next) {
             var memberList2 = [];
             memberList.forEach(function (item, index) {
                 var isOut = false;
-                if (item.attendDesc == "결혼" || item.attendDesc == "제외" || item.attendDesc == "장기결석")
+                if (item.attendDesc == "결혼" || item.attendDesc == "제외" || item.attendDesc == "장기결석" || item.attendDesc == "교회 옮김" || item.attendDesc == "교회옮김" || item.attendDesc == "타교회")
                     isOut = true;
                 if (item.attend >= attendSet && !isOut) {
                     if (query) {

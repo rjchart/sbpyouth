@@ -7,6 +7,7 @@ block script
 		var isEditable = false;
 		var isPowerEditable = false;
 		var ttoleValue = 1985;
+		var savedData = null;
 		function ProfileBS(name, year, branch, attend, charge) {
 			var data = {
 				name: name,
@@ -25,8 +26,15 @@ block script
 					var html;
 					if (!isEditable)
 						html = window.profile_template(data);
-					else
+					else {
 						html = window.profile_edit(data);
+
+						var html2 = window.modalMemberProfile(
+							{
+								data:data
+							});
+						document.getElementById("profileModal").innerHTML = html2;
+					}
 					document.getElementById("profileData").innerHTML = html;
 					$('#profileData').show();
 
@@ -40,11 +48,17 @@ block script
 					}
 					
 					$(".ui.dropdown").dropdown();
+
 				},
 				error: function(request) {
-					alert("실패");
+					alert("데이터를 불러오기 실패하였습니다.");
 				}
 			});
+			
+		}
+		function ModalProfile() {
+			$('.ui.profile.modal')
+				.modal('show');
 		}
 
 		//- function ProfileBS(year, name, partition, branch, attendString, attend, bYear, bMonth, bDay, gender, phone, attendDesc, tension, tensionString, part, photo, charge, mail, locate, service) {
@@ -247,7 +261,7 @@ block script
 		}
 	
 		function AddMemberButton() {
-			$('.ui.modal')
+			$('.ui.one.modal')
 				.modal({
 					closable 	: false,
 					onDeny 		: function () {
@@ -268,7 +282,7 @@ block script
 						//- window.alert('Approved!');
 					}
 				});
-			$('.ui.modal')
+			$('.ui.one.modal')
 				.modal('show');
 				
 		}
@@ -296,8 +310,8 @@ block script
 				empty[key] = '';
 			})
 			document.getElementById("addMember").innerHTML = innerText + window.addPerson_second(empty);
-			//- $('.ui.modal')
-			//- 	.modal('hide');
+			$('.ui.one.modal')
+				.modal('refresh');
 			//- $('.ui.modal')
 			//- 	.modal('show');
 			
@@ -473,7 +487,7 @@ block content
 						|Add Friend	
 	block sub_content
 	block modal_content
-		div.ui.fullscreen.modal
+		div.ui.fullscreen.one.modal
 			i.close.icon 
 			div.header Add Friend 
 			div.ui.content
@@ -509,4 +523,8 @@ block content
 					|등록 맴버 추가
 				div.ui.positive.right.labeled.icon.button 등록
 					i.checkmark.icon
-						
+		div#profileModal.ui.profile.modal
+			i.plus.center.icon
+			|등록 맴버 추가
+			div.main.ui.container
+				|abc

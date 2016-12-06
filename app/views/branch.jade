@@ -76,6 +76,7 @@ block script
 			$(document).ready(function(){
 				$('#profileData').hide();
 				$('.small.button').popup();
+				$('.ui.dropdown').dropdown();
 			});
 			
 			var addMemberNumber = 1;
@@ -113,8 +114,8 @@ block script
 				empty.attendDesc = lastDesc;
 				
 				document.getElementById("addMember").innerHTML = innerText + window.addBranch_second(empty);
-				//- $('.ui.edit.modal')
-				//- 	.modal('hide');
+				$('.ui.edit.modal')
+					.modal('refresh');
 				//- $('.ui.edit.modal')
 				//- 	.modal('show');
 				$('.ui.dropdown')
@@ -172,6 +173,8 @@ block script
 
 				$('.ui.dropdown')
 					.dropdown();
+				$('.ui.make.modal')
+					.modal('refresh');
 				
 				makeBSNumber++;
 				
@@ -187,11 +190,11 @@ block content
 	//- div.ui.masthead.vertical.tab.segment
 	div.ui.secondary.pointing.menu.navbar.grid.computer.only.row
 		block sub_item01
-			a.sub.item(href="/branch") 전체 브랜치 현황
+			a.sub.item(href="/branch?year=#{year}") 전체 브랜치 현황
 		block sub_item02
-			- bsList.forEach( function(item,index) {
-				a.sub.item(href="/branch_segment/#{item.branch}?year=#{year}&tag=#{branchTag}") #{item.branch}
-			- });
+			//- - bsList.forEach( function(item,index) {
+			//- 	a.sub.item(href="/branch_segment/#{item.branch}?year=#{year}&tag=#{branchTag}") #{item.branch}
+			//- - });
 		if auth!="manager" || auth=="developer" 
 			div.ui.right.secondary.menu
 				div.item
@@ -204,10 +207,10 @@ block content
 	div.ui.secondary.pointing.menu.navbar.grid.tablet.only.row
 		block sub_item01
 			a.sub.item(href="/branch") 전체 브랜치 현황
-		block sub_item02
-			- bsList.forEach( function(item,index) {
-				a.sub.item(href="/branch_segment/#{item.branch}?year=#{year}&tag=#{branchTag}") #{item.branch}
-			- });
+		//- block sub_item02
+		//- 	- bsList.forEach( function(item,index) {
+		//- 		a.sub.item(href="/branch_segment/#{item.branch}?year=#{year}&tag=#{branchTag}") #{item.branch}
+		//- 	- });
 	block sub_content
 	block modal_content
 		div.ui.edit.modal

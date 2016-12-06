@@ -3,7 +3,35 @@ block sub_item03
     a.active.sub.item(href="/executives") 임원
 block sub_content
     div.main.ui.container
-        div.ui.segment
+        div.ui.five.top.attached.buttons
+            if (year == 2017)
+                a.ui.button.active(href="/executives?year=2017") 2017
+            else 
+                a.ui.button(href="/executives?year=2017") 2017
+            if (year == 2016)
+                a.ui.button.active(href="/executives?year=2016") 2016
+            else
+                a.ui.button(href="/executives?year=2016") 2016
+            if (year == 2015)
+                a.ui.button.active(href="/executives?year=2015") 2015
+            else
+                a.ui.button(href="/executives?year=2015") 2015
+            if (year == 2014)
+                a.ui.button.active(href="/executives?year=2014") 2014
+            else 
+                a.ui.button(href="/executives?year=2014") 2014
+            if (year == 2013)
+                a.ui.button.active(href="/executives?year=2013") 2013
+            else 
+                a.ui.button(href="/executives?year=2013") 2013
+        div.ui.attached.segment
+            //- div.ui.two.top.attached.buttons
+            //-     div.ui.red.button(onclick="DeleteMember(#{PartitionKey},'#{name}')")
+            //-         i.remove.icon 
+            //-         |Delete
+            //-     div.ui.button(onclick="UploadSubmit()")
+            //-         i.write.icon 
+            //-         |Edit
             h3.ui.dividing.header 임원단
                 div.sub.header 신반포 중앙교회 청년부 전반적인 일을 맡고 있으며 매주 토요일 회의를 통해 청년부의 할일을 계획하고 정리합니다.
             div.ui.accordion

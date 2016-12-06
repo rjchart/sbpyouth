@@ -15,33 +15,33 @@ form#uploadForm(action="/saveProfile/#{name}", enctype="multipart/form-data", me
                 |edit
             br
             br
-            a.header #{name}
+            a.header(onclick="ModalProfile()") #{name}
             div.meta
                 span.date #{birthYear}.#{birthMonth}.#{birthDay}
-            table.ui.small.table
+            table.ui.very.basic.small.table(style="padding-left:0px; padding-right:0px")
                 tr 
                     td 성별
                     td
-                        div.ui.input.focus
-                            input(type="text", name="gender", value="#{gender}" style="max-width:130px; max-height:30px")
+                        div.ui.input
+                            input(type="text", name="gender", value="#{gender}")
                 tr 
                     td 브랜치
                     td 
-                        div.ui.input.focus
-                            input(type="text", name="branch", value="#{branch}", style="max-width:130px; max-height:30px")
+                        div.ui.input
+                            input(type="text", name="branch", value="#{branch}")
                 tr 
                     td 전화번호
                     td 
-                        div.ui.input.focus
-                            input(type="text", name="phone", value="#{phone}", style="max-width:130px; max-height:30px")
+                        div.ui.input
+                            input(type="text", name="phone", value="#{phone}")
                 tr 
                     td 이메일
                     td 
-                        div.ui.input.focus
-                            input(type="text", name="mail", value="#{mail || ''}", style="max-width:130px; max-height:30px")
+                        div.ui.input
+                            input(type="text", name="mail", value="#{mail || ''}")
                 tr 
                     td 출석빈도
-                    td.center.aligned: div.ui.selection.dropdown(style="min-width:100px;")
+                    td.center.aligned: div.ui.selection.dropdown
                         input(type="hidden", name="attend", value="#{attend}")
                         i.dropdown.icon
                         div.text #{attendString}
@@ -67,43 +67,43 @@ form#uploadForm(action="/saveProfile/#{name}", enctype="multipart/form-data", me
                 tr 
                     td 비고사항
                     td 
-                        div.ui.input.focus
-                            input(type="text", name="attendDesc", value="#{attendDesc || ''}", style="max-width:130px; max-height:30px")
+                        div.ui.input
+                            input(type="text", name="attendDesc", value="#{attendDesc || ''}")
                 tr 
                     td 소속
                     td 
-                        div.ui.input.focus
-                            input(type="text", name="part", value="#{part}", style="max-width:130px; max-height:30px")
+                        div.ui.input
+                            input(type="text", name="part", value="#{part}")
                 tr 
                     td 브랜치 역할
                     td 
-                        div.ui.input.focus
-                            input(type="text", name="charge", value="#{charge}", style="max-width:130px; max-height:30px")
+                        div.ui.input
+                            input(type="text", name="charge", value="#{charge||''}")
                 tr 
                     td 봉사 부서
                     td 
-                        div.ui.input.focus
-                            input(type="text", name="service", value="#{service || ''}", style="max-width:130px; max-height:30px")
+                        div.ui.input
+                            input(type="text", name="service", value="#{service || ''}")
                 tr 
                     td 거주지
                     td 
-                        div.ui.input.focus
-                            input(type="text", name="locate", value="#{locate || ''}", style="max-width:130px; max-height:30px")
+                        div.ui.input
+                            input(type="text", name="locate", value="#{locate || ''}")
                 tr 
                     td 출생년도
                     td 
-                        div.ui.input.focus
-                            input(type="text", name="birthYear", value="#{birthYear || ''}", style="max-width:130px; max-height:30px")
+                        div.ui.input
+                            input(type="text", name="birthYear", value="#{birthYear || ''}")
                 tr 
                     td 출생월
                     td 
-                        div.ui.input.focus
-                            input(type="text", name="birthMonth", value="#{birthMonth || ''}", style="max-width:130px; max-height:30px")
+                        div.ui.input
+                            input(type="text", name="birthMonth", value="#{birthMonth || ''}")
                 tr 
                     td 출생일
                     td 
-                        div.ui.input.focus
-                            input(type="text", name="birthDay", value="#{birthDay || ''}", style="max-width:130px; max-height:30px")
+                        div.ui.input
+                            input(type="text", name="birthDay", value="#{birthDay || ''}")
         div.ui.two.bottom.attached.buttons
             div.ui.red.button(onclick="DeleteMember(#{PartitionKey},'#{name}')")
                 i.remove.icon 

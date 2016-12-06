@@ -57,7 +57,66 @@ html(lang='en')
           background-color: #fdfdfd;
           width:100%;
         }
+
+        table tr td div.ui.input input {
+          max-width:100px; 
+          max-height:30px; 
+          border:0px; 
+          text-align:center; 
+          padding-bottom:0px; 
+          padding-top:0px; 
+          padding-right:0px;
+          padding-left:0px;
+        } 
+
+        table tr td div.menu {
+          padding-top:0px; 
+          padding-bottom:0px;
+        }
+
+        table tr td div.ui.selection.dropdown {
+          min-width:100px; 
+          padding-right:0px; 
+          padding-left:0px; 
+          border:0px;  
+          padding-bottom:0px;
+          text-align:center;
+        }
+
+        table tr td div.ui.selection.dropdown div.menu div.item {
+          padding-top:0px; 
+          padding-bottom:0px; 
+          min-width:100px; 
+          max-height:30px;
+          text-align:center;
+        }
+
+        table tr td.center.aligned {
+          padding-top:0px;
+          padding-bottom:0px;
+        }
+
+        div.ui.container h3 div.ui.celled.list div.item div.content div.ui.input input {
+          width:100%; 
+          max-height:30px; 
+          border:0px; 
+          padding-bottom:0px; 
+          padding-top:0px; 
+          padding-right:0px;
+          padding-left:0px; 
+          color:gray; 
+          font-size:14pt; 
+          font-weight:bold
+        }
         
+        div.item div.content {
+          width:100%;
+        }
+
+        div.item div.content div div.ui.input {
+          width:100%;
+        }
+
         /* 파일 필드 숨기기 */
         #uploadInput.filebox[type="file"] {  
           position: absolute;

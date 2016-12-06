@@ -1,12 +1,43 @@
 extends branch
 block sub_item01
-	a.active.sub.item(href="/branch") 전체 브랜치 현황
+	if (year == '2017')
+		a.active.sub.item(href="branch?year=2017") 2017
+	else 
+		a.sub.item(href="branch?year=2017") 2017
+	if (year == '2016-2')
+		a.active.sub.item(href="branch?year=2016-2") 2016-2
+	else
+		a.sub.item(href="branch?year=2016-2") 2016-2
+	if (year == '2016')
+		a.active.sub.item(href="branch?year=2016") 2016
+	else
+		a.sub.item(href="branch?year=2016") 2016
+	if (year == '2015-2')
+		a.active.sub.item(href="branch?year=2015-2") 2015-2
+	else
+		a.sub.item(href="branch?year=2015-2") 2015-2
+	if (year == '2015')
+		a.active.sub.item(href="branch?year=2015") 2015
+	else
+		a.sub.item(href="branch?year=2015") 2015
+	//- a.active.sub.item(href="/branch?year=2016-2") 2016-2
+	//- div.active.ui.dropdown.sub.item 2016-2
+	//- 	i.dropdown.icon
+	//- 	div.menu
+	//- 		a.item(href="/branch?year=2016-2") 전체 브랜치
+	//- 		- bsList.forEach( function(item,index) {
+	//- 			a.item(href="/branch_segment/#{item.branch}?year=#{year}&tag=#{branchTag}") #{item.branch}
+	//- 		- });
 block sub_content
 	div.ui.main.container
 		div.ui.grid
 			div.two.column.computer.only.row
 				div.twelve.wide.streched.column
-					div.ui.segment
+					div.ui.twelve.top.attached.buttons
+						- bsList.forEach( function(item,index) {
+							a.ui.button(href="/branch_segment/#{item.branch}?year=#{year}&tag=#{branchTag}") #{item.branch}
+						- });
+					div.ui.attached.segment
 						h2.ui.header
 							|#{year}년도 브랜치 편성
 						div.ui.container
@@ -56,7 +87,7 @@ block sub_content
 									tr 
 										if i == 0
 											td(rowspan="#{maxLength.out}") 
-												div.ui.ribbon.label 유학자 및 지방근무자
+												div.ui.ribbon.label 유학자
 										each item in bsList
 											td
 												if item.out.length > i 
@@ -130,7 +161,7 @@ block sub_content
 									tr 
 										if i == 0
 											td(rowspan="#{maxLength.out}") 
-												div.ui.ribbon.label 유학자 및 지방근무자
+												div.ui.ribbon.label 유학자
 										each item in bsList
 											td
 												if item.out.length > i 
