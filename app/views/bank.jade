@@ -95,34 +95,30 @@ block sub_content
                                     td
         div.mobile.only.row
             div.ui.main.container
-                div.ui.segment
-                    table.ui.celled.structured.unstackable.table
-                        thead
+                table.ui.celled.structured.unstackable.table
+                    thead
+                        tr
+                            th 날짜
+                            th 구분
+                            th 상세 내역
+                            th No
+                            th 수입 금액
+                            th 지출 금액
+                            th 남은 금액
+                    tfoot
+                        tr
+                            th(colspan="4")
+                            th 
+                            th
+                            th
+                    tbody
+                        each item in data
                             tr
-                                th 집행 날짜
-                                th 구분
-                                th 상세 내역
-                                th No
-                                th 수입 금액
-                                th 지출 금액
-                                th 남은 금액
-                                th 비고
-                        tfoot
-                            tr
-                                th(colspan="4")
-                                th 
-                                th
-                                th
-                                th
-                        tbody
-                            each item in data
-                                tr
-                                    td #{item.month}.#{item.day}
-                                    td #{item.shortSection}
-                                    td #{item.content}
-                                    td #{item.receiptNo || ''}
-                                    td #{item.gain || ''}
-                                    td #{item.spend || ''}
-                                    td #{item.curMoney || ''}
-                                    td #{item.detail||''}
+                                td #{item.month}.#{item.day}
+                                td #{item.shortSection}
+                                td #{item.content}
+                                td #{item.receiptNo || ''}
+                                td #{item.gain || ''}
+                                td #{item.spend || ''}
+                                td #{item.curMoney || ''}
                         
