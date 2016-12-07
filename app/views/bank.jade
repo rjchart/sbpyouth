@@ -55,7 +55,7 @@ block sub_content
                     else 
                         a.ui.button(href="churchLeader?month=12") 12월
                 div.ui.attached.segment
-                    table.ui.celled.structured.unstackable.table
+                    table.ui.celled.selectable.unstackable.table
                         thead
                             tr
                                 th 집행 날짜
@@ -93,6 +93,7 @@ block sub_content
                                     td #{item.bankName}
                                     td #{item.bankNumber}
                                     td
+                                        i.ui.circular.info.icon(data-content="계좌번호: #{item.bankNumber||''}(#{item.bankName||''})")
         div.mobile.only.row
             div.ui.main.container
                 table.ui.celled.structured.unstackable.table
@@ -119,6 +120,6 @@ block sub_content
                                 td #{item.content}
                                 td #{item.receiptNo || ''}
                                 td(style="font-size:6pt") #{item.gain || ''}
-                                td(style="font-size:6pt") #{item.spend || ''}
-                                td(style="font-size:6pt") #{item.curMoney || ''}
+                                td: i.label.info(style="font-size:6pt", data-content="계좌번호: #{item.bankNumber||''}(#{item.bankName||''})") #{item.spend || ''}
+                                td: i.label.info(style="font-size:6pt", data-content="계좌번호: #{item.bankNumber||''}(#{item.bankName||''})") #{item.curMoney || ''}
                         

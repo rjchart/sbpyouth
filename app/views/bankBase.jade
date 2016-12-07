@@ -28,6 +28,7 @@ block script
 					});
 				$('.ui.modal')
 					.modal('show');
+
 					
 			}
 			
@@ -70,6 +71,12 @@ block script
 				addMemberNumber++;
 				
 			}
+
+			$(document).ready(function(){
+				$('.circular.info.icon').popup();
+				$('.labeled.icon.button').popup();
+				$('.label.info').popup();
+			});
 			
 	block script_part02
 block header_item01
@@ -83,7 +90,7 @@ block content
 		//- if auth=="manager" || auth=="developer" 
 		div.ui.right.secondary.menu
 			div.item
-				button.ui.blue.primary.labeled.icon.button(onclick="AddMemberButton()")
+				button.ui.blue.primary.labeled.icon.button(onclick="AddMemberButton()", data-content="회계 정보를 추가할 수 있다.")
 					i.user.icon 
 					|Add
 	div.ui.secondary.pointing.menu.navbar.grid.mobile.only.row(style="padding-top:30px !important")
@@ -91,7 +98,7 @@ block content
 			a.sub.item(href="/back") 전체 조회 
 		div.ui.right.secondary.menu
 			div.item
-				button.ui.blue.primary.labeled.icon.button(onclick="AddMemberButton()")
+				button.ui.blue.primary.labeled.icon.button(onclick="AddMemberButton()", data-content="회계 정보를 추가할 수 있다.")
 					i.user.icon 
 					|Add
 	block sub_content
@@ -154,9 +161,6 @@ block content
 						div.field
 							label 입금 계좌
 							input(name="add_bankNumber[0]", placeholder="계좌번호", type="text")
-			div.actions 
-				div.ui.black.deny.button
-					i.plus.center.icon
-					|등록 맴버 추가
+			div.actions
 				div.ui.positive.right.labeled.icon.button 등록
 					i.checkmark.icon
