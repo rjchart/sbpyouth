@@ -117,8 +117,8 @@ block sub_content
                         tbody
                             each item in data
                                 tr
-                                    td #{item.year}.#{item.month}.#{item.day}
-                                    td #{item.section}
+                                    td #{item.shortYear}.#{item.month}.#{item.day}
+                                    td #{item.shortSection}
                                     td #{item.content}
                                     td #{item.receiptNo || ''}
                                     td #{item.gain || ''}

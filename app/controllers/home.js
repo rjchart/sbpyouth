@@ -91,6 +91,9 @@ router.get('/bank', function (req, res, next) {
                 item.gain = MakeMoneyData(item.gain);
                 item.spend = MakeMoneyData(item.spend);
                 item.curMoney = MakeMoneyData(item.curMoney);
+                item.shortYear = item.year.substring(2,4);
+                item.shortSection = item.section.substring(0,4);
+                item.shortContent = item.content.substring(0,4);
             });
                   
             res.render('bank', user);
