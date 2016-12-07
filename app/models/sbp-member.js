@@ -459,6 +459,57 @@ module.exports.GetDetailCurrentMemberWithGroup = function (group, next) {
     exports.GetMemberWithGroup(year, group, next);
 }
 
+module.exports.GetBankLog = function (year, next) {
+    
+    var query = new azure.TableQuery()
+    .where('PartitionKey eq ?', year);
+    // .where('PartitionKey eq ? and month eq ?', year, group);
+
+    // 데이터베이스 쿼리를 실행합니다.
+    tableService.queryEntities('bank', query, null, function (error, result) {
+        if (!error) {
+            var banklogs = [];
+            for (var index in result.entries) {
+                var data = result.entries[index];
+                RemoveEntityGen(data);
+                if (data.section == '예산')
+                    data.gain = data.money;
+                else
+                    data.spend = data.money;
+                banklogs.push(data);
+            }
+            SetBankSort(banklogs);
+            next(null, banklogs);
+            // module.exports.GetMembersAndLogWithNames(members, function (error2, result2) {
+            //     if (!error2) {
+            //         for (var index in result2) {
+            //             var data = result2[index];
+            //             for (var j in result.entries) {
+            //                 var data2 = result.entries[j];
+            //                 if (data2.data == data.RowKey) {
+            //                     for (var key in data2) {
+            //                         if (key == "data")
+            //                             data['name'] = data2[key];
+            //                         else
+            //                             data[key] = data2[key];
+            //                     }
+            //                 }
+            //             }
+            //         }
+            //         next(null, result2);
+            //     }
+            //     else
+            //         next(error);
+            // });
+        }
+        else {
+            console.log("error:" + error);
+            next(error);
+        }
+            
+    });
+}
+
 module.exports.GetMemberWithGroup = function (year, group, next) {
     
     var query = new azure.TableQuery()
@@ -637,6 +688,31 @@ function SetBranchSort (branch) {
         if (aa < bb) return -1;
         if (aa > bb) return 1;
         return 0;
+    });
+}
+
+function SetBankSort (data) {
+    data = data.sort(function(a,b){
+        var ay = parseInt(a.year);
+        var by = parseInt(b.year);
+        var am = parseInt(a.month);
+        var bm = parseInt(b.month);
+        var ad = parseInt(a.day);
+        var bd = parseInt(b.day);
+
+        if (ay < by) return -1;
+        else if (ay > by) return 1;
+        else {
+            if (am < bm) return -1;
+            else if (am > bm) return 1;
+            else {
+                if (ad < bd) return -1;
+                else if (ad > bd) return 1;
+                else if (a.section == "예산") return -1;
+                else if (b.section == "예산") return 1;
+                else return 0;
+            }
+        }
     });
 }
 

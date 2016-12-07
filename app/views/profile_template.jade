@@ -7,7 +7,7 @@ div.ui.card
         else
             img.fitImg(src="/public/img/image.png")
     div.content
-        a.header #{name}
+        a.header(onclick="ModalProfile()") #{name}
         div.meta
             span.date #{birthYear}.#{birthMonth}.#{birthDay}
         div.ui.relaxed.celled.list

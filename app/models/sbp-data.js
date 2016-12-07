@@ -10,6 +10,23 @@ var tableService = azure.createTableService(storageAccount, accessKey);
 var blobService = azure.createBlobService(storageAccount, accessKey);
 var entGen = azure.TableUtilities.entityGenerator;
 
+
+function SetEntityGen (entity) {
+    for (var key in entity) {
+        var value = entity[key];
+        var valueType = typeof value;
+        if (value == null)
+            value = '';
+        // console.log(valueType);
+        if (key == "PartitionKey" || key == "RowKey")
+            entity[key] = entGen.String(value.toString());
+        else if (typeof value == "string")
+            entity[key] = entGen.String(value);
+        else if (typeof value == "number")
+            entity[key] = entGen.Int32(value);
+    }
+}
+
 function RemoveEntityGen (entity) {
     // var resultData = {};
     for (var key in entity) {
@@ -18,6 +35,28 @@ function RemoveEntityGen (entity) {
             entity[key] = valueOfKey._;
     }
     // return resultData;
+}
+
+module.exports.AddBank = function (addData, next) {
+    var batch = new azure.TableBatch();
+    for (var key in addData) {
+        var data = addData[key];
+		SetEntityGen(data);
+        // var entity = {
+        //     PartitionKey: entGen.String(data.year),
+        //     RowKey: entGen.String(time),
+        //     data: entGen.String(data.name),
+        //     chargeGroup: entGen.String(data.chargeGroup)
+        // };
+        batch.insertEntity(data,{echoContent: true});
+    }
+    tableService.executeBatch('bank', batch, function (error, result, response) {
+        if(!error) {
+            next(null, result);
+        }
+        else
+            next(error, null);
+    });
 }
 
 module.exports.AddData = function (addData, next) {

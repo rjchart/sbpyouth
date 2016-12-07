@@ -24,16 +24,17 @@ block script
 				dataType: "json",
 				success: function(data) {
 					var html;
+
+					var html2 = window.modalMemberProfile(
+						{
+							data:data
+						});
+					document.getElementById("profileModal").innerHTML = html2;
+
 					if (!isEditable)
 						html = window.profile_template(data);
 					else {
 						html = window.profile_edit(data);
-
-						var html2 = window.modalMemberProfile(
-							{
-								data:data
-							});
-						document.getElementById("profileModal").innerHTML = html2;
 					}
 					document.getElementById("profileData").innerHTML = html;
 					$('#profileData').show();
@@ -59,6 +60,19 @@ block script
 		function ModalProfile() {
 			$('.ui.profile.modal')
 				.modal('show');
+		}
+		function EditSubmit() {
+			$('#editMember').ajaxSubmit({
+				error: function(xhr) {
+					alert("데이터 갱신에 실패했습니다.");
+				},
+				success: function(response) {
+					alert("저장되었습니다.");
+					if (response.field) {
+						;
+					}
+				}
+			});
 		}
 
 		//- function ProfileBS(year, name, partition, branch, attendString, attend, bYear, bMonth, bDay, gender, phone, attendDesc, tension, tensionString, part, photo, charge, mail, locate, service) {
@@ -470,9 +484,18 @@ block header_item03
 		|Friends
 block content
 	div.ui.secondary.pointing.menu.navbar.grid.computer.only.row
-		a.active.sub.item(onclick="SubMenuFriendClicked(0)") 전체 맴버 현황
-		//- a.sub.item(onclick="SubMenuFriendClicked(1)") 청2부 맴버
-		//- a.sub.item(onclick="SubMenuFriendClicked(2)") 청1부 맴버
+		if (sub == 'total')
+			a.active.sub.item(href="/friends") 전체 맴버 현황
+		else
+			a.sub.item(href="/friends") 전체 맴버 현황
+		if (sub == 'soccer')
+			a.active.sub.item(href="/friends/soccer") 축구 맴버
+		else 
+			a.sub.item(href="/friends/soccer") 축구 맴버
+		if (sub == 'tablepingpong')
+			a.active.sub.item(href="/friends/tablepingpong") 탁구 맴버
+		else
+			a.sub.item(href="/friends/tablepingpong") 탁구 맴버
 		//- a.sub.item(onclick="SubMenuFriendClicked(3)") 또래 친구들
 		//- if auth=="manager" || auth=="developer" || auth=="executive" 
 		div.ui.right.secondary.menu
@@ -524,7 +547,4 @@ block content
 				div.ui.positive.right.labeled.icon.button 등록
 					i.checkmark.icon
 		div#profileModal.ui.profile.modal
-			i.plus.center.icon
-			|등록 맴버 추가
-			div.main.ui.container
-				|abc
+			

@@ -1,0 +1,128 @@
+extends bankBase
+block sub_item01
+    a.active.sub.item(href="/bank") 전체 조회
+block sub_content
+    div.ui.grid
+        div.computer.tablet.only.row
+            div.ui.main.container
+                div.ui.twelve.top.attached.buttons
+                    if (month == 1)
+                        a.ui.button.active(href="churchLeader?month=1") 1월
+                    else
+                        a.ui.button(href="churchLeader?month=1") 1월
+                    if (month == 2)
+                        a.ui.button.active(href="churchLeader?month=2") 2월
+                    else
+                        a.ui.button(href="churchLeader?month=2") 2월
+                    if (month == 3)
+                        a.ui.button.active(href="churchLeader?month=3") 3월
+                    else 
+                        a.ui.button(href="churchLeader?month=3") 3월
+                    if (month == 4)
+                        a.ui.button.active(href="churchLeader?month=4") 4월
+                    else 
+                        a.ui.button(href="churchLeader?month=4") 4월
+                    if (month == 5)
+                        a.ui.button.active(href="churchLeader?month=5") 5월
+                    else
+                        a.ui.button(href="churchLeader?month=5") 5월
+                    if (month == 6)
+                        a.ui.button.active(href="churchLeader?month=6") 6월
+                    else
+                        a.ui.button(href="churchLeader?month=6") 6월
+                    if (month == 7)
+                        a.ui.button.active(href="churchLeader?month=7") 7월
+                    else 
+                        a.ui.button(href="churchLeader?month=7") 7월
+                    if (month == 8)
+                        a.ui.button.active(href="churchLeader?month=8") 8월
+                    else 
+                        a.ui.button(href="churchLeader?month=8") 8월
+                    if (month == 9)
+                        a.ui.button.active(href="churchLeader?month=9") 9월
+                    else 
+                        a.ui.button(href="churchLeader?month=9") 9월
+                    if (month == 10)
+                        a.ui.button.active(href="churchLeader?month=10") 10월
+                    else 
+                        a.ui.button(href="churchLeader?month=10") 10월
+                    if (month == 11)
+                        a.ui.button.active(href="churchLeader?month=11") 11월
+                    else 
+                        a.ui.button(href="churchLeader?month=11") 11월
+                    if (month == 12)
+                        a.ui.button.active(href="churchLeader?month=12") 12월
+                    else 
+                        a.ui.button(href="churchLeader?month=12") 12월
+                div.ui.attached.segment
+                    table.ui.celled.structured.unstackable.table
+                        thead
+                            tr
+                                th 집행 날짜
+                                th 구분
+                                th 상세 내역
+                                th No
+                                th 수입 금액
+                                th 지출 금액
+                                th 남은 금액
+                                th 비고
+                                th 입금 은행
+                                th 입금 계좌
+                                th 입금 상태
+                        tfoot
+                            tr
+                                th(colspan="4")
+                                th 
+                                th
+                                th
+                                th
+                                th
+                                th
+                                th
+                        tbody
+                            each item in data
+                                tr
+                                    td #{item.year}.#{item.month}.#{item.day}
+                                    td #{item.section}
+                                    td #{item.content}
+                                    td #{item.receiptNo || ''}
+                                    td #{item.gain || ''}
+                                    td #{item.spend || ''}
+                                    td #{item.curMoney || ''}
+                                    td #{item.detail||''}
+                                    td #{item.bankName}
+                                    td #{item.bankNumber}
+                                    td
+        div.mobile.only.row
+            div.ui.main.container
+                div.ui.segment
+                    table.ui.celled.structured.unstackable.table
+                        thead
+                            tr
+                                th 집행 날짜
+                                th 구분
+                                th 상세 내역
+                                th No
+                                th 수입 금액
+                                th 지출 금액
+                                th 남은 금액
+                                th 비고
+                        tfoot
+                            tr
+                                th(colspan="4")
+                                th 
+                                th
+                                th
+                                th
+                        tbody
+                            each item in data
+                                tr
+                                    td #{item.year}.#{item.month}.#{item.day}
+                                    td #{item.section}
+                                    td #{item.content}
+                                    td #{item.receiptNo || ''}
+                                    td #{item.gain || ''}
+                                    td #{item.spend || ''}
+                                    td #{item.curMoney || ''}
+                                    td #{item.detail||''}
+                        

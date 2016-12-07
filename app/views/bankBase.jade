@@ -1,0 +1,162 @@
+extends layout
+block script
+	block script_part01
+		script(type="text/javascript", src="/javascript/templates.js")
+		script(type="text/javascript", src="/javascript/runtime.js")
+		script.
+			function AddMemberButton() {
+				$('.ui.modal')
+					.modal({
+						closable 	: false,
+						onDeny 		: function () {
+							//- window.alert('Wait not yet!');
+							PlusAddMember();
+							return false;
+						},
+						onApprove 	: function () {
+							var $getAdd = $('#addBank');
+							$('#addBank').ajaxSubmit({
+								error: function (xhr) {
+									alert('등록 실패했습니다.');
+								},
+								success: function (response) {
+									alert('등록 성공했습니다.');
+								}
+							});
+							//- window.alert('Approved!');
+						}
+					});
+				$('.ui.modal')
+					.modal('show');
+					
+			}
+			
+			var addMemberNumber = 1;
+			function PlusAddMember () {
+				var bmNumber = addMemberNumber;
+				var innerText = "";
+				var lastGroup = "";
+				var lastYear = "";
+				for (var i = 0; i < bmNumber; i++) {
+					var index = "add_name[" + i + "]";
+					var index2 = "add_chargeName[" + i + "]";
+					var index3 = "add_chargeGroup[" + i + "]";
+					var index4 = "add_chargeYear[" + i + "]";
+					
+					var getData = {};
+					getData.num = i;
+					getData.name = document.getElementsByName(index)[0].value;
+					getData.chargeName = document.getElementsByName(index2)[0].value;
+					getData.chargeGroup = document.getElementsByName(index3)[0].value;
+					getData.chargeYear = document.getElementsByName(index4)[0].value;
+					
+					lastGroup = getData.chargeGroup;
+					lastYear = getData.chargeYear;
+					if (i == 0)
+						innerText += window.addMember_template(getData);
+					else
+						innerText += window.addMember_second(getData);
+				}
+				document.getElementById("addMember").innerHTML = innerText + window.addMember_second({
+					num: bmNumber,
+					name: '',
+					chargeName: '',
+					chargeGroup: lastGroup,
+					chargeYear: lastYear
+				});
+				$('.ui.modal')
+					.modal('refresh');
+				
+				addMemberNumber++;
+				
+			}
+			
+	block script_part02
+block header_item01
+	a.main.item.active(href="/")
+		i.home.icon
+		|Home  
+block content
+	div.ui.secondary.pointing.menu.navbar.grid.computer.tablet.only.row
+		block sub_item01
+			a.sub.item(href="/back") 전체 조회
+		//- if auth=="manager" || auth=="developer" 
+		div.ui.right.secondary.menu
+			div.item
+				button.ui.blue.primary.labeled.icon.button(onclick="AddMemberButton()")
+					i.user.icon 
+					|Add
+	div.ui.secondary.pointing.menu.navbar.grid.mobile.only.row(style="padding-top:30px !important")
+		block sub_item01
+			a.sub.item(href="/back") 전체 조회 
+		div.ui.right.secondary.menu
+			div.item
+				button.ui.blue.primary.labeled.icon.button(onclick="AddMemberButton()")
+					i.user.icon 
+					|Add
+	block sub_content
+	block modal_content
+		div.ui.big.modal
+			i.close.icon 
+			div.header Add 
+			div.ui.content
+				form#addBank.ui.fluid.form(action="/addBank" method="post")
+					div.four.fields
+						div.field(style="min-width:45px; max-width:60px")
+							label 년도
+							div.ui.selection.dropdown(style="min-width:20px; max-width:30px")
+								input(type="hidden", name="add_year[0]", value="#{year}")
+								i.dropdown.icon
+								div.text
+								div.menu
+									div.item(data-value="2017") 17
+									div.item(data-value="2016") 16
+							//- input(name="add_year[0]", placeholder="년도", type="text")
+						div.field(style="min-width:45px; max-width:70px")
+							label 월
+							div.ui.selection.dropdown(style="min-width:20px; max-width:30px")
+								input(type="hidden", name="add_month[0]", value="#{month||1}")
+								i.dropdown.icon
+								div.text
+								div.menu
+									- var months = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+									each mm in months
+										div.item(data-value="#{mm}") #{mm}
+						div.field(style="min-width:45px; max-width:70px")
+							label 일
+							div.ui.selection.dropdown(style="min-width:20px; max-width:30px")
+								input(type="hidden", name="add_day[0]", value="#{day||1}")
+								i.dropdown.icon
+								div.text
+								div.menu
+									- for (var dd = 1; dd < 32; ++dd) {
+										div.item(data-value="#{dd}") #{dd}
+									- }
+						div.field
+							label 구분
+							div.ui.selection.dropdown(style="min-width:70px; max-width:140px")
+								input(type="hidden", name="add_section[0]", value="브랜치 모임")
+								i.dropdown.icon
+								div.text
+								div.menu
+									- var sections = ['브랜치 모임', '훈련/회의비', '소모임/단합친교비', '생일축하 및 상품', '심방비(경조사)', '팀별/부서사역비', '격려/환송/결혼', '소모품/기타', '성경교재/교육자료', '임원/리더워크숍', '체육행사', '예산', '특강비', '겨울수련회', '여름수련회', '야유회'];
+									each ss in sections
+										div.item(data-value="#{ss}") #{ss}
+						div.field
+							label 상세 내역
+							input(name="add_content[0]", placeholder="상세 내역", type="text")
+						div.field
+							label 지출/수입 금액
+							input(name="add_money[0]", placeholder="사용 금액", type="text")
+						div.field
+							label 입금 은행
+							input(name="add_bankName[0]", placeholder="입금은행", type="text")
+						div.field
+							label 입금 계좌
+							input(name="add_bankNumber[0]", placeholder="계좌번호", type="text")
+			div.actions 
+				div.ui.black.deny.button
+					i.plus.center.icon
+					|등록 맴버 추가
+				div.ui.positive.right.labeled.icon.button 등록
+					i.checkmark.icon

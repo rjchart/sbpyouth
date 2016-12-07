@@ -52,6 +52,52 @@ router.get('/', function (req, res, next) {
     return;
 });
 
+function MakeMoneyData (data) {
+    var returnData;
+    if (data) {
+        data += ".";
+        data = data.replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
+        returnData = data.replace('.','');
+        return returnData
+    }
+    return null;
+}
+
+router.get('/bank', function (req, res, next) {
+    var user = sbp_data.CheckLogin(req);
+
+    var year = req.query.year;
+    var getDate = new Date();
+    if (year == null)
+        year = getDate.getFullYear().toString();
+    var month = getDate.getMonth();
+    var day = getDate.getDay();
+    // user.year = year;
+    // res.render('bank', user);
+    sbp_member.GetBankLog(year, function (error, result) {
+        if (!error) {
+            user.data = result;
+            user.year = year;
+            user.month = month;
+            user.day = day;
+
+            var curMoney = 0;
+            result.forEach(function(item) {
+                if (item.gain)
+                    curMoney = curMoney + parseInt(item.gain);
+                if (item.spend)
+                    curMoney = curMoney - parseInt(item.spend);
+                item.curMoney = curMoney;
+                item.gain = MakeMoneyData(item.gain);
+                item.spend = MakeMoneyData(item.spend);
+                item.curMoney = MakeMoneyData(item.curMoney);
+            });
+                  
+            res.render('bank', user);
+        }
+    });
+});
+
 router.get('/churchLeader', function (req, res, next) {
     var user = sbp_data.CheckLogin(req);
 
@@ -423,6 +469,137 @@ router.get('/friends', function (req, res, next) {
             // CombineElements(user, input)
             user.memberList = memberList2;
             user.year = year;
+            user.sub = 'total';
+            res.render('friendSearch', user);
+            // 정리된 정보를 건내고 ejs 랜더링 하여 보여줌.
+            // res.render('friends', 
+            //     {	
+            //         title: title,
+            //         memberList: memberList2,
+            //         year: year
+            //     }
+            // );
+        }
+        else 
+            res.send('error: cannot find friends list: ' + error);
+    });
+});
+
+router.get('/friends/soccer', function (req, res, next) {
+    var query;
+    query = req.query.query;
+    var user = sbp_data.CheckLogin(req);
+    // var year = req.query.year;
+    var year = sbp_time.getYear();
+	var attendSet = req.query.attendValue;
+    if (!attendSet)
+        attendSet = 0;
+    
+    sbp_member.GetMembersAndLogWithYear(year, function (error, memberList) {
+        if (!error) {
+            var memberList2 = [];
+            memberList.forEach(function (item, index) {
+                var isOut = false;
+                var sports = item.likeSports
+                if (!sports || sports.indexOf("축구") == -1)
+                    isOut = true;
+                if (item.attendDesc == "결혼" || item.attendDesc == "제외" || item.attendDesc == "장기결석" || item.attendDesc == "교회 옮김" || item.attendDesc == "교회옮김" || item.attendDesc == "타교회")
+                    isOut = true;
+                if (item.attend >= attendSet && !isOut) {
+                    if (query) {
+                        if (item.RowKey.includes(query))
+                            memberList2.push(item);
+                        if (item.PartitionKey == query)
+                            memberList2.push(item);
+                        if (item.birthYear.includes(query))
+                            memberList2.push(item);
+                        if (item.birthMonth.toString().includes(query))
+                            memberList2.push(item);
+                        if (item.birthDay.toString().includes(query))
+                            memberList2.push(item);
+                        if (item.branch == query)
+                            memberList2.push(item);
+                        if (item.gender == query)
+                            memberList2.push(item);
+                        if (item.attendString.includes(query))
+                            memberList2.push(item);
+                        if (item.part == query)
+                            memberList2.push(item);
+                    }
+                    else 
+                        memberList2.push(item);
+                }   
+            });
+
+            // CombineElements(user, input)
+            user.memberList = memberList2;
+            user.year = year;
+            user.sub = 'soccer';
+            res.render('friendSearch', user);
+            // 정리된 정보를 건내고 ejs 랜더링 하여 보여줌.
+            // res.render('friends', 
+            //     {	
+            //         title: title,
+            //         memberList: memberList2,
+            //         year: year
+            //     }
+            // );
+        }
+        else 
+            res.send('error: cannot find friends list: ' + error);
+    });
+});
+
+router.get('/friends/tablepingpong', function (req, res, next) {
+    var query;
+    query = req.query.query;
+    var user = sbp_data.CheckLogin(req);
+    // var year = req.query.year;
+    var year = sbp_time.getYear();
+	var attendSet = req.query.attendValue;
+    if (!attendSet)
+        attendSet = 0;
+    
+    sbp_member.GetMembersAndLogWithYear(year, function (error, memberList) {
+        if (!error) {
+            var memberList2 = [];
+            memberList.forEach(function (item, index) {
+                var isOut = false;
+                var sports = item.likeSports
+                if (!sports || sports.indexOf("탁구") == -1)
+                    isOut = true;
+                if (item.attendDesc == "결혼" || item.attendDesc == "제외" || item.attendDesc == "장기결석" || item.attendDesc == "교회 옮김" || item.attendDesc == "교회옮김" || item.attendDesc == "타교회")
+                    isOut = true;
+                if (item.attend >= attendSet && !isOut) {
+                    if (query) {
+                        if (item.RowKey.includes(query))
+                            memberList2.push(item);
+                        if (item.PartitionKey == query)
+                            memberList2.push(item);
+                        if (item.birthYear.includes(query))
+                            memberList2.push(item);
+                        if (item.birthMonth.toString().includes(query))
+                            memberList2.push(item);
+                        if (item.birthDay.toString().includes(query))
+                            memberList2.push(item);
+                        if (item.branch == query)
+                            memberList2.push(item);
+                        if (item.gender == query)
+                            memberList2.push(item);
+                        if (item.attendString.includes(query))
+                            memberList2.push(item);
+                        if (item.part == query)
+                            memberList2.push(item);
+                    }
+                    else 
+                        memberList2.push(item);
+                }   
+            });
+
+            // CombineElements(user, input)
+            user.memberList = memberList2;
+            user.year = year;
+            user.sub = 'tablepingpong';
             res.render('friendSearch', user);
             // 정리된 정보를 건내고 ejs 랜더링 하여 보여줌.
             // res.render('friends', 
@@ -531,6 +708,79 @@ function ChargeGroupListInput(group, year, item) {
     else 
         group[year.toString()].push(item);
 }
+
+router.post('/addBank', function (req, res, next) {
+
+    var getDate = new Date();
+    var year = getDate.getFullYear().toString();
+    var month = getDate.getMonth();
+    var day = getDate.getDay();
+
+
+    var add_year = req.body.add_year;
+    var add_month = req.body.add_month;
+    var add_day = req.body.add_day;
+    var add_section = req.body.add_section;
+    var add_content = req.body.add_content;
+    var add_money = req.body.add_money;
+    var add_detail = req.body.add_detail;
+    var add_bankName = req.body.add_bankName;
+    var add_bankNumber = req.body.add_bankNumber;
+
+
+    sbp_member.GetBankLog(year, function (error, result) {
+        if (!error) {
+            var receiptNo = 1;
+            for (i=0; i < result.length; i++) {
+                var tmp = result[i];
+                if (tmp.receiptNo && receiptNo <= tmp.receiptNo)
+                    receiptNo = tmp.receiptNo + 1;
+            }
+
+
+            var addData = [];
+            for (i = 0; i < add_content.length; i++) {
+                var tmp = {};
+                if (add_content[i] == null || add_content[i] == '')
+                    continue;
+                var time = new Date().getTime();
+
+                tmp.year = add_year[i];
+                tmp.month = add_month[i];
+                tmp.day = add_day[i];
+                tmp.section = add_section[i];
+                tmp.content = add_content[i];
+                tmp.money = add_money[i];
+                if (tmp.section != "예산") {
+                    tmp.receiptNo = receiptNo;
+                    receiptNo = receiptNo+1;
+                }
+                if (add_detail && add_detail.length > i)
+                    tmp.detail = add_detail[i];
+                if (add_bankName && add_bankName.length > i)
+                    tmp.bankName = add_bankName[i];
+                if (add_bankNumber && add_bankNumber.length > i)
+                    tmp.bankNumber = add_bankNumber[i];
+                tmp.PartitionKey = tmp.year.toString();
+                tmp.RowKey = time.toString(); 
+
+
+                addData.push(tmp);
+            }
+            
+            sbp_data.AddBank(addData, function (error, result) {
+                if (!error) {
+                    res.send("ok");
+                }
+            });
+
+        }
+    });
+
+
+    
+});
+
 
 router.post('/addCharge', function (req, res, next) {
     var add_name = req.body.add_name;
