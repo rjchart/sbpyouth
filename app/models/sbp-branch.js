@@ -919,12 +919,12 @@ module.exports.MakeNewBranch = function (members, bsList, type) {
 			newBSList.forEach( function (bs, index) {
 				bs.two.splice(0,1);
 				// delete bs.two[0];
-				if (bs.pow < powerAver * .65) {
+				if (bs.pow < powerAver * .55) {
 					isPowAverBad = true 
 					return true;
 				}
 
-				if (bs.pow > powerAver * 1.35) {
+				if (bs.pow > powerAver * 1.45) {
 					isPowAverBad = true 
 					return true;
 				}

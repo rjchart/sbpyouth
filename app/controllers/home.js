@@ -67,14 +67,16 @@ router.get('/bank', function (req, res, next) {
     var user = sbp_data.CheckLogin(req);
 
     var year = req.query.year;
+    var month = req.query.month;
     var getDate = new Date();
     if (year == null)
         year = getDate.getFullYear().toString();
-    var month = getDate.getMonth();
-    var day = getDate.getDay();
+    if (month == null)
+        month = (getDate.getMonth()+1).toString();
+    var day = getDate.getDate();
     // user.year = year;
     // res.render('bank', user);
-    sbp_member.GetBankLog(year, function (error, result) {
+    sbp_member.GetBankWithMonthLog(year, month, function (error, result) {
         if (!error) {
             user.data = result;
             user.year = year;
@@ -783,6 +785,70 @@ router.post('/addBank', function (req, res, next) {
 
     
 });
+
+
+router.post('/editBank', function (req, res, next) {
+
+    var getDate = new Date();
+    var year = getDate.getFullYear().toString();
+    var month = getDate.getMonth();
+    var day = getDate.getDay();
+
+    var date = req.body.date;
+    var section = req.body.section;
+    var content = req.body.content;
+    var receiptNo = req.body.receiptNo;
+    var gain = req.body.gain;
+    var spend = req.body.spend;
+    var detail = req.body.detail;
+    var RowKey = req.body.RowKey;
+    var PartitionKey = req.body.PartitionKey;
+
+    var addData = [];
+    for (i = 0; i < RowKey.length; i++) {
+        var tmp = {};
+        if (RowKey[i] == null || RowKey[i] == '')
+            continue;
+        var time = new Date().getTime();
+
+
+        // tmp.date = date[i];
+        tmp.section = section[i];
+        tmp.content = content[i];
+        tmp.receiptNo = receiptNo[i];
+        tmp.gain = gain[i].replace(/,/g,'');
+        tmp.spend = spend[i].replace(/,/g,'');
+        tmp.detail = detail[i];
+
+        if (tmp.gain && tmp.gain > 0)
+            tmp.money = tmp.gain;
+        
+        if (tmp.spend && tmp.spend > 0)
+            tmp.money = tmp.spend;
+        
+        var dateStrings = date[i].split('.');
+        tmp.year = dateStrings[0];
+        tmp.month = dateStrings[1];
+        tmp.day = dateStrings[2];
+        
+        tmp.PartitionKey = PartitionKey[i];
+        tmp.RowKey = RowKey[i]; 
+
+
+        addData.push(tmp);
+    }
+    
+    sbp_data.AddBank(addData, function (error, result) {
+        if (!error) {
+            res.send("ok");
+        }
+    });
+
+
+
+    
+});
+
 
 
 router.post('/addCharge', function (req, res, next) {

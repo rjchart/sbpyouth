@@ -48,7 +48,7 @@ module.exports.AddBank = function (addData, next) {
         //     data: entGen.String(data.name),
         //     chargeGroup: entGen.String(data.chargeGroup)
         // };
-        batch.insertEntity(data,{echoContent: true});
+        batch.insertOrMergeEntity(data,{echoContent: true});
     }
     tableService.executeBatch('bank', batch, function (error, result, response) {
         if(!error) {

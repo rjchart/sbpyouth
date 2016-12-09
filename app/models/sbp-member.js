@@ -510,6 +510,36 @@ module.exports.GetBankLog = function (year, next) {
     });
 }
 
+module.exports.GetBankWithMonthLog = function (year, month, next) {
+    
+    var query = new azure.TableQuery()
+    // .where('PartitionKey eq ?', year);
+    .where('PartitionKey eq ? and month eq ?', year, month);
+
+    // 데이터베이스 쿼리를 실행합니다.
+    tableService.queryEntities('bank', query, null, function (error, result) {
+        if (!error) {
+            var banklogs = [];
+            for (var index in result.entries) {
+                var data = result.entries[index];
+                RemoveEntityGen(data);
+                if (data.section == '예산')
+                    data.gain = data.money;
+                else
+                    data.spend = data.money;
+                banklogs.push(data);
+            }
+            SetBankSort(banklogs);
+            next(null, banklogs);
+        }
+        else {
+            console.log("error:" + error);
+            next(error);
+        }
+            
+    });
+}
+
 module.exports.GetMemberWithGroup = function (year, group, next) {
     
     var query = new azure.TableQuery()

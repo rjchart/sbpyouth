@@ -21,6 +21,7 @@ block script
 								},
 								success: function (response) {
 									alert('등록 성공했습니다.');
+									document.location.reload();
 								}
 							});
 							//- window.alert('Approved!');
@@ -30,6 +31,19 @@ block script
 					.modal('show');
 
 					
+			}
+
+			function EditButton() {
+				var $getAdd = $('#editBank');
+				$('#editBank').ajaxSubmit({
+					error: function (xhr) {
+						alert('등록 실패했습니다.');
+					},
+					success: function (response) {
+						alert('등록 성공했습니다.');
+						document.location.reload();
+					}
+				});
 			}
 			
 			var addMemberNumber = 1;
@@ -76,7 +90,44 @@ block script
 				$('.circular.info.icon').popup();
 				$('.labeled.icon.button').popup();
 				$('.label.info').popup();
+
+				$('.year.dropdown').dropdown({
+					onChange: function(value, text, $selectedItem) {
+						console.log("abc");
+
+						//- $('.month.dropdown').dropdown('set selected', '7');
+					}
+				});
+
+				//- $('.year.dropdown').dropdown('set selected', '2017');
+				$('input.txt').keydown(function(event) {
+					var keyCode = event.keyCode;
+					if (keyCode == 40) {
+						var className = event.target.className;
+						var classes = className.split(' ');
+						//- if (classes[3]!='0')
+						var num = parseInt(classes[2])+1;
+						classes[2] = num.toString();
+						className = 'input.' + classes.join('.');
+						$(className).focus();
+					}
+					else if (keyCode == 38) {
+						var className = event.target.className;
+						var classes = className.split(' ');
+						//- if (classes[3]!='0')
+						var num = parseInt(classes[2])-1;
+						classes[2] = num.toString();
+						className = 'input.' + classes.join('.');
+						$(className).focus();
+					}
+				})
+
+				//- $('input.txt.2').focus();
 			});
+
+			function SelectRow() {
+				console.log("abc");
+			}
 			
 	block script_part02
 block header_item01
@@ -90,15 +141,19 @@ block content
 		//- if auth=="manager" || auth=="developer" 
 		div.ui.right.secondary.menu
 			div.item
-				button.ui.blue.primary.labeled.icon.button(onclick="AddMemberButton()", data-content="회계 정보를 추가할 수 있다.")
-					i.user.icon 
+				button.ui.blue.primary.labeled.icon.button(onclick="AddMemberButton()")
+					i.plus.icon 
 					|Add
+			div.item
+				button.ui.red.labeled.icon.button(onclick="EditButton()")
+					i.edit.icon 
+					|Edit
 	div.ui.secondary.pointing.menu.navbar.grid.mobile.only.row(style="padding-top:30px !important")
 		block sub_item01
 			a.sub.item(href="/back") 전체 조회 
 		div.ui.right.secondary.menu
 			div.item
-				button.ui.blue.primary.labeled.icon.button(onclick="AddMemberButton()", data-content="회계 정보를 추가할 수 있다.")
+				button.ui.blue.primary.labeled.icon.button(onclick="AddMemberButton()")
 					i.user.icon 
 					|Add
 	block sub_content
@@ -111,7 +166,7 @@ block content
 					div.four.fields
 						div.field(style="min-width:45px; max-width:60px")
 							label 년도
-							div.ui.selection.dropdown(style="min-width:20px; max-width:30px")
+							div.ui.selection.year.dropdown(style="min-width:20px; max-width:30px")
 								input(type="hidden", name="add_year[0]", value="#{year}")
 								i.dropdown.icon
 								div.text
@@ -121,7 +176,7 @@ block content
 							//- input(name="add_year[0]", placeholder="년도", type="text")
 						div.field(style="min-width:45px; max-width:70px")
 							label 월
-							div.ui.selection.dropdown(style="min-width:20px; max-width:30px")
+							div.ui.selection.month.dropdown(style="min-width:20px; max-width:30px")
 								input(type="hidden", name="add_month[0]", value="#{month||1}")
 								i.dropdown.icon
 								div.text
@@ -131,7 +186,7 @@ block content
 										div.item(data-value="#{mm}") #{mm}
 						div.field(style="min-width:45px; max-width:70px")
 							label 일
-							div.ui.selection.dropdown(style="min-width:20px; max-width:30px")
+							div.ui.selection.day.dropdown(style="min-width:20px; max-width:30px")
 								input(type="hidden", name="add_day[0]", value="#{day||1}")
 								i.dropdown.icon
 								div.text
@@ -155,6 +210,17 @@ block content
 						div.field
 							label 지출/수입 금액
 							input(name="add_money[0]", placeholder="사용 금액", type="text")
+					div.four.fields
+						div.field
+							label 은행 즐겨찾기
+							div.ui.selection.dropdown(style="min-width:70px; max-width:140px")
+								input(type="hidden", name="add_section[0]", value="브랜치 모임")
+								i.dropdown.icon
+								div.text
+								div.menu
+									- var sections = ['브랜치 모임', '훈련/회의비', '소모임/단합친교비', '생일축하 및 상품', '심방비(경조사)', '팀별/부서사역비', '격려/환송/결혼', '소모품/기타', '성경교재/교육자료', '임원/리더워크숍', '체육행사', '예산', '특강비', '겨울수련회', '여름수련회', '야유회'];
+									each ss in sections
+										div.item(data-value="#{ss}") #{ss}
 						div.field
 							label 입금 은행
 							input(name="add_bankName[0]", placeholder="입금은행", type="text")
