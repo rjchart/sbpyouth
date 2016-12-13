@@ -14,7 +14,7 @@ block sub_content
 			div.twelve.wide.streched.column
 				div.ui.segment
 					h2.ui.header
-						|#{year}년도 다음 학기 임시 생성 브랜치 편성
+						|##{year} 다음 학기 임시 생성 브랜치 편성
 					div.ui.container
 						- var bmKeys = ['one', 'two', 'arm', 'out']; 
 						table.ui.celled.striped.structured.table
@@ -26,6 +26,7 @@ block sub_content
 									- });
 							tfoot
 								form#SaveTemp(action="/saveTempBranch" method="post")
+									input(type="hidden" name="tempName" value="#{year}")
 									-var index = 0;
 									each item in bsList
 										input(type="hidden" name="m_name[#{index}]" value="#{item.RowKey}")

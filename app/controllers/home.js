@@ -84,11 +84,21 @@ router.get('/bank', function (req, res, next) {
             user.day = day;
 
             var curMoney = 0;
+            var bankMoney = 0;
+            var spendSum = 0;
             result.forEach(function(item) {
-                if (item.gain)
+                if (item.gain) {
                     curMoney = curMoney + parseInt(item.gain);
-                if (item.spend)
+                    if (item.paid)
+                        bankMoney = bankMoney + parseInt(item.gain);
+                }
+                if (item.spend) {
                     curMoney = curMoney - parseInt(item.spend);
+                    spendSum = spendSum + parseInt(item.spend);
+                    if (item.paid)
+                        bankMoney = bankMoney - parseInt(item.spend);
+                }
+
                 item.curMoney = curMoney;
                 item.gain = MakeMoneyData(item.gain);
                 item.spend = MakeMoneyData(item.spend);
@@ -97,7 +107,9 @@ router.get('/bank', function (req, res, next) {
                 item.shortSection = item.section.substring(0,4);
                 item.shortContent = item.content.substring(0,4);
             });
-                  
+            user.spendSum = MakeMoneyData(spendSum);
+            user.curMoney = MakeMoneyData(curMoney);
+            user.bankMoney = MakeMoneyData(bankMoney);
             res.render('bank', user);
         }
     });
@@ -443,7 +455,7 @@ router.get('/friends', function (req, res, next) {
             var memberList2 = [];
             memberList.forEach(function (item, index) {
                 var isOut = false;
-                if (item.attendDesc == "결혼" || item.attendDesc == "제외" || item.attendDesc == "장기결석" || item.attendDesc == "교회 옮김" || item.attendDesc == "교회옮김" || item.attendDesc == "타교회")
+                if (item.attendDesc == "결혼" || item.attendDesc == "제외" ||item.attendDesc == "장기결석" || item.attendDesc == "교회 옮김" || item.attendDesc == "교회옮김" || item.attendDesc == "타교회")
                     isOut = true;
                 if (item.attend >= attendSet && !isOut) {
                     if (query) {
@@ -803,6 +815,13 @@ router.post('/editBank', function (req, res, next) {
     var detail = req.body.detail;
     var RowKey = req.body.RowKey;
     var PartitionKey = req.body.PartitionKey;
+    var deleteRow = req.body.deleteRow;
+    var paidNum = req.body.paid;
+    var paid = [];
+    paidNum.forEach( function(item) {
+        var num = parseInt(item);
+        paid[num] = "on"; 
+    });
 
     var addData = [];
     for (i = 0; i < RowKey.length; i++) {
@@ -819,6 +838,11 @@ router.post('/editBank', function (req, res, next) {
         tmp.gain = gain[i].replace(/,/g,'');
         tmp.spend = spend[i].replace(/,/g,'');
         tmp.detail = detail[i];
+        tmp.deleteRow = deleteRow[i];
+        if (paid && paid.length > i && paid[i])
+            tmp.paid = paid[i];
+        else
+            tmp.paid = false;
 
         if (tmp.gain && tmp.gain > 0)
             tmp.money = tmp.gain;
@@ -1001,44 +1025,55 @@ router.post('/addBranch', function (req, res, next) {
 
 router.post('/makeBranch', function (req, res, next) {
     var bsList = req.body['make_nameBS'];
+    var seperate = req.body['seperate'];
+    var likeData = req.body['likeData'];
+    var powerData = req.body['powerData'];
+    var tempName = req.body['tempName'];
+    var removeName = req.body['remove_name'];
+    if (tempName == null)
+        tempName = 'temp'
     sbp_member.GetMembersAndLogWithYear(null, function (error, members) {
         if (!error) {
             // index: 1 -- 간단히 브랜치원이 원하는 BS 싫어하지 않는 BS 정도를 결정하고 나머지 랜덤. 
             // index: 2 -- 브랜치의 밸런스를 맞추고 팀원들의 행복도를 통해 최적의 브랜치 편성
-            var newList = sbp_branch.MakeNewBranch(members, bsList, 3);
-            // newList.year = '2016';
-            newList.year = 'temp';
-            console.log("done");
-            res.render('branchTemp', newList);
+            removeList = [];
+            members.forEach(function(item) {
+                removeName.forEach(function(removeItem) {
+                    if(item.RowKey == removeItem)
+                        removeList.push(item);
+                });
+            });
+            removeList.forEach(function(item) {
+                var getID = members.indexOf(item);
+                if (getID >= 0)
+                    members.splice(getID,1);
+            });
+
+            var newList = sbp_branch.MakeNewBranch(members, bsList, 0, likeData, powerData, 0);
+            if (newList == null) {
+                res.render('branchFail');
+            }
+            else {
+                // newList.year = '2016';
+                newList.year = tempName;
+                console.log("done");
+                res.render('branchTemp', newList);
+            }
         }    
     });
 });
 
 router.post('/saveTempBranch', function (req, res, next) {
-    // var bsList = req.body['make_nameBS'];
-    // sbp_member.GetMembersAndLogWithYear(null, function (error, members) {
-    //     if (!error) {
-    //         // index: 1 -- 간단히 브랜치원이 원하는 BS 싫어하지 않는 BS 정도를 결정하고 나머지 랜덤. 
-    //         // index: 2 -- 브랜치의 밸런스를 맞추고 팀원들의 행복도를 통해 최적의 브랜치 편성
-    //         var newList = sbp_branch.MakeNewBranch(members, bsList, 2);
-    //         // newList.year = '2016';
-    //         newList.year = pkginfo['sbp-data'].year;
-    //         console.log("done");
-    //         res.render('branchTemp', newList);
-    //     }    
-    // });
+    var tempName = req.body['tempName'];
+    if (!tempName)
+        tempName = 'temp';
 
-
-    // req.body['m_name'].forEach(function (member, index) {
-    //     if (member == "")
-            
-    // });
     var inputData = [];
     for (var i = 0; i < req.body.m_name.length; i++) {
         if (req.body.m_name[i] == "")
             continue;
         var entity = {
-            PartitionKey: 'temp',
+            PartitionKey: tempName,
             RowKey: req.body.m_name[i],
             branch: req.body.m_branch[i],
             age: req.body.m_age[i],
@@ -1051,7 +1086,7 @@ router.post('/saveTempBranch', function (req, res, next) {
     }
     sbp_member.SaveBranch(inputData, function (error, result) {
         if (!error) {
-            res.redirect('branch?year=temp');
+            res.redirect('branch?year=' + tempName);
         }
         else {
             res.status(500).send("저장에 실패했습니다. Cannot save the branch data: " + error);

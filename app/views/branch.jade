@@ -4,6 +4,7 @@ block script
 		script(type="text/javascript", src="../javascript/templates.js")
 		script(type="text/javascript", src="../javascript/runtime.js")
 		script.
+			var makeStep = 0;
 			function ProfileBS(name, year, branch, attend) {
 				var data = {
 					name: name,
@@ -123,6 +124,56 @@ block script
 				
 				addMemberNumber++;
 				
+			}
+
+			function NextButton(value) {
+				if (value == 1) {
+					makeStep = makeStep+1;
+				}
+				else {
+					makeStep = makeStep-1;
+				}
+				if (makeStep < 0) makeStep = 0;
+				if (makeStep > 2) makeStep = 2;
+				
+
+				if (makeStep == 0) {
+					$("div.step.first").addClass('active');
+					$("div.step.second").removeClass('active');
+					$("div.step.third").removeClass('active');
+					$("div.ui.blue.before.labeled.icon.button").hide();
+					$("div.ui.blue.after.labeled.icon.button").show();
+					$("div.ui.positive.right.labeled.icon.button").hide();
+					$("div.ui.black.deny.button").show();
+					$("div.ui.first.fluid.grid").show();
+					$("table.profile.ui.second.very.basic.small.table").hide();
+					$("div.ui.third.fluid.grid").hide();
+				}
+				else if (makeStep == 1) {
+					$("div.step.first").removeClass('active');
+					$("div.step.second").addClass('active');
+					$("div.step.third").removeClass('active');
+					$("div.ui.blue.before.labeled.icon.button").show();
+					$("div.ui.blue.after.labeled.icon.button").show();
+					$("div.ui.positive.right.labeled.icon.button").hide();
+					$("div.ui.black.deny.button").hide();
+					$("div.ui.first.fluid.grid").hide();
+					$("table.profile.ui.second.very.basic.small.table").show();
+					$("div.ui.third.fluid.grid").hide();
+				} 
+				else if (makeStep == 2) {
+					$("div.step.first").removeClass('active');
+					$("div.step.second").removeClass('active');
+					$("div.step.third").addClass('active');
+					$("div.ui.blue.before.labeled.icon.button").show();
+					$("div.ui.blue.after.labeled.icon.button").hide();
+					$("div.ui.positive.right.labeled.icon.button").show();
+					$("div.ui.black.deny.button").hide();
+					$("div.ui.first.fluid.grid").hide();
+					$("table.profile.ui.second.very.basic.small.table").hide();
+					$("div.ui.third.fluid.grid").show();
+				} 
+
 			}
 			
 			function MakeBranchButton() {
@@ -250,11 +301,25 @@ block content
 					i.checkmark.icon
 	block make_content
 		div.ui.make.modal
-			i.close.icon 
-			div.header Make Branch 
-			div.ui.content
-				form#makeBranch.ui.fluid.form(action="/makeBranch" method="post")
-					div.ui.grid#makeFields
+			div.ui.three.top.attached.steps
+				div.step.first.active
+					i.truck.icon
+					div.content
+						div.title BS 선정
+						div.description BS 임원 명단을 결정합니다.
+				div.step.second
+					i.configure.icon
+					div.content
+						div.title 브랜치 설정
+						div.description 브랜치 편성 설정을 정합니다. 
+				div.step.third
+					i.remove.icon
+					div.content
+						div.title 제외 맴버 설정
+						div.description 제외 시킬 사람들을 정합니다. 
+			div.ui.attached.content
+				form#makeBranch.ui.form(action="/makeBranch" method="post")
+					div.ui.first.fluid.grid#makeFields(style="display:block")
 						if bsList == null
 							div.two.wide.column
 								label BS
@@ -286,9 +351,99 @@ block content
 								label BS
 								input(name="make_nameBS[#{index}]", placeholder= "이름", type="text", value="#{item.RowKey}")
 							- });
+					div.ui.third.fluid.grid(style="display:none")
+						div.two.wide.column
+							label 이름
+							input(name="remove_name[0]", placeholder="", type="text")
+						div.two.wide.column
+							label 이름
+							input(name="remove_name[1]", placeholder="", type="text")
+						div.two.wide.column
+							label 이름
+							input(name="remove_name[2]", placeholder="", type="text")
+						div.two.wide.column
+							label 이름
+							input(name="remove_name[3]", placeholder="", type="text")
+						div.two.wide.column
+							label 이름
+							input(name="remove_name[4]", placeholder="", type="text")
+						div.two.wide.column
+							label 이름
+							input(name="remove_name[5]", placeholder="", type="text")
+						div.two.wide.column
+							label 이름
+							input(name="remove_name[6]", placeholder="", type="text")
+						div.two.wide.column
+							label 이름
+							input(name="remove_name[7]", placeholder="", type="text")
+						div.two.wide.column
+							label 이름
+							input(name="remove_name[8]", placeholder="", type="text")
+						div.two.wide.column
+							label 이름
+							input(name="remove_name[9]", placeholder="", type="text")
+						div.two.wide.column
+							label 이름
+							input(name="remove_name[10]", placeholder="", type="text")
+						div.two.wide.column
+							label 이름
+							input(name="remove_name[11]", placeholder="", type="text")
+						div.two.wide.column
+							label 이름
+							input(name="remove_name[12]", placeholder="", type="text")
+						div.two.wide.column
+							label 이름
+							input(name="remove_name[13]", placeholder="", type="text")
+						div.two.wide.column
+							label 이름
+							input(name="remove_name[14]", placeholder="", type="text")
+						div.two.wide.column
+							label 이름
+							input(name="remove_name[15]", placeholder="", type="text")
+					table.profile.ui.second.very.basic.small.table(style="display:none")
+						tr
+							td 청 1/2 부 분리
+							td.center.aligned: div.ui.selection.dropdown
+								input(type="hidden", name="seperate", value="0")
+								i.dropdown.icon
+								div.text
+								div.menu
+									div.item(data-value="0", style="min-width:100px; max-height:30px") 분리함
+									div.item(data-value="1", style="min-width:100px; max-height:30px") 분리하지 않음
+						tr
+							td 호불호 정보 사용
+							td.center.aligned: div.ui.selection.dropdown
+								input(type="hidden", name="likeData", value="0")
+								i.dropdown.icon
+								div.text
+								div.menu
+									div.item(data-value="0", style="min-width:100px; max-height:30px") 사용
+									div.item(data-value="1", style="min-width:100px; max-height:30px") 사용하지 않음
+						tr
+							td 인원들 활성도 비교
+							td.center.aligned: div.ui.selection.dropdown
+								input(type="hidden", name="powerData", value="0")
+								i.dropdown.icon
+								div.text
+								div.menu
+									div.item(data-value="0", style="min-width:100px; max-height:30px") 아주 균등하게
+									div.item(data-value="1", style="min-width:100px; max-height:30px") 꽤 균등하게
+									div.item(data-value="2", style="min-width:100px; max-height:30px") 조금 균등하게
+									div.item(data-value="3", style="min-width:100px; max-height:30px") 사용하지 않음
+						tr
+							td 임시 저장 이름
+							td(style="text-align:center")
+								div.ui.input
+									input(type="text", name="tempName", value="", placeholder="저장시 사용 이름")
+
 			div.actions 
 				div.ui.black.deny.button
 					i.plus.center.icon
 					|등록 BS 추가
-				div.ui.positive.right.labeled.icon.button 등록
+				div.ui.blue.before.labeled.icon.button(onclick="NextButton(0)", style="display:none") 이전
+					i.arrow.left.icon
+				div.ui.blue.after.labeled.icon.button(onclick="NextButton(1)") 다음
+					i.arrow.right.icon
+				div.ui.positive.right.labeled.icon.button(style="display:none") 등록
 					i.checkmark.icon
+			i.close.icon

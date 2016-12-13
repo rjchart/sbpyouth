@@ -1,0 +1,15 @@
+extends branch
+block script_part02
+	script.
+		function SaveTemp () {
+			//- var $getAdd = $('#SaveTemp');
+			$('#SaveTemp').submit();
+			console.log("save");
+		}
+block sub_item02
+	a.active.sub.item 임시 생성 브랜치
+block sub_content
+	div.main.ui.container
+		div
+			h2 500번 이상 수행 동안 실패했습니다.
+			p 인원 활성도의 균등 수치를 낮춰서 다시 시도하기 바랍니다.

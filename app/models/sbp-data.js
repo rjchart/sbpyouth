@@ -24,6 +24,8 @@ function SetEntityGen (entity) {
             entity[key] = entGen.String(value);
         else if (typeof value == "number")
             entity[key] = entGen.Int32(value);
+        else if (typeof value == "boolean")
+            entity[key] = entGen.Boolean(value);
     }
 }
 
@@ -41,14 +43,14 @@ module.exports.AddBank = function (addData, next) {
     var batch = new azure.TableBatch();
     for (var key in addData) {
         var data = addData[key];
-		SetEntityGen(data);
-        // var entity = {
-        //     PartitionKey: entGen.String(data.year),
-        //     RowKey: entGen.String(time),
-        //     data: entGen.String(data.name),
-        //     chargeGroup: entGen.String(data.chargeGroup)
-        // };
-        batch.insertOrMergeEntity(data,{echoContent: true});
+		if (data.deleteRow == "true") {
+			SetEntityGen(data);
+			batch.deleteEntity(data,{echoContent: true});
+		}
+		else {
+			SetEntityGen(data);
+			batch.insertOrMergeEntity(data,{echoContent: true});
+		}
     }
     tableService.executeBatch('bank', batch, function (error, result, response) {
         if(!error) {

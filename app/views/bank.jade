@@ -68,20 +68,21 @@ block sub_content
                                     th 지출 금액
                                     th 남은 금액
                                     th 비고
-                                    th 입금 상태
+                                    th 정보
+                                    th 이체
+                                    th 삭제
                             tfoot
-                                tr
-                                    th(colspan="4")
-                                    th 
-                                    th
-                                    th
-                                    th
-                                    th
+                                tr(style="text-align:center")
+                                    th(colspan="4") 은행 금액: #{bankMoney}
+                                    th(colspan="2") 총 지출액: #{spendSum}
+                                    th(colspan="2") 남은 금액: #{curMoney}
+                                    th(colspan="3")
                             tbody
                                 each item, index in data
                                     input(type="hidden", name="RowKey[#{index}]", value="#{item.RowKey}")
                                     input(type="hidden", name="PartitionKey[#{index}]", value="#{item.PartitionKey}")
-                                    tr(onclick="SelectRow()", href="#")
+                                    input(type="hidden", name="deleteRow[#{index}]", class="delete#{index}", value='false')
+                                    tr(class="tr#{index}" onclick="SelectRow()", href="#")
                                         td 
                                             div.ui.input
                                                 input.txt.date(class="#{index}", type="text", name="date[#{index}]", value="#{item.year}.#{item.month}.#{item.day}")
@@ -112,6 +113,13 @@ block sub_content
                                                 input.txt.detail(class="#{index}", type="text", name="detail[#{index}]", value="#{item.detail || ''}", style="max-width:70px")
                                         td
                                             i.ui.circular.info.icon(data-content="계좌번호: #{item.bankNumber||''}(#{item.bankName||''})")
+                                        td
+                                            div.ui.fitted.toggle.checkbox
+                                                input(type="checkbox", name="paid[#{index}]", checked=item.paid||off, value=index)
+                                                label
+                                        td(style="text-align:center")
+                                            div.small.ui.red.circular.ban.icon.button(onclick="DeleteRow(#{index})")
+                                                i.icon.ban
             div.mobile.only.row
                 div.ui.main.container
                     table.ui.celled.structured.unstackable.table
