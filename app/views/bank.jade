@@ -122,22 +122,22 @@ block sub_content
                                                 i.icon.ban
             div.mobile.only.row
                 div.ui.main.container
-                    table.ui.celled.structured.unstackable.table
-                        thead
+                    table.ui.celled.fixed.single.line.structured.unstackable.table
+                        thead(style="text-align:center")
                             tr
-                                th 날짜
-                                th 구분
+                                th(style="max-width:50px; width:50px;") 날짜
+                                th(style="max-width:50px; width:50px;") 구분
                                 th 상세 내역
-                                th No
+                                th(style="max-width:30px; width:30px;") No
                                 th 수입 금액
                                 th 지출 금액
                                 th 남은 금액
-                        tfoot
+                        tfoot(style="text-align:center")
                             tr
                                 th(colspan="4") 은행 금액: #{bankMoney}
                                 th(colspan="2") 총 지출액: #{spendSum} 
-                                th(colspan="2") 남은 금액: #{curMoney}
-                        tbody
+                                th #{curMoney}
+                        tbody(style="text-align:center")
                             each item in data
                                 tr
                                     td #{item.month}.#{item.day}
