@@ -104,8 +104,10 @@ router.get('/bank', function (req, res, next) {
                 item.spend = MakeMoneyData(item.spend);
                 item.curMoney = MakeMoneyData(item.curMoney);
                 item.shortYear = item.year.substring(2,4);
-                item.shortSection = item.section.substring(0,4);
-                item.shortContent = item.content.substring(0,4);
+                if (item.section)
+                    item.shortSection = item.section.substring(0,4);
+                if (item.content)
+                    item.shortContent = item.content.substring(0,4);
             });
             user.spendSum = MakeMoneyData(spendSum);
             user.curMoney = MakeMoneyData(curMoney);
@@ -750,8 +752,9 @@ router.post('/addBank', function (req, res, next) {
             var receiptNo = 1;
             for (i=0; i < result.length; i++) {
                 var tmp = result[i];
-                if (tmp.receiptNo && receiptNo <= tmp.receiptNo)
-                    receiptNo = tmp.receiptNo + 1;
+                var tmpNo = parseInt(tmp.receiptNo);
+                if (tmpNo && receiptNo <= tmpNo)
+                    receiptNo = tmpNo + 1;
             }
 
 
