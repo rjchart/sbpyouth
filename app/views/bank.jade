@@ -134,10 +134,9 @@ block sub_content
                                 th 남은 금액
                         tfoot
                             tr
-                                th(colspan="4")
-                                th 
-                                th
-                                th
+                                th(colspan="4") 은행 금액: #{bankMoney}
+                                th(colspan="2") 총 지출액: #{spendSum} 
+                                th(colspan="2") 남은 금액: #{curMoney}
                         tbody
                             each item in data
                                 tr
