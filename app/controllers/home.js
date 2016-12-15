@@ -765,6 +765,7 @@ router.post('/addBank', function (req, res, next) {
     var add_detail = req.body.add_detail;
     var add_bankName = req.body.add_bankName;
     var add_bankNumber = req.body.add_bankNumber;
+    var add_bankReceive = req.body.add_bankReceive;
 
 
     sbp_member.GetBankLog(year, function (error, result) {
@@ -802,6 +803,8 @@ router.post('/addBank', function (req, res, next) {
                     tmp.bankName = add_bankName[i];
                 if (add_bankNumber && add_bankNumber.length > i)
                     tmp.bankNumber = add_bankNumber[i];
+                if (add_bankReceive && add_bankReceive.length > i)
+                    tmp.bankReceive = add_bankReceive[i];
                 tmp.PartitionKey = tmp.year.toString();
                 tmp.RowKey = time.toString(); 
 

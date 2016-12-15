@@ -111,7 +111,7 @@ block sub_content
                                             td #{item.curMoney || ''}
                                             td 
                                                 div.ui.input
-                                                    input.txt.detail(class="#{index}", type="text", name="detail[#{index}]", value="#{item.detail || ''}", style="max-width:70px")
+                                                    input.txt.detail(class="#{index}", type="text", name="detail[#{index}]", value="#{item.detail || item.bankReceive || ''}", style="max-width:70px")
                                             td
                                                 i.ui.circular.info.icon(data-content="계좌번호: #{item.bankNumber||''}(#{item.bankName||''})")
                                             td
@@ -135,7 +135,7 @@ block sub_content
                                             td(style="max-width:70px") #{item.gain || ''}
                                             td(style="max-width:70px") #{item.spend || ''} 
                                             td #{item.curMoney || ''}
-                                            td(style="max-width:70px") #{item.detail || ''}
+                                            td(style="max-width:70px") #{item.detail || item.bankReceive || ''}
                                             td(colspan="3")
                                                 i.ui.circular.info.icon(data-content="계좌번호: #{item.bankNumber||''}(#{item.bankName||''})")
             div.mobile.only.row

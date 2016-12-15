@@ -99,10 +99,12 @@ block script
 						if (bank) {
 							$('input.bankName.txt').val(bank);
 							$('input.bankNumber.txt').val(number);
+							$('input.bankReceive.txt').val(value);
 						}
 						else {
 							$('input.bankName.txt').val('');
 							$('input.bankNumber.txt').val('');
+							$('input.bankReceive.txt').val('');
 						}
 						//- $('.month.dropdown').dropdown('set selected', '7');
 					}
@@ -192,6 +194,7 @@ block content
 			div.header Add 
 			div.ui.content
 				form#addBank.ui.fluid.form(action="/addBank" method="post")
+					input.bankReceive.txt(name="add_bankReceive[0]", type="hidden")
 					div.four.fields
 						div.field
 							label 청년부 구분
@@ -246,10 +249,10 @@ block content
 					div.four.fields
 						div.field
 							label 상세 내역
-							input(name="add_content[0]", placeholder="상세 내역", type="text")
+							input(name="add_content[0]", type="text")
 						div.field
 							label 지출/수입 금액
-							input(name="add_money[0]", placeholder="사용 금액", type="text")
+							input(name="add_money[0]", type="text")
 					div.four.fields
 						div.field
 							label 은행 즐겨찾기
@@ -266,10 +269,10 @@ block content
 											div.item(data-value="#{ss.name}", bank="#{ss.bankName}", number="#{ss.bankNumber}") #{ss.name} (#{ss.section})
 						div.field
 							label 입금 은행
-							input.bankName.txt(name="add_bankName[0]", placeholder="입금은행", type="text")
+							input.bankName.txt(name="add_bankName[0]", type="text")
 						div.field
-							label 입금 계좌
-							input.bankNumber.txt(name="add_bankNumber[0]", placeholder="계좌번호", type="text")
+							label 계좌번호
+							input.bankNumber.txt(name="add_bankNumber[0]", type="text")
 			div.actions
 				div.ui.positive.right.labeled.icon.button 등록
 					i.checkmark.icon
