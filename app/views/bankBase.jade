@@ -94,8 +94,8 @@ block script
 				$('.circular.info.icon').popup();
 				$('.labeled.icon.button').popup();
 				$('.label.info').popup();
-
 				$('.bank.dropdown').dropdown({
+					direction:'downward',
 					onChange: function(value, text, $selectedItem) {
 						console.log("abc");
 						var bank = $selectedItem.attr('bank');

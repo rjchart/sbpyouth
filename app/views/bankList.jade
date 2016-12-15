@@ -60,6 +60,10 @@ block script
                     }
                 });
 
+                $('.section.dropdown').dropdown({
+                    minCharacters: 5
+                });
+
                 //- $('.year.dropdown').dropdown('set selected', '2017');
                 $('input.txt').keydown(function(event) {
                     var keyCode = event.keyCode;
