@@ -259,10 +259,12 @@ block content
 					div.four.fields
 						div.field
 							label 상세 내역
-							input(name="add_content[0]", type="text")
+							div.ui.huge.icon.input
+								input(name="add_content[0]", type="text")
 						div.field
 							label 지출/수입 금액
-							input(name="add_money[0]", type="text")
+							div.ui.huge.icon.input
+								input(name="add_money[0]", type="text")
 					div.four.fields
 						div.field
 							label 은행 즐겨찾기
@@ -279,10 +281,12 @@ block content
 											div.item(data-value="#{ss.name}", bank="#{ss.bankName}", number="#{ss.bankNumber}") #{ss.name} (#{ss.section})
 						div.field
 							label 입금 은행
-							input.bankName.txt(name="add_bankName[0]", type="text")
+							div.ui.huge.icon.input
+								input.bankName.txt(name="add_bankName[0]", type="text")
 						div.field
 							label 계좌번호
-							input.bankNumber.txt(name="add_bankNumber[0]", type="text")
+							div.ui.huge.icon.input
+								input.bankNumber.txt(name="add_bankNumber[0]", type="text")
 			div.actions
 				div.ui.positive.right.labeled.icon.button 등록
 					i.checkmark.icon
