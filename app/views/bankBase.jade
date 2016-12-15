@@ -21,7 +21,11 @@ block script
 								},
 								success: function (response) {
 									alert('등록 성공했습니다.');
-									document.location.reload();
+									var year = response.year;
+									var month = response.month;
+									var part = response.part;
+									var urlString = "/bank?year=" + year + "&month=" + month + "&part=" + part;
+									document.location.replace(urlString);
 								}
 							});
 							//- window.alert('Approved!');
@@ -163,11 +167,17 @@ block header_item04
 		i.dropdown.icon
 		div.menu
 			a.item.active(href="/bank") 회계
-			a.item 기타
+			a.item(href="/bankList") 기타
 block content
 	div.ui.secondary.pointing.menu.navbar.grid.computer.tablet.only.row
 		block sub_item01
-			a.sub.item(href="/bank") 전체 조회
+			div.ui.dropdown.sub.item
+			|청년 2부
+			i.dropdown.icon
+			div.menu
+				a.item.active(href="/bank?part='청년2부'") 청년2부
+				a.item(href="/bank?part='청년1부'") 청년1부
+				a.sub.item(href="/bank") 전체 조회
 		//- if auth=="manager" || auth=="developer" 
 		if auth=="manager" || auth=="developer" 
 			div.ui.right.secondary.menu

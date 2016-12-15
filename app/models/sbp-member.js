@@ -459,10 +459,10 @@ module.exports.GetDetailCurrentMemberWithGroup = function (group, next) {
     exports.GetMemberWithGroup(year, group, next);
 }
 
-module.exports.GetBankLog = function (year, next) {
+module.exports.GetBankLog = function (year, part, next) {
     
     var query = new azure.TableQuery()
-    .where('PartitionKey eq ?', year);
+    .where('PartitionKey eq ? and part eq ?', year, part);
     // .where('PartitionKey eq ? and month eq ?', year, group);
 
     // 데이터베이스 쿼리를 실행합니다.
@@ -510,11 +510,11 @@ module.exports.GetBankLog = function (year, next) {
     });
 }
 
-module.exports.GetBankWithMonthLog = function (year, month, next) {
+module.exports.GetBankWithMonthLog = function (year, month, part, next) {
     
     var query = new azure.TableQuery()
     // .where('PartitionKey eq ?', year);
-    .where('PartitionKey eq ? and month eq ?', year, month);
+    .where('PartitionKey eq ? and month eq ? and part eq ?', year, month, part);
 
     // 데이터베이스 쿼리를 실행합니다.
     tableService.queryEntities('bank', query, null, function (error, result) {

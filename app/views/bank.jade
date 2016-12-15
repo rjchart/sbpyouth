@@ -1,6 +1,15 @@
 extends bankBase
 block sub_item01
-    a.active.sub.item(href="/bank") 전체 조회
+    div.ui.dropdown.sub.item 
+        if (part == "청년2부")
+            |청년2부
+        else
+            |청년1부
+        i.dropdown.icon
+        div.menu
+            a.item(href="/bank?part=청년2부") 청년2부
+            a.item(href="/bank?part=청년1부") 청년1부
+            //- a.item(href="/bank") 전체 조회
 block sub_content
     form#editBank(action="/editBank" method="post")
         div.ui.grid

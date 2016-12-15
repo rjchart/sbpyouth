@@ -66,6 +66,9 @@ function MakeMoneyData (data) {
 router.get('/bank', function (req, res, next) {
     var user = sbp_data.CheckLogin(req);
 
+    var part = req.query.part;
+    if (part == null)
+        part = "청년2부";
     var year = req.query.year;
     var month = req.query.month;
     var getDate = new Date();
@@ -76,12 +79,13 @@ router.get('/bank', function (req, res, next) {
     var day = getDate.getDate();
     // user.year = year;
     // res.render('bank', user);
-    sbp_member.GetBankWithMonthLog(year, month, function (error, result) {
+    sbp_member.GetBankWithMonthLog(year, month, part, function (error, result) {
         if (!error) {
             user.data = result;
             user.year = year;
             user.month = month;
             user.day = day;
+            user.part = part;
 
             var curMoney = 0;
             var bankMoney = 0;
@@ -523,6 +527,66 @@ router.get('/friends', function (req, res, next) {
     });
 });
 
+router.get('/hiddenFriends', function (req, res, next) {
+    var query;
+    query = req.query.query;
+    var user = sbp_data.CheckLogin(req);
+    // var year = req.query.year;
+    var year = sbp_time.getYear();
+	var attendSet = req.query.attendValue;
+    if (!attendSet)
+        attendSet = 0;
+    
+    sbp_member.GetMembersAndLogWithYear(year, function (error, memberList) {
+        if (!error) {
+            var memberList2 = [];
+            memberList.forEach(function (item, index) {
+                var isOut = false;
+                if (item.attend >= attendSet && !isOut) {
+                    if (query) {
+                        if (item.RowKey.includes(query))
+                            memberList2.push(item);
+                        if (item.PartitionKey == query)
+                            memberList2.push(item);
+                        if (item.birthYear.includes(query))
+                            memberList2.push(item);
+                        if (item.birthMonth.toString().includes(query))
+                            memberList2.push(item);
+                        if (item.birthDay.toString().includes(query))
+                            memberList2.push(item);
+                        if (item.branch == query)
+                            memberList2.push(item);
+                        if (item.gender == query)
+                            memberList2.push(item);
+                        if (item.attendString.includes(query))
+                            memberList2.push(item);
+                        if (item.part == query)
+                            memberList2.push(item);
+                    }
+                    else 
+                        memberList2.push(item);
+                }   
+            });
+
+            // CombineElements(user, input)
+            user.memberList = memberList2;
+            user.year = year;
+            user.sub = 'total';
+            res.render('friendSearch', user);
+            // 정리된 정보를 건내고 ejs 랜더링 하여 보여줌.
+            // res.render('friends', 
+            //     {	
+            //         title: title,
+            //         memberList: memberList2,
+            //         year: year
+            //     }
+            // );
+        }
+        else 
+            res.send('error: cannot find friends list: ' + error);
+    });
+});
+
 router.get('/friends/soccer', function (req, res, next) {
     var query;
     query = req.query.query;
@@ -768,7 +832,7 @@ router.post('/addBank', function (req, res, next) {
     var add_bankReceive = req.body.add_bankReceive;
 
 
-    sbp_member.GetBankLog(year, function (error, result) {
+    sbp_member.GetBankLog(add_year, add_part, function (error, result) {
         if (!error) {
             var receiptNo = 1;
             for (i=0; i < result.length; i++) {
@@ -814,7 +878,11 @@ router.post('/addBank', function (req, res, next) {
             
             sbp_data.AddBank(addData, function (error, result) {
                 if (!error) {
-                    res.send("ok");
+                    res.send({
+                            year: add_year[0],
+                            month: add_month[0],
+                            part: add_part[0]
+                        });
                 }
             });
 
@@ -882,10 +950,11 @@ router.post('/editBank', function (req, res, next) {
     var deleteRow = req.body.deleteRow;
     var paidNum = req.body.paid;
     var paid = [];
-    paidNum.forEach( function(item) {
-        var num = parseInt(item);
-        paid[num] = "on"; 
-    });
+    if (paidNum)
+        paidNum.forEach( function(item) {
+            var num = parseInt(item);
+            paid[num] = "on"; 
+        });
 
     var addData = [];
     for (i = 0; i < RowKey.length; i++) {
