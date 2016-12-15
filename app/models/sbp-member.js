@@ -554,7 +554,8 @@ module.exports.GetDatas = function (partitionKey, tableName, next) {
                 RemoveEntityGen(data);
                 banklogs.push(data);
             }
-            // SetBankSort(banklogs);
+            if (tableName == "bankList")
+                SetBankListSort(banklogs);
             next(null, banklogs);
         }
         else {
@@ -769,6 +770,33 @@ function SetBankSort (data) {
                 else if (ad > bd) return 1;
                 else if (a.section == "예산") return -1;
                 else if (b.section == "예산") return 1;
+                else return 0;
+            }
+        }
+    });
+}
+
+function SetBankListSort (data) {
+    data = data.sort(function(a,b){
+        if (a.section == "임원" && b.section != "임원") return -1;
+        else if (a.section != "임원" && b.section == "임원") return 1;
+        else if (a.section == "임원" && b.section == "임원" && a.name < b.name) return -1;
+        else if (a.section == "임원" && b.section == "임원" && a.name > b.name) return 1;
+        else if (a.section == "임원" && b.section == "임원" && a.name == b.name) return 0;
+        else {
+            if (a.section == "BS" && b.section != "BS") return -1;
+            else if (a.section != "BS" && b.section == "BS") return 1;
+            else if (a.section == "BS" && b.section == "BS" && a.name < b.name) return -1;
+            else if (a.section == "BS" && b.section == "BS" && a.name > b.name) return 1;
+            else if (a.section == "BS" && b.section == "BS" && a.name == b.name) return 0;
+            else {
+                if (a.section == "팀장" && b.section != "팀장") return -1;
+                else if (a.section != "팀장" && b.section == "팀장") return 1;
+                else if (a.section == "팀장" && b.section == "팀장" && a.name < b.name) return -1;
+                else if (a.section == "팀장" && b.section == "팀장" && a.name > b.name) return 1;
+                else if (a.section == "팀장" && b.section == "팀장" && a.name == b.name) return 0;
+                else if (a.name < b.name) return -1;
+                else if (a.name > b.name) return 1;
                 else return 0;
             }
         }
