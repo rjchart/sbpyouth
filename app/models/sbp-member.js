@@ -540,6 +540,31 @@ module.exports.GetBankWithMonthLog = function (year, month, next) {
     });
 }
 
+module.exports.GetDatas = function (partitionKey, tableName, next) {
+    
+    var query = new azure.TableQuery()
+    .where('PartitionKey eq ?', partitionKey);
+
+    // 데이터베이스 쿼리를 실행합니다.
+    tableService.queryEntities(tableName, query, null, function (error, result) {
+        if (!error) {
+            var banklogs = [];
+            for (var index in result.entries) {
+                var data = result.entries[index];
+                RemoveEntityGen(data);
+                banklogs.push(data);
+            }
+            // SetBankSort(banklogs);
+            next(null, banklogs);
+        }
+        else {
+            console.log("error:" + error);
+            next(error);
+        }
+            
+    });
+}
+
 module.exports.GetMemberWithGroup = function (year, group, next) {
     
     var query = new azure.TableQuery()
@@ -556,27 +581,31 @@ module.exports.GetMemberWithGroup = function (year, group, next) {
                 RemoveEntityGen(data);
                 members.push(data.data);
             }
-            module.exports.GetMembersAndLogWithNames(members, function (error2, result2) {
-                if (!error2) {
-                    for (var index in result2) {
-                        var data = result2[index];
-                        for (var j in result.entries) {
-                            var data2 = result.entries[j];
-                            if (data2.data == data.RowKey) {
-                                for (var key in data2) {
-                                    if (key == "data")
-                                        data['name'] = data2[key];
-                                    else
-                                        data[key] = data2[key];
+            if (members.length == 0)
+                next(null, []);
+            else {
+                module.exports.GetMembersAndLogWithNames(members, function (error2, result2) {
+                    if (!error2) {
+                        for (var index in result2) {
+                            var data = result2[index];
+                            for (var j in result.entries) {
+                                var data2 = result.entries[j];
+                                if (data2.data == data.RowKey) {
+                                    for (var key in data2) {
+                                        if (key == "data")
+                                            data['name'] = data2[key];
+                                        else
+                                            data[key] = data2[key];
+                                    }
                                 }
                             }
                         }
+                        next(null, result2);
                     }
-                    next(null, result2);
-                }
-                else
-                    next(error);
-            });
+                    else
+                        next(error);
+                });
+            }
         }
         else {
             console.log("error:" + error);

@@ -170,6 +170,11 @@ html(lang='en')
         .ui.message{
           padding: 40px !important;
         }
+        
+        .vertical.sidebar.menu {
+          margin-top: 60px !important;
+          padding-bottom: 65px !important;
+        }
 
         @media (max-width: 767px) {
             .ui.grid.main{
@@ -202,7 +207,7 @@ html(lang='en')
   body
     block header
         div.ui.grid
-            div.computer.tablet.only.row
+            div.computer.only.row
                 div.ui.inverted.fixed.menu.navbar.page.grid
                     header.item
                       img.logo(src="/public/img/logo.png")
@@ -220,6 +225,14 @@ html(lang='en')
                       a.main.item(href="/friends")
                         i.child.icon 
                         |Friends
+                    block header_item04
+                      div.ui.dropdown.item
+                        i.tasks.icon 
+                        |Tasks
+                        i.dropdown.icon
+                        div.menu
+                          a.item(href="/bank") 회계
+                          a.item 기타
                     div.right.menu
                         block header_setting
                           a.ui.main.item(href="/setting")
@@ -233,7 +246,7 @@ html(lang='en')
                           a.ui.main.item(href="/auth/login?ret=#{base}")
                             i.sign.in.icon  
                             |Login
-            div.mobile.only.row
+            div.mobile.tablet.only.row
                 div.ui.left.inverted.vertical.thin.sidebar.menu
                     div.main.item(href="/")
                       i.home.icon
@@ -258,6 +271,12 @@ html(lang='en')
                       a.main.item(href="/friends")
                         i.child.icon 
                         |Friends
+                    div.main.item(href="/bank")
+                      i.tasks.icon
+                      |Tasks
+                      div.menu
+                        a.item(href="/bank") 회계 
+                        a.item(href="/") 기타
                     block header_setting
                       a.ui.main.item(href="/setting")
                         i.settings.icon  

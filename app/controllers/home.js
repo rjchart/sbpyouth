@@ -112,7 +112,26 @@ router.get('/bank', function (req, res, next) {
             user.spendSum = MakeMoneyData(spendSum);
             user.curMoney = MakeMoneyData(curMoney);
             user.bankMoney = MakeMoneyData(bankMoney);
-            res.render('bank', user);
+
+            sbp_member.GetDatas("은행리스트", 'bankList', function (error, result) {
+                if (!error) {
+                    user.bankList = result;
+                    res.render('bank', user);
+                }
+                else 
+                    res.render('bank',user);
+            });
+        }
+    });
+});
+
+router.get('/bankList', function (req, res, next) {
+    var user = sbp_data.CheckLogin(req);
+
+    sbp_member.GetDatas("은행리스트", 'bankList', function (error, result) {
+        if (!error) {
+            user.data = result;
+            res.render('bankList', user);
         }
     });
 });
@@ -737,6 +756,7 @@ router.post('/addBank', function (req, res, next) {
 
 
     var add_year = req.body.add_year;
+    var add_part = req.body.add_part;
     var add_month = req.body.add_month;
     var add_day = req.body.add_day;
     var add_section = req.body.add_section;
@@ -768,6 +788,7 @@ router.post('/addBank', function (req, res, next) {
                 tmp.year = add_year[i];
                 tmp.month = add_month[i];
                 tmp.day = add_day[i];
+                tmp.part = add_part[i];
                 tmp.section = add_section[i];
                 tmp.content = add_content[i];
                 tmp.money = add_money[i];
@@ -794,6 +815,43 @@ router.post('/addBank', function (req, res, next) {
                 }
             });
 
+        }
+    });
+
+
+    
+});
+
+router.post('/addBankList', function (req, res, next) {
+
+    var add_name = req.body.add_name;
+    var add_section = req.body.add_section;
+    var add_bankName = req.body.add_bankName;
+    var add_bankNumber = req.body.add_bankNumber;
+
+    var time = new Date().getTime();
+
+    var addData = [];
+    for (i = 0; i < add_name.length; i++) {
+        var tmp = {};
+        if (add_name[i] == null || add_name[i] == '')
+            continue;
+
+        tmp.name = add_name[i];
+        tmp.section = add_section[i];
+        if (add_bankName && add_bankName.length > i)
+            tmp.bankName = add_bankName[i];
+        if (add_bankNumber && add_bankNumber.length > i)
+            tmp.bankNumber = add_bankNumber[i];
+        tmp.PartitionKey = "은행리스트"
+        tmp.RowKey = time.toString(); 
+
+        addData.push(tmp);
+    }
+    
+    sbp_data.AddDatas(addData, 'bankList', function (error, result) {
+        if (!error) {
+            res.send("ok");
         }
     });
 

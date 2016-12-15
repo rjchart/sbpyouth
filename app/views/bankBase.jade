@@ -91,10 +91,19 @@ block script
 				$('.labeled.icon.button').popup();
 				$('.label.info').popup();
 
-				$('.year.dropdown').dropdown({
+				$('.bank.dropdown').dropdown({
 					onChange: function(value, text, $selectedItem) {
 						console.log("abc");
-
+						var bank = $selectedItem.attr('bank');
+						var number = $selectedItem.attr('number');
+						if (bank) {
+							$('input.bankName.txt').val(bank);
+							$('input.bankNumber.txt').val(number);
+						}
+						else {
+							$('input.bankName.txt').val('');
+							$('input.bankNumber.txt').val('');
+						}
 						//- $('.month.dropdown').dropdown('set selected', '7');
 					}
 				});
@@ -144,24 +153,30 @@ block script
 			}
 			
 	block script_part02
-block header_item01
-	a.main.item.active(href="/")
-		i.home.icon
-		|Home  
+	
+block header_item04
+	div.ui.dropdown.item
+		i.tasks.icon 
+		|Tasks
+		i.dropdown.icon
+		div.menu
+			a.item.active(href="/bank") 회계
+			a.item 기타
 block content
 	div.ui.secondary.pointing.menu.navbar.grid.computer.tablet.only.row
 		block sub_item01
 			a.sub.item(href="/bank") 전체 조회
 		//- if auth=="manager" || auth=="developer" 
-		div.ui.right.secondary.menu
-			div.item
-				button.ui.blue.primary.labeled.icon.button(onclick="AddMemberButton()")
-					i.plus.icon 
-					|Add
-			div.item
-				button.ui.red.labeled.icon.button(onclick="EditButton()")
-					i.edit.icon 
-					|Edit
+		if auth=="manager" || auth=="developer" 
+			div.ui.right.secondary.menu
+				div.item
+					button.ui.blue.primary.labeled.icon.button(onclick="AddMemberButton()")
+						i.plus.icon 
+						|Add
+				div.item
+					button.ui.red.labeled.icon.button(onclick="EditButton()")
+						i.edit.icon 
+						|Edit
 	div.ui.secondary.pointing.menu.navbar.grid.mobile.only.row(style="padding-top:30px !important")
 		block sub_item01
 			a.sub.item(href="/back") 전체 조회 
@@ -239,20 +254,22 @@ block content
 						div.field
 							label 은행 즐겨찾기
 							//-(style="min-width:70px; max-width:140px")
-							div.ui.search.selection.dropdown
-								input(type="hidden", name="bankLikelihood[0]", value="브랜치 모임")
+							div.ui.search.selection.bank.dropdown
+								input(type="hidden", name="bankLikelihood[0]", value="직접입력")
 								i.dropdown.icon
 								div.text
 								div.menu
 									- var sections = ['브랜치 모임', '훈련/회의비', '소모임/단합친교비', '생일축하 및 상품', '심방비(경조사)', '팀별/부서사역비', '격려/환송/결혼', '소모품/기타', '성경교재/교육자료', '임원/리더워크숍', '체육행사', '예산', '특강비', '겨울수련회', '여름수련회', '야유회'];
-									each ss in sections
-										div.item(data-value="#{ss}") #{ss}
+									if (bankList)
+										div.item(data-value="직접입력") 직접입력 
+										each ss in bankList
+											div.item(data-value="#{ss.name}", bank="#{ss.bankName}", number="#{ss.bankNumber}") #{ss.name} (#{ss.section})
 						div.field
 							label 입금 은행
-							input(name="add_bankName[0]", placeholder="입금은행", type="text")
+							input.bankName.txt(name="add_bankName[0]", placeholder="입금은행", type="text")
 						div.field
 							label 입금 계좌
-							input(name="add_bankNumber[0]", placeholder="계좌번호", type="text")
+							input.bankNumber.txt(name="add_bankNumber[0]", placeholder="계좌번호", type="text")
 			div.actions
 				div.ui.positive.right.labeled.icon.button 등록
 					i.checkmark.icon

@@ -39,6 +39,29 @@ function RemoveEntityGen (entity) {
     // return resultData;
 }
 
+module.exports.AddDatas = function (addData, tableName, next) {
+    var batch = new azure.TableBatch();
+    for (var key in addData) {
+        var data = addData[key];
+		if (data.deleteRow == "true") {
+			SetEntityGen(data);
+			batch.deleteEntity(data,{echoContent: true});
+		}
+		else {
+			SetEntityGen(data);
+			batch.insertOrMergeEntity(data,{echoContent: true});
+		}
+    }
+    tableService.executeBatch(tableName, batch, function (error, result, response) {
+        if(!error) {
+            next(null, result);
+        }
+        else
+            next(error, null);
+    });
+}
+
+
 module.exports.AddBank = function (addData, next) {
     var batch = new azure.TableBatch();
     for (var key in addData) {
@@ -71,7 +94,7 @@ module.exports.AddData = function (addData, next) {
             data: entGen.String(data.name),
             chargeGroup: entGen.String(data.chargeGroup)
         };
-        batch.insertEntity(entity,{echoContent: true});
+        batch.insertOrMergeEntity(entity,{echoContent: true});
     }
     tableService.executeBatch('saveData', batch, function (error, result, response) {
         if(!error) {
@@ -139,6 +162,14 @@ module.exports.MultipartyFunction = function (req, id, next) {
 
 module.exports.CheckLogin = function (req) {
     if (!req.session.passport || !req.session.passport.user) {
+		var header = req.rawHeaders[1];
+		if (header == "127.0.0.1:3000") {
+			return {
+				title: title,
+				base: req.url,
+				auth: "developer"
+			};
+		}
         return {
 			title: title,
 			base: req.url

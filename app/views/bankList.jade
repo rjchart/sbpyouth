@@ -1,0 +1,221 @@
+extends layout
+block script
+    block script_part01
+        script(type="text/javascript", src="/javascript/templates.js")
+        script(type="text/javascript", src="/javascript/runtime.js")
+        script.
+            function AddMemberButton() {
+                $('.ui.modal')
+                    .modal({
+                        closable 	: false,
+                        onDeny 		: function () {
+                            //- window.alert('Wait not yet!');
+                            PlusAddMember();
+                            return false;
+                        },
+                        onApprove 	: function () {
+                            var $getAdd = $('#addBank');
+                            $('#addBank').ajaxSubmit({
+                                error: function (xhr) {
+                                    alert('등록 실패했습니다.');
+                                },
+                                success: function (response) {
+                                    alert('등록 성공했습니다.');
+                                    document.location.reload();
+                                }
+                            });
+                            //- window.alert('Approved!');
+                        }
+                    });
+                $('.ui.modal')
+                    .modal('show');
+
+                    
+            }
+
+            function EditButton() {
+                var $getAdd = $('#editBank');
+                $('#editBank').ajaxSubmit({
+                    error: function (xhr) {
+                        alert('등록 실패했습니다.');
+                    },
+                    success: function (response) {
+                        alert('등록 성공했습니다.');
+                        document.location.reload();
+                    }
+                });
+            }
+            
+            var addMemberNumber = 1;
+            $(document).ready(function(){
+                $('.circular.info.icon').popup();
+                $('.labeled.icon.button').popup();
+                $('.label.info').popup();
+
+                $('.year.dropdown').dropdown({
+                    onChange: function(value, text, $selectedItem) {
+                        console.log("abc");
+
+                        //- $('.month.dropdown').dropdown('set selected', '7');
+                    }
+                });
+
+                //- $('.year.dropdown').dropdown('set selected', '2017');
+                $('input.txt').keydown(function(event) {
+                    var keyCode = event.keyCode;
+                    if (keyCode == 40) {
+                        var className = event.target.className;
+                        var classes = className.split(' ');
+                        //- if (classes[3]!='0')
+                        var num = parseInt(classes[2])+1;
+                        classes[2] = num.toString();
+                        className = 'input.' + classes.join('.');
+                        $(className).focus();
+                    }
+                    else if (keyCode == 38) {
+                        var className = event.target.className;
+                        var classes = className.split(' ');
+                        //- if (classes[3]!='0')
+                        var num = parseInt(classes[2])-1;
+                        classes[2] = num.toString();
+                        className = 'input.' + classes.join('.');
+                        $(className).focus();
+                    }
+                })
+
+                //- $('input.txt.2').focus();
+            });
+
+            function SelectRow() {
+                console.log("abc");
+            }
+
+            function DeleteRow(index) {
+                var classValue = "tr.tr" + index;
+                var deleteValue = "input.delete" + index;
+
+                var r = confirm("해당 열을 삭제하시겠습니까?");
+                if (r == true) {
+                    $(classValue).hide();
+                    $(deleteValue).val(true);
+                    //- var $test = $(deleteValue);
+                    //- $test.value = "true";
+                } 
+
+            }
+			
+    block script_part02
+block header_item04
+    div.ui.dropdown.item
+        i.tasks.icon 
+        |Tasks
+        i.dropdown.icon
+        div.menu
+            a.item.active(href="/bank") 회계
+            a.item 기타
+block content
+    div.ui.secondary.pointing.menu.navbar.grid.computer.tablet.only.row
+        block sub_item01
+            a.sub.item(href="/bankList") 전체 조회
+        //- if auth=="manager" || auth=="developer" 
+        if auth=="manager" || auth=="developer" 
+            div.ui.right.secondary.menu
+                div.item
+                    button.ui.blue.primary.labeled.icon.button(onclick="AddMemberButton()")
+                        i.plus.icon 
+                        |Add
+                div.item
+                    button.ui.red.labeled.icon.button(onclick="EditButton()")
+                        i.edit.icon 
+                        |Edit
+    div.ui.secondary.pointing.menu.navbar.grid.mobile.only.row(style="padding-top:30px !important")
+        block sub_item01
+            a.sub.item(href="/back") 전체 조회 
+        div.ui.right.secondary.menu
+            div.item
+                button.ui.blue.primary.labeled.icon.button(onclick="AddMemberButton()")
+                    i.user.icon 
+                    |Add
+    block sub_content
+        form#editBank(action="/editBankList" method="post")
+            div.ui.grid
+                div.computer.tablet.only.row
+                    div.ui.main.container
+                        div.ui.segment
+                            table.bank.ui.celled.fix.unstackable.table
+                                //- selectable
+                                thead(style="text-align:center")
+                                    tr
+                                        th 이름
+                                        th 담당
+                                        th 은행 이름
+                                        th 계좌번호
+                                        th 정보
+                                        th 삭제
+                                tbody
+                                    each item, index in data
+                                        input(type="hidden", name="RowKey[#{index}]", value="#{item.RowKey}")
+                                        input(type="hidden", name="PartitionKey[#{index}]", value="#{item.PartitionKey}")
+                                        input(type="hidden", name="deleteRow[#{index}]", class="delete#{index}", value='false')
+                                        tr(class="tr#{index}", href="#")
+                                            td(style="max-width:90px; min-width:90px; width:90px")
+                                                div.ui.input
+                                                    input.txt.name(class="#{index}", type="text", name="name[#{index}]", value="#{item.name}")
+                                            td.center.aligned: div.ui.selection.dropdown
+                                                input(type="hidden", name="section[#{index}]", value="#{item.section}")
+                                                i.dropdown.icon(style="position:absolute; right:0px")
+                                                div.text 
+                                                div.menu
+                                                    - var sections = ['임원', '팀장', 'BS', '기타'];
+                                                    each ss in sections
+                                                        div.item(data-value="#{ss}", style="font-size:9px") #{ss}
+                                            td(style="max-width:200px; min-width:200px; width:200px")
+                                                div.ui.input
+                                                    input.txt.bankName(class="#{index}", type="text", name="bankName[#{index}]", value="#{item.bankName||''}", style="max-width:180px; min-width:180px; width:180px; padding-right:0px") 
+                                            td(style="max-width:200px; min-width:200px; width:200px")
+                                                div.ui.input(style="text-align:center")
+                                                    input.txt.bankNumber(class="#{index}", type="text", name="bankNumber[#{index}]", value="#{item.bankNumber || ''}", style="max-width:180px; min-width:180px; width:180px; padding-right:0px")
+                                            td
+                                            td(style="text-align:center")
+                                                div.small.ui.red.circular.ban.icon.button(onclick="DeleteRow(#{index})")
+                                                    i.icon.ban
+    block modal_content
+        div.ui.big.modal
+            i.close.icon 
+            div.header Add 
+            div.ui.content
+                form#addBank.ui.fluid.form(action="/addBankList" method="post")
+                    div.four.fields
+                        div.field
+                            label 이름
+                            input(name="add_name[0]", placeholder="상세 내역", type="text")
+                        div.field
+                            label 담당
+                            div.ui.selection.dropdown
+                                input(type="hidden", name="add_section[0]", value="임원")
+                                i.dropdown.icon
+                                div.text
+                                div.menu
+                                    - var sections = ['임원', '팀장', 'BS', '기타'];
+                                    each ss in sections
+                                        div.item(data-value="#{ss}") #{ss}
+                        //- div.field
+                        //-     label 은행 즐겨찾기
+                        //-     //-(style="min-width:70px; max-width:140px")
+                        //-     div.ui.search.selection.dropdown
+                        //-         input(type="hidden", name="bankLikelihood[0]", value="브랜치 모임")
+                        //-         i.dropdown.icon
+                        //-         div.text
+                        //-         div.menu
+                        //-             - var sections = ['브랜치 모임', '훈련/회의비', '소모임/단합친교비', '생일축하 및 상품', '심방비(경조사)', '팀별/부서사역비', '격려/환송/결혼', '소모품/기타', '성경교재/교육자료', '임원/리더워크숍', '체육행사', '예산', '특강비', '겨울수련회', '여름수련회', '야유회'];
+                        //-             each ss in sections
+                        //-                 div.item(data-value="#{ss}") #{ss}
+                        div.field
+                            label 입금 은행
+                            input(name="add_bankName[0]", placeholder="입금은행", type="text")
+                        div.field
+                            label 계좌번호
+                            input(name="add_bankNumber[0]", placeholder="계좌번호", type="text")
+            div.actions
+                div.ui.positive.right.labeled.icon.button 등록
+                    i.checkmark.icon

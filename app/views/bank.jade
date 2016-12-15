@@ -77,49 +77,67 @@ block sub_content
                                     th(colspan="2") 총 지출액: #{spendSum}
                                     th(colspan="2") 남은 금액: #{curMoney}
                                     th(colspan="3")
-                            tbody
-                                each item, index in data
-                                    input(type="hidden", name="RowKey[#{index}]", value="#{item.RowKey}")
-                                    input(type="hidden", name="PartitionKey[#{index}]", value="#{item.PartitionKey}")
-                                    input(type="hidden", name="deleteRow[#{index}]", class="delete#{index}", value='false')
-                                    tr(class="tr#{index}" onclick="SelectRow()", href="#")
-                                        td 
-                                            div.ui.input
-                                                input.txt.date(class="#{index}", type="text", name="date[#{index}]", value="#{item.year}.#{item.month}.#{item.day}")
-                                        td.center.aligned: div.ui.selection.dropdown
-                                            input(type="hidden", name="section[#{index}]", value="#{item.section}")
-                                            i.dropdown.icon(style="position:absolute; right:0px")
-                                            div.text 
-                                            div.menu
-                                                - var sections = ['브랜치 모임', '훈련/회의비', '소모임/단합친교비', '생일축하 및 상품', '심방비(경조사)', '팀별/부서사역비', '격려/환송/결혼', '소모품/기타', '성경교재/교육자료', '임원/리더워크숍', '체육행사', '예산', '특강비', '겨울수련회', '여름수련회', '야유회'];
-                                                each ss in sections
-                                                    div.item(data-value="#{ss}", style="font-size:9px") #{ss}
-                                        
-                                        td
-                                            div.ui.input
-                                                input.txt.content(class="#{index}", type="text", name="content[#{index}]", value="#{item.content||''}", style="max-width:100px") 
-                                        td 
-                                            div.ui.input
-                                                input.txt.receiptNo(class="#{index}", type="text", name="receiptNo[#{index}]", value="#{item.receiptNo || ''}", style="max-width:20px")
-                                        td 
-                                            div.ui.input
-                                                input.txt.gain(class="#{index}", type="text", name="gain[#{index}]", value="#{item.gain || ''}", style="max-width:70px")
-                                        td 
-                                            div.ui.input
-                                                input.txt.spend(class="#{index}", type="text", name="spend[#{index}]", value="#{item.spend || ''}", style="max-width:70px")
-                                        td #{item.curMoney || ''}
-                                        td 
-                                            div.ui.input
-                                                input.txt.detail(class="#{index}", type="text", name="detail[#{index}]", value="#{item.detail || ''}", style="max-width:70px")
-                                        td
-                                            i.ui.circular.info.icon(data-content="계좌번호: #{item.bankNumber||''}(#{item.bankName||''})")
-                                        td
-                                            div.ui.fitted.toggle.checkbox
-                                                input(type="checkbox", name="paid[#{index}]", checked=item.paid||off, value=index)
-                                                label
-                                        td(style="text-align:center")
-                                            div.small.ui.red.circular.ban.icon.button(onclick="DeleteRow(#{index})")
-                                                i.icon.ban
+                            if auth=="manager" || auth=="developer" 
+                                tbody
+                                    each item, index in data
+                                        input(type="hidden", name="RowKey[#{index}]", value="#{item.RowKey}")
+                                        input(type="hidden", name="PartitionKey[#{index}]", value="#{item.PartitionKey}")
+                                        input(type="hidden", name="deleteRow[#{index}]", class="delete#{index}", value='false')
+                                        tr(class="tr#{index}" onclick="SelectRow()", href="#")
+                                            td 
+                                                div.ui.input
+                                                    input.txt.date(class="#{index}", type="text", name="date[#{index}]", value="#{item.year}.#{item.month}.#{item.day}")
+                                            td.center.aligned: div.ui.selection.dropdown
+                                                input(type="hidden", name="section[#{index}]", value="#{item.section}")
+                                                i.dropdown.icon(style="position:absolute; right:0px")
+                                                div.text 
+                                                div.menu
+                                                    - var sections = ['브랜치 모임', '훈련/회의비', '소모임/단합친교비', '생일축하 및 상품', '심방비(경조사)', '팀별/부서사역비', '격려/환송/결혼', '소모품/기타', '성경교재/교육자료', '임원/리더워크숍', '체육행사', '예산', '특강비', '겨울수련회', '여름수련회', '야유회'];
+                                                    each ss in sections
+                                                        div.item(data-value="#{ss}", style="font-size:9px") #{ss}
+                                            
+                                            td
+                                                div.ui.input
+                                                    input.txt.content(class="#{index}", type="text", name="content[#{index}]", value="#{item.content||''}", style="max-width:100px") 
+                                            td 
+                                                div.ui.input
+                                                    input.txt.receiptNo(class="#{index}", type="text", name="receiptNo[#{index}]", value="#{item.receiptNo || ''}", style="max-width:20px")
+                                            td 
+                                                div.ui.input
+                                                    input.txt.gain(class="#{index}", type="text", name="gain[#{index}]", value="#{item.gain || ''}", style="max-width:70px")
+                                            td 
+                                                div.ui.input
+                                                    input.txt.spend(class="#{index}", type="text", name="spend[#{index}]", value="#{item.spend || ''}", style="max-width:70px")
+                                            td #{item.curMoney || ''}
+                                            td 
+                                                div.ui.input
+                                                    input.txt.detail(class="#{index}", type="text", name="detail[#{index}]", value="#{item.detail || ''}", style="max-width:70px")
+                                            td
+                                                i.ui.circular.info.icon(data-content="계좌번호: #{item.bankNumber||''}(#{item.bankName||''})")
+                                            td
+                                                div.ui.fitted.toggle.checkbox
+                                                    input(type="checkbox", name="paid[#{index}]", checked=item.paid||off, value=index)
+                                                    label
+                                            td(style="text-align:center")
+                                                div.small.ui.red.circular.ban.icon.button(onclick="DeleteRow(#{index})")
+                                                    i.icon.ban
+                            else
+                                tbody
+                                    each item, index in data
+                                        input(type="hidden", name="RowKey[#{index}]", value="#{item.RowKey}")
+                                        input(type="hidden", name="PartitionKey[#{index}]", value="#{item.PartitionKey}")
+                                        input(type="hidden", name="deleteRow[#{index}]", class="delete#{index}", value='false')
+                                        tr(class="tr#{index}" onclick="SelectRow()", href="#", style="text-align:center")
+                                            td #{item.year}.#{item.month}.#{item.day}
+                                            td #{item.section}
+                                            td(style="max-width:120px") #{item.content||''} 
+                                            td(style="max-width:20px") #{item.receiptNo || ''}
+                                            td(style="max-width:70px") #{item.gain || ''}
+                                            td(style="max-width:70px") #{item.spend || ''} 
+                                            td #{item.curMoney || ''}
+                                            td(style="max-width:70px") #{item.detail || ''}
+                                            td(colspan="3")
+                                                i.ui.circular.info.icon(data-content="계좌번호: #{item.bankNumber||''}(#{item.bankName||''})")
             div.mobile.only.row
                 div.ui.main.container
                     table.ui.celled.fixed.single.line.structured.unstackable.table
