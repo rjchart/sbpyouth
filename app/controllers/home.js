@@ -1000,9 +1000,42 @@ router.post('/editBank', function (req, res, next) {
             res.send("ok");
         }
     });
+    
+});
 
+router.post('/editBankList', function (req, res, next) {
+    var name = req.body.name;
+    var section = req.body.section;
+    var bankName = req.body.bankName;
+    var bankNumber = req.body.bankNumber;
+    var RowKey = req.body.RowKey;
+    var PartitionKey = req.body.PartitionKey;
+    var deleteRow = req.body.deleteRow;
 
+    var addData = [];
+    for (i = 0; i < RowKey.length; i++) {
+        var tmp = {};
+        if (RowKey[i] == null || RowKey[i] == '')
+            continue;
+        var time = new Date().getTime();
 
+        // tmp.date = date[i];
+        tmp.name = name[i];
+        tmp.section = section[i];
+        tmp.bankName = bankName[i];
+        tmp.bankNumber = bankNumber[i];
+        tmp.deleteRow = deleteRow[i];
+        tmp.PartitionKey = PartitionKey[i];
+        tmp.RowKey = RowKey[i]; 
+
+        addData.push(tmp);
+    }
+    
+    sbp_data.AddDatas(addData, 'bankList', function (error, result) {
+        if (!error) {
+            res.send("ok");
+        }
+    });
     
 });
 
