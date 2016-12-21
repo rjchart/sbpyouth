@@ -298,7 +298,7 @@ function RemoveOldBranchHateBS(notHateBSList, member) {
 		member.haters.forEach(function (hater, index) {
 			notHateBSList.forEach(function (bs, index2) {
 				if (hater == bs.RowKey) {
-					removeIndexList.push(index);
+					removeIndexList.push(index2);
 					return;
 				}
 			});
@@ -503,8 +503,7 @@ function CheckBMHappiness(member, bs, hateData, familyData) {
 	return true;
 }
 
-function GetBSOfBM(bsList, member, inputBSName, hateData, familyData) {
-
+function GetBSOfBM(bsList, member, inputBSName) {
 	var selectedIndex = 0;
 	var isBSHoper = false;
 
@@ -562,6 +561,7 @@ function GetBSOfBM(bsList, member, inputBSName, hateData, familyData) {
 			var selectedBS = notHateBSList[selectedIndex];
 			//console.log("branch check1");
 
+
 			var youthKey = 'one';
 			if (member.age > 26)
 				youthKey = 'two';
@@ -576,6 +576,9 @@ function GetBSOfBM(bsList, member, inputBSName, hateData, familyData) {
 			});
 			//console.log("branch check3: " + selectedBS.RowKey);
 
+			if(member.RowKey == "기동석")
+				console.log("ab");
+				
 			var isGoodBranch = CheckBMHappiness(member, selectedBS, 0, 0);
 			if (!isGoodBranch) {
 				if (notHateBSList.length == 1) {
@@ -1007,6 +1010,10 @@ module.exports.MakeNewBranch = function (members, bsList, typeData, likeData, po
 			for (var j = 0; j < members.length; j++) {
 				var randomValue = randomIntInc(0, newMembers.length-1);
 				var member = newMembers[randomValue];
+				if (likeData != 0)
+					member.hater = [];
+				if (familyData != 0)
+					member.families = [];
 				newMembers.splice(randomValue,1);
 				// //console.log("check 2:" + member.RowKey);
 				// var member = newMembers[j];
@@ -1016,10 +1023,7 @@ module.exports.MakeNewBranch = function (members, bsList, typeData, likeData, po
 				if (member.isok) {
 					var selectedBS;
 					var getBSName = GetBSWithHoper(doneMembers, member)
-					if (likeData == 0)
-						selectedBS = GetBSOfBM(newBSList, member, getBSName, 0, familyData);
-					else
-						selectedBS = GetBSOfBMWithRandom(newBSList, member, null);
+					selectedBS = GetBSOfBM(newBSList, member, getBSName);
 					if (selectedBS == null) {
 						isNotGood = true;
 						break;	

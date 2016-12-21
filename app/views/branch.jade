@@ -411,7 +411,7 @@ block content
 									div.item(data-value="0", style="min-width:100px; max-height:30px") 분리함
 									div.item(data-value="1", style="min-width:100px; max-height:30px") 분리하지 않음
 						tr
-							td 호불호 정보 사용
+							td 특수 정보 사용
 							td.center.aligned: div.ui.selection.dropdown
 								input(type="hidden", name="likeData", value="0")
 								i.dropdown.icon
@@ -419,6 +419,15 @@ block content
 								div.menu
 									div.item(data-value="0", style="min-width:100px; max-height:30px") 사용
 									div.item(data-value="1", style="min-width:100px; max-height:30px") 사용하지 않음
+						tr
+							td 가족 분리
+							td.center.aligned: div.ui.selection.dropdown
+								input(type="hidden", name="familyData", value="0")
+								i.dropdown.icon
+								div.text
+								div.menu
+									div.item(data-value="0", style="min-width:100px; max-height:30px") 분리
+									div.item(data-value="1", style="min-width:100px; max-height:30px") 분리하지 않음
 						tr
 							td 인원들 활성도 비교
 							td.center.aligned: div.ui.selection.dropdown

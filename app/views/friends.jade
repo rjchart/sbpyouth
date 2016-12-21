@@ -332,18 +332,20 @@ block script
 			addMemberNumber++;
 			
 		}
-		
+
+		var getSearch;
 		function TypeSearch () {
 			var device = (/android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini/i.test(navigator.userAgent.toLowerCase()));
-			var getSearch = document.getElementById('typeSearch').value;
-			if (device) {
-				getSearch = document.getElementById('typeSearchMobile').value;
-				//- if (getSearch != '')
-				//- 	location.href="/friends?query=" + getSearch;
-				//- else 
-				//- 	location.href="/friends";
-				//- return;
-			}
+			//- var getSearch = document.getElementById('typeSearch').value;
+			//- if (device) {
+				//- getSearch = document.getElementById('typeSearchMobile').value;
+
+					//- if (getSearch != '')
+					//- 	location.href="/friends?query=" + getSearch;
+					//- else 
+					//- 	location.href="/friends";
+					//- return;
+			//- }
 			getSearch = getSearch.replace(' ', '.');
 			console.log('search:' + getSearch);
 			
@@ -409,16 +411,20 @@ block script
 			
 		}
 		$(document).ready(function(){
-			$('#typeSearch').keypress(function(e){
+			$('input.search').keypress(function(e){
+				getSearch = e.currentTarget.value;
 				if(e.keyCode==13)
 					TypeSearch();
 			});
 
-			$('#typeSearch').focusout(function(){
+			$('input.search').focusout(function(e){
+				getSearch = e.currentTarget.val();
 				TypeSearch();
 			});
 			$('#DetailProfile').hide();
 			$('#profileData').hide();
+
+			//- $('input#typeSearch').focus
 		});
 		
 		function DeleteMember(year, name) {
