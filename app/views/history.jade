@@ -1,6 +1,6 @@
 extends index
-block sub_item01
-    a.active.sub.item(href="/") 청년부 지도자
+block sub_item07
+    a.active.sub.item(href="/history") 히스토리
 block sub_content
     div.ui.main.container
         div.ui.five.top.attached.buttons
@@ -39,7 +39,7 @@ block sub_content
                                 if (dataArray.length == 1)
                                     |#{dataArray[0].event_name}
                                 else 
-                                    |#{dataArray[0].event_name} 외 #{dataArray.length - 1}
+                                    |#{dataArray[0].event_name}
                             strong &nbsp;&nbsp;&nbsp;&nbsp;#{dataArray[0].event_year}.#{dataArray[0].event_month}.#{dataArray[0].event_day}
                         div.active.content
                             div.ui.three.stackable.cards
@@ -54,14 +54,15 @@ block sub_content
                                             div.header #{data.event_subject}
                                             div.meta
                                                 if (data.event_location)
-                                                    |#{data.event_location}, 
-                                                span.members #{data.event_part}
+                                                    |#{data.event_location}
+                                                //- span.members #{data.event_part}
                                             if (data.event_description)
                                                 div.description
                                                     |#{data.event_description}
                                             if (data.members)
                                                 div.description(style="color:gray; font-size:10px")
                                                     | >> #{data.members}
+                        div.ui.fitted.divider
                     else
                         div.title
                             div.ui.blue.tag.label
@@ -84,18 +85,15 @@ block sub_content
                                             div.header #{data.event_subject}
                                             div.meta
                                                 if (data.event_location)
-                                                    |#{data.event_location}, 
-                                                span.members #{data.event_part}
+                                                    |#{data.event_location}
+                                                //- span.members #{data.event_part}
                                             if (data.event_description)
                                                 div.description
                                                     |#{data.event_description}
                                             if (data.members)
                                                 div.description(style="color:gray; font-size:10px")
                                                     | >> #{data.members}
-                            //- div.content
-                            //-     p(style="color:gray") #{chargeDesc[i]}
-                            //-     - var data = datas[chargeName]; 
-                            //-     include big_profile_template
+                        div.ui.fitted.divider
                 if !isLogin
                     br
                     br

@@ -183,6 +183,22 @@ function MakeTimePhotos (datas) {
         }
         result[key].push(data);
     }
+
+    for (var key in result) {
+        result[key] = result[key].sort(function(a,b) {
+            var aa = 0;
+            var bb = 0;
+            if (a.priority)
+                aa = parseInt(a.priority);
+            if (b.priority)
+                bb = parseInt(b.priority);
+
+            if (aa > bb) return -1;
+            else if (aa < bb) return 1;
+            else return 0;
+        });
+    }
+
     return {
         result: result,
         keys: keys
