@@ -51,7 +51,7 @@ block sub_content
                                             else
                                                 img.fitImg(src="/public/img/image.png")
                                         div.content
-                                            div.header #{data.event_name}
+                                            div.header #{data.event_subject}
                                             div.meta
                                                 if (data.event_location)
                                                     |#{data.event_location}, 
@@ -69,7 +69,7 @@ block sub_content
                                 if (dataArray.length == 1)
                                     |#{dataArray[0].event_name}
                                 else 
-                                    |#{dataArray[0].event_name} 외 #{dataArray.length - 1}
+                                    |#{dataArray[0].event_name}
                             strong &nbsp;&nbsp;&nbsp;&nbsp;#{dataArray[0].event_year}.#{dataArray[0].event_month}.#{dataArray[0].event_day}
                         div.content
                             div.ui.three.stackable.cards
@@ -81,7 +81,7 @@ block sub_content
                                             else
                                                 img.fitImg(src="/public/img/image.png")
                                         div.content
-                                            div.header #{data.event_name}
+                                            div.header #{data.event_subject}
                                             div.meta
                                                 if (data.event_location)
                                                     |#{data.event_location}, 

@@ -384,10 +384,15 @@ block content
 										- for (var dd = 1; dd < 32; ++dd) {
 											div.item(data-value="#{dd}") #{dd}
 										- }
+						div.four.fields
 							div.field
 								label 이벤트 이름
 								div.ui.icon.input
 									input(name="event_name", type="text")
+							div.field
+								label 이벤트 소제목
+								div.ui.icon.input
+									input(name="event_subject", type="text")
 							div.field
 								label 이벤트 장소
 								div.ui.icon.input

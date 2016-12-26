@@ -175,7 +175,7 @@ function MakeTimePhotos (datas) {
     var keys = [];
     for (var i = 0; i < datas.length; i++) {
         data = datas[i];
-        var key = data.event_year + "." + data.event_month + "." + data.event_day;
+        var key = data.event_year + "." + data.event_month + "." + data.event_day + ">> " + data.event_name;
         if (!result[key]) {
             var newArray = [];
             result[key] = newArray;
