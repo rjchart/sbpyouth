@@ -540,6 +540,32 @@ module.exports.GetBankWithMonthLog = function (year, month, part, next) {
     });
 }
 
+// module.exports.GetHistoryWithMonth = function (year, month, next) {
+    
+//     var query = new azure.TableQuery()
+//     // .where('PartitionKey eq ?', year);
+//     .where('PartitionKey eq ? and month eq ?', year, month);
+
+//     // 데이터베이스 쿼리를 실행합니다.
+//     tableService.queryEntities('history', query, null, function (error, result) {
+//         if (!error) {
+//             var resultDatas = [];
+//             for (var index in result.entries) {
+//                 var data = result.entries[index];
+//                 RemoveEntityGen(data);
+//                 resultDatas.push(data);
+//             }
+//             // SetBankSort(resultDatas);
+//             next(null, resultDatas);
+//         }
+//         else {
+//             console.log("error:" + error);
+//             next(error);
+//         }
+            
+//     });
+// }
+
 module.exports.GetDatas = function (partitionKey, tableName, next) {
     
     var query = new azure.TableQuery()
@@ -565,6 +591,46 @@ module.exports.GetDatas = function (partitionKey, tableName, next) {
             
     });
 }
+
+function MakeQuery(partitionKey, other) {
+    var queryString = "PartitionKey eq '" + partitionKey + "'";
+    var tt = typeof other;
+    if (typeof other != undefined) {
+        for (var key in other) {
+            queryString += " and " + key + " eq '" + other[key] + "'";
+        }
+    }
+    return queryString;
+}
+
+module.exports.GetSBPDatas = function (partitionKey, others, next) {
+    
+    var queryString = MakeQuery(partitionKey, others);
+
+    // queryString1 = "PartitionKey eq 'Event'";
+    var query = new azure.TableQuery()
+    .where(queryString);
+    // .where('PartitionKey eq ?', partitionKey);
+
+    // 데이터베이스 쿼리를 실행합니다.
+    tableService.queryEntities('sbpcc', query, null, function (error, result) {
+        if (!error) {
+            var resultDatas = [];
+            for (var index in result.entries) {
+                var data = result.entries[index];
+                RemoveEntityGen(data);
+                resultDatas.push(data);
+            }
+            next(null, resultDatas);
+        }
+        else {
+            console.log("error:" + error);
+            next(error);
+        }
+            
+    });
+}
+
 
 module.exports.GetMemberWithGroup = function (year, group, next) {
     
@@ -622,6 +688,19 @@ module.exports.SaveMember = function (member, next) {
     SetEntityGen(member);
 
 	tableService.insertOrMergeEntity('members', member, function(error, result) {
+		if (!error) {
+            next(null, result);
+		}
+		else {
+            next(error);
+		}
+	});
+}
+
+module.exports.SaveDatas = function (tableName, data, next) {
+    SetEntityGen(data);
+
+	tableService.insertOrMergeEntity(tableName, data, function(error, result) {
 		if (!error) {
             next(null, result);
 		}

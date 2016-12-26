@@ -65,15 +65,63 @@ function addMember_template(locals) {
 var buf = [];
 var jade_mixins = {};
 var jade_interp;
-;var locals_for_with = (locals || {});(function (chargeGroup, chargeName, chargeYear, name, num) {
-buf.push("<div class=\"four fields\"><div class=\"field\"><label>이름</label><input" + (jade.attr("name", "add_name[" + (num) + "]", true, false)) + " placeholder=\"이름\" type=\"text\"" + (jade.attr("value", "" + (name) + "", true, false)) + "/></div><div class=\"field\"><label>직책</label><input" + (jade.attr("name", "add_chargeName[" + (num) + "]", true, false)) + " placeholder=\"직책, 혹은 브랜치\" type=\"text\"" + (jade.attr("value", "" + (chargeName) + "", true, false)) + "/></div><div class=\"field\"><label>소속</label><input" + (jade.attr("name", "add_chargeGroup[" + (num) + "]", true, false)) + " placeholder=\"소속 (회장, 총부, BS 등)\" type=\"text\"" + (jade.attr("value", "" + (chargeGroup) + "", true, false)) + "/></div><div class=\"field\"><label>년도</label><input" + (jade.attr("name", "add_chargeYear[" + (num) + "]", true, false)) + " placeholder=\"년도\" type=\"text\"" + (jade.attr("value", "" + (chargeYear) + "", true, false)) + "/></div></div>");}.call(this,"chargeGroup" in locals_for_with?locals_for_with.chargeGroup:typeof chargeGroup!=="undefined"?chargeGroup:undefined,"chargeName" in locals_for_with?locals_for_with.chargeName:typeof chargeName!=="undefined"?chargeName:undefined,"chargeYear" in locals_for_with?locals_for_with.chargeYear:typeof chargeYear!=="undefined"?chargeYear:undefined,"name" in locals_for_with?locals_for_with.name:typeof name!=="undefined"?name:undefined,"num" in locals_for_with?locals_for_with.num:typeof num!=="undefined"?num:undefined));;return buf.join("");
+;var locals_for_with = (locals || {});(function (chargeGroup, chargeName, chargeYear, name, num, undefined) {
+buf.push("<div class=\"four fields\"><div class=\"field\"><label>이름</label><input" + (jade.attr("name", "add_name[" + (num) + "]", true, false)) + " placeholder=\"이름\" type=\"text\"" + (jade.attr("value", "" + (name) + "", true, false)) + "/></div><div class=\"field\"><label>직책</label><input" + (jade.attr("name", "add_chargeName[" + (num) + "]", true, false)) + " placeholder=\"직책, 혹은 브랜치\" type=\"text\"" + (jade.attr("value", "" + (chargeName) + "", true, false)) + "/></div><div class=\"field\"><label>소속</label><td class=\"center aligned\"><div class=\"ui selection dropdown\"><input type=\"hidden\"" + (jade.attr("name", "add_chargeGroup[" + (num) + "]", true, false)) + (jade.attr("value", "" + (chargeGroup) + "", true, false)) + "/><i class=\"dropdown icon\"></i><div class=\"text\">" + (jade.escape((jade_interp = chargeGroup) == null ? '' : jade_interp)) + "</div><div class=\"menu\">");
+var sections = ['교회', '임원', 'BS', '팀장', '부장 집사'];
+// iterate sections
+;(function(){
+  var $$obj = sections;
+  if ('number' == typeof $$obj.length) {
+
+    for (var $index = 0, $$l = $$obj.length; $index < $$l; $index++) {
+      var ss = $$obj[$index];
+
+buf.push("<div" + (jade.attr("data-value", "" + (ss) + "", true, false)) + " class=\"item\">" + (jade.escape((jade_interp = ss) == null ? '' : jade_interp)) + "</div>");
+    }
+
+  } else {
+    var $$l = 0;
+    for (var $index in $$obj) {
+      $$l++;      var ss = $$obj[$index];
+
+buf.push("<div" + (jade.attr("data-value", "" + (ss) + "", true, false)) + " class=\"item\">" + (jade.escape((jade_interp = ss) == null ? '' : jade_interp)) + "</div>");
+    }
+
+  }
+}).call(this);
+
+buf.push("</div></div></td></div><div class=\"field\"><label>년도</label><input" + (jade.attr("name", "add_chargeYear[" + (num) + "]", true, false)) + " placeholder=\"년도\" type=\"text\"" + (jade.attr("value", "" + (chargeYear) + "", true, false)) + "/></div></div>");}.call(this,"chargeGroup" in locals_for_with?locals_for_with.chargeGroup:typeof chargeGroup!=="undefined"?chargeGroup:undefined,"chargeName" in locals_for_with?locals_for_with.chargeName:typeof chargeName!=="undefined"?chargeName:undefined,"chargeYear" in locals_for_with?locals_for_with.chargeYear:typeof chargeYear!=="undefined"?chargeYear:undefined,"name" in locals_for_with?locals_for_with.name:typeof name!=="undefined"?name:undefined,"num" in locals_for_with?locals_for_with.num:typeof num!=="undefined"?num:undefined,"undefined" in locals_for_with?locals_for_with.undefined:typeof undefined!=="undefined"?undefined:undefined));;return buf.join("");
 }
 function addMember_second(locals) {
 var buf = [];
 var jade_mixins = {};
 var jade_interp;
-;var locals_for_with = (locals || {});(function (chargeGroup, chargeName, chargeYear, name, num) {
-buf.push("<div class=\"four fields\"><div class=\"field\"><input" + (jade.attr("name", "add_name[" + (num) + "]", true, false)) + " placeholder=\"이름\" type=\"text\"" + (jade.attr("value", "" + (name) + "", true, false)) + "/></div><div class=\"field\"><input" + (jade.attr("name", "add_chargeName[" + (num) + "]", true, false)) + " placeholder=\"직책, 혹은 브랜치\" type=\"text\"" + (jade.attr("value", "" + (chargeName) + "", true, false)) + "/></div><div class=\"field\"><input" + (jade.attr("name", "add_chargeGroup[" + (num) + "]", true, false)) + " placeholder=\"소속 (회장, 총부, BS 등)\" type=\"text\"" + (jade.attr("value", "" + (chargeGroup) + "", true, false)) + "/></div><div class=\"field\"><input" + (jade.attr("name", "add_chargeYear[" + (num) + "]", true, false)) + " placeholder=\"년도\" type=\"text\"" + (jade.attr("value", "" + (chargeYear) + "", true, false)) + "/></div></div>");}.call(this,"chargeGroup" in locals_for_with?locals_for_with.chargeGroup:typeof chargeGroup!=="undefined"?chargeGroup:undefined,"chargeName" in locals_for_with?locals_for_with.chargeName:typeof chargeName!=="undefined"?chargeName:undefined,"chargeYear" in locals_for_with?locals_for_with.chargeYear:typeof chargeYear!=="undefined"?chargeYear:undefined,"name" in locals_for_with?locals_for_with.name:typeof name!=="undefined"?name:undefined,"num" in locals_for_with?locals_for_with.num:typeof num!=="undefined"?num:undefined));;return buf.join("");
+;var locals_for_with = (locals || {});(function (chargeGroup, chargeName, chargeYear, name, num, undefined) {
+buf.push("<div class=\"four fields\"><div class=\"field\"><input" + (jade.attr("name", "add_name[" + (num) + "]", true, false)) + " placeholder=\"이름\" type=\"text\"" + (jade.attr("value", "" + (name) + "", true, false)) + "/></div><div class=\"field\"><input" + (jade.attr("name", "add_chargeName[" + (num) + "]", true, false)) + " placeholder=\"직책, 혹은 브랜치\" type=\"text\"" + (jade.attr("value", "" + (chargeName) + "", true, false)) + "/></div><div class=\"field\"><td class=\"center aligned\"><div class=\"ui selection dropdown\"><input type=\"hidden\"" + (jade.attr("name", "add_chargeGroup[" + (num) + "]", true, false)) + (jade.attr("value", "" + (chargeGroup) + "", true, false)) + "/><i class=\"dropdown icon\"></i><div class=\"text\">" + (jade.escape((jade_interp = chargeGroup) == null ? '' : jade_interp)) + " </div><div class=\"menu\">");
+var sections = ['교회', '임원', 'BS', '팀장', '부장 집사'];
+// iterate sections
+;(function(){
+  var $$obj = sections;
+  if ('number' == typeof $$obj.length) {
+
+    for (var $index = 0, $$l = $$obj.length; $index < $$l; $index++) {
+      var ss = $$obj[$index];
+
+buf.push("<div" + (jade.attr("data-value", "" + (ss) + "", true, false)) + " class=\"item\">" + (jade.escape((jade_interp = ss) == null ? '' : jade_interp)) + "</div>");
+    }
+
+  } else {
+    var $$l = 0;
+    for (var $index in $$obj) {
+      $$l++;      var ss = $$obj[$index];
+
+buf.push("<div" + (jade.attr("data-value", "" + (ss) + "", true, false)) + " class=\"item\">" + (jade.escape((jade_interp = ss) == null ? '' : jade_interp)) + "</div>");
+    }
+
+  }
+}).call(this);
+
+buf.push("</div></div></td></div><div class=\"field\"><input" + (jade.attr("name", "add_chargeYear[" + (num) + "]", true, false)) + " placeholder=\"년도\" type=\"text\"" + (jade.attr("value", "" + (chargeYear) + "", true, false)) + "/></div></div>");}.call(this,"chargeGroup" in locals_for_with?locals_for_with.chargeGroup:typeof chargeGroup!=="undefined"?chargeGroup:undefined,"chargeName" in locals_for_with?locals_for_with.chargeName:typeof chargeName!=="undefined"?chargeName:undefined,"chargeYear" in locals_for_with?locals_for_with.chargeYear:typeof chargeYear!=="undefined"?chargeYear:undefined,"name" in locals_for_with?locals_for_with.name:typeof name!=="undefined"?name:undefined,"num" in locals_for_with?locals_for_with.num:typeof num!=="undefined"?num:undefined,"undefined" in locals_for_with?locals_for_with.undefined:typeof undefined!=="undefined"?undefined:undefined));;return buf.join("");
 }
 function addPerson_template(locals) {
 var buf = [];

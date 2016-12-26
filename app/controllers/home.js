@@ -170,6 +170,69 @@ router.get('/churchLeader', function (req, res, next) {
     });
 });
 
+function MakeTimePhotos (datas) {
+    result = {};
+    var keys = [];
+    for (var i = 0; i < datas.length; i++) {
+        data = datas[i];
+        var key = data.event_year + "." + data.event_month + "." + data.event_day;
+        if (!result[key]) {
+            var newArray = [];
+            result[key] = newArray;
+            keys.push(key);
+        }
+        result[key].push(data);
+    }
+    return {
+        result: result,
+        keys: keys
+    };
+}
+
+router.get('/history', function (req, res, next) {
+    var user = sbp_data.CheckLogin(req);
+
+    var year = req.query.year;
+    var month = req.query.month;
+    var getDate = new Date();
+    if (year == null)
+        year = getDate.getFullYear().toString();
+    if (month == null)
+        month = (getDate.getMonth()+1).toString();
+    var day = getDate.getDate();
+
+    var input = {
+        event_year: year
+    }
+    // ,
+    //     event_month: month
+
+    user.year = year;
+    user.month = month;
+    user.day = day;
+
+    sbp_member.GetSBPDatas('Event', input, function (error, result) {
+        if (!error) {
+                // var inputData = {};
+                // for (var index in result) {
+                //     var value = result[index];
+                //     inputData[value.RowKey] = value;
+                // }
+            result2 = MakeTimePhotos(result);
+            user.datas = result2.result;
+            result2.keys = result2.keys.sort(function(a,b) {
+                if (a > b) return -1;
+                else if (a < b) return 1;
+                else return 0;
+            });
+            user.keys = result2.keys;
+            // user.year = year;
+                  
+            res.render('history', user);
+        }
+    });
+});
+
 router.get('/checkMember', function (req, res, next) {
     var checkName = req.query.name;
 
@@ -798,6 +861,57 @@ router.post('/saveProfile/:id', function (req, res, next) {
                 else 
                     next(error);
             });
+        }
+        else 
+            next(error);
+    });
+});
+
+router.post('/addEvent', function (req, res, next) {
+    var getTime = new Date().toISOString();
+    
+	// var id = getTime;
+    
+    sbp_data.MultipartyFunction(req, 'Event', function (error, result) {
+        if (!error) {
+            
+            var members = "";
+            for (var i = 0; i < 16; i++) {
+                var key = "members[" + i + "]";
+                if (result[key] != undefined  && result[key] != "") {
+                    if (i != 0)
+                        members += ", ";
+                    members += result[key];
+                }
+            }
+            for (var i = 0; i < 16; i++) {
+                var key = "members[" + i + "]";
+                delete result[key];
+            }
+            if (members != "")
+                result.members = members;
+            // if (typeof result.members != 'undefined')
+            //     members = result.members.join(", ");
+            result.PartitionKey = "Event";
+            result.RowKey = getTime + "_" + result.event_name;
+            sbp_member.SaveDatas('sbpcc', result, function (error, saveResult) {
+                if (!error) {
+                    res.send( {
+                        field: saveResult
+                    });
+                }
+                else 
+                    next(error);
+            });
+            // sbp_member.SaveDatas(result, function (error, result) {
+            //     if (!error) {
+            //         res.send( {
+            //             field: result
+            //         });
+            //     }
+            //     else 
+            //         next(error);
+            // });
         }
         else 
             next(error);

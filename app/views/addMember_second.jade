@@ -4,6 +4,13 @@ div.four.fields
     div.field
         input(name="add_chargeName[#{num}]", placeholder="직책, 혹은 브랜치", type="text", value="#{chargeName}")
     div.field
-        input(name="add_chargeGroup[#{num}]", placeholder="소속 (회장, 총부, BS 등)", type="text", value="#{chargeGroup}")
+        td.center.aligned: div.ui.selection.dropdown
+            input(type="hidden", name="add_chargeGroup[#{num}]", value="#{chargeGroup}")
+            i.dropdown.icon
+            div.text #{chargeGroup} 
+            div.menu
+                - var sections = ['교회', '임원', 'BS', '팀장', '부장 집사'];
+                each ss in sections
+                    div.item(data-value="#{ss}") #{ss}
     div.field
         input(name="add_chargeYear[#{num}]", placeholder="년도", type="text", value="#{chargeYear}")
