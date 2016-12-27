@@ -1,0 +1,88 @@
+extends index
+block sub_item07
+    a.active.sub.item(href="/history") 히스토리
+block sub_content
+    div.ui.main.container
+        div.ui.segment
+            h3.ui.dividing.header 청년부 또래별 정리
+                div.sub.header 신반포 중앙교회 청년부의 나이별로 정리
+            div.ui.accordion
+                - var first = 0;
+                each key in keys
+                    - var dataArray = datas[key];
+                    if (first == 0)
+                        - first = 1;
+                        div.active.title
+                            div.ui.blue.tag.label
+                                i.dropdown.icon 
+                                |#{key.substring(2,4)} 또래
+                            strong &nbsp;&nbsp;&nbsp;&nbsp;
+                                - var arrayFirst = 0;
+                                each data in dataArray
+                                    if (arrayFirst == 0)
+                                        |#{data.name}
+                                        - arrayFirst = 1;
+                                    else 
+                                        |, #{data.name}
+                        div.active.content
+                            div.ui.three.stackable.cards
+                                each data in dataArray
+                                    div.ui.big.card
+                                        div.image.outImg(style="background-color:black")
+                                            if (data.photoName) 
+                                                img.fitImg#photo(src="https://sbpyouth.blob.core.windows.net/imgcontainer/#{data.photoName||''}")
+                                            else
+                                                img.fitImg(src="/public/img/image.png")
+                                        div.content
+                                            div.header #{data.name}
+                                            div.meta
+                                                if (data.birthYear)
+                                                    |#{data.birthYear}
+                                                //- span.members #{data.event_part}
+                                            if (data.name)
+                                                div.description
+                                                    |#{data.name}
+                                            if (data.name)
+                                                div.description(style="color:gray; font-size:10px")
+                                                    | >> #{data.name}
+                        div.ui.fitted.divider
+                    else
+                        div.title
+                            div.ui.blue.tag.label
+                                i.dropdown.icon 
+                                |#{key.substring(2,4)} 또래
+                            strong &nbsp;&nbsp;&nbsp;&nbsp;
+                                - var arrayFirst = 0;
+                                each data in dataArray
+                                    if (arrayFirst == 0)
+                                        |#{data.name}
+                                        - arrayFirst = 1;
+                                    else 
+                                        |, #{data.name}
+                        div.content
+                            div.ui.three.stackable.cards
+                                each data in dataArray
+                                    div.ui.big.card
+                                        div.image.outImg(style="background-color:black")
+                                            if (data.photoName) 
+                                                img.fitImg#photo(src="https://sbpyouth.blob.core.windows.net/imgcontainer/#{data.photoName||''}")
+                                            else
+                                                img.fitImg(src="/public/img/image.png")
+                                        div.content
+                                            div.header #{data.name}
+                                            div.meta
+                                                |#{data.birthYear}.#{data.birthMonth}.#{data.birthDay}
+                                                //- span.members #{data.event_part}
+                                            if (data.name)
+                                                div.description
+                                                    |#{data.name}
+                                            if (data.name)
+                                                div.description(style="color:gray; font-size:10px")
+                                                    | >> #{data.name}
+                        div.ui.fitted.divider
+                if !isLogin
+                    br
+                    br
+            if !isLogin
+                div.ui.bottom.attached.label 간단하니 가능하면 <a href="/auth/login?ret=/" style="color:red">로그인</a> 해주세요.
+                        

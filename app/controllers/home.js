@@ -205,6 +205,45 @@ function MakeTimePhotos (datas) {
     };
 }
 
+function MakeYearFriends (datas) {
+    result = {};
+    var keys = [];
+    for (var i = 0; i < datas.length; i++) {
+        data = datas[i];
+        var year = parseInt(data.birthYear);
+        if (parseInt(data.birthMonth) < 3 && parseInt(data.birthMonth) > 0)
+            year -= 1;
+        var key = year.toString();
+
+        if (!result[key]) {
+            var newArray = [];
+            result[key] = newArray;
+            keys.push(key);
+        }
+        result[key].push(data);
+    }
+
+    for (var key in result) {
+        result[key] = result[key].sort(function(a,b) {
+            var aa = 0;
+            var bb = 0;
+            if (a.priority)
+                aa = parseInt(a.priority);
+            if (b.priority)
+                bb = parseInt(b.priority);
+
+            if (aa > bb) return -1;
+            else if (aa < bb) return 1;
+            else return 0;
+        });
+    }
+
+    return {
+        result: result,
+        keys: keys
+    };
+}
+
 router.get('/history', function (req, res, next) {
     var user = sbp_data.CheckLogin(req);
 
@@ -562,6 +601,44 @@ router.post('/friend_profile', function (req, res, next) {
             res.send(getData);
         }
     });  
+});
+
+router.get('/yearFriends', function (req, res, next) {
+    var user = sbp_data.CheckLogin(req);
+    // var year = req.query.year;
+    var year = sbp_time.getYear();
+	var attendSet = req.query.attendValue;
+    if (!attendSet)
+        attendSet = 0;
+    
+    sbp_member.GetMembersAndLogWithYear(year, function (error, memberList) {
+        if (!error) {
+            var memberList2 = [];
+            memberList.forEach(function (item, index) {
+                var isOut = false;
+                if (item.attendDesc == "결혼" || item.attendDesc == "제외" ||item.attendDesc == "장기결석" || item.attendDesc == "교회 옮김" || item.attendDesc == "교회옮김" || item.attendDesc == "타교회")
+                    isOut = true;
+                if (item.attend >= attendSet && !isOut) {
+                    memberList2.push(item);
+                }   
+            });
+
+            result = MakeYearFriends(memberList2);
+            result.keys = result.keys.sort(function(a,b) {
+                if (a > b) return -1;
+                else if (a < b) return 1;
+                else return 0;
+            });
+
+            user.datas = result.result;
+            user.keys = result.keys;
+            user.year = year;
+            user.sub = 'total';
+            res.render('yearFriends', user);
+        }
+        else 
+            res.send('error: cannot find friends list: ' + error);
+    });
 });
 
 router.get('/friends', function (req, res, next) {
