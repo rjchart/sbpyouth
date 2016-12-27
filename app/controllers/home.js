@@ -603,7 +603,7 @@ router.post('/friend_profile', function (req, res, next) {
     });  
 });
 
-router.get('/yearFriends', function (req, res, next) {
+router.get('/friends/years', function (req, res, next) {
     var user = sbp_data.CheckLogin(req);
     // var year = req.query.year;
     var year = sbp_time.getYear();
@@ -633,7 +633,7 @@ router.get('/yearFriends', function (req, res, next) {
             user.datas = result.result;
             user.keys = result.keys;
             user.year = year;
-            user.sub = 'total';
+            user.sub = 'yearFriends';
             res.render('yearFriends', user);
         }
         else 

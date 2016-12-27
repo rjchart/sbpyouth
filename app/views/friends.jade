@@ -502,6 +502,10 @@ block content
 			a.active.sub.item(href="/friends/tablepingpong") 탁구 맴버
 		else
 			a.sub.item(href="/friends/tablepingpong") 탁구 맴버
+		if (sub == 'yearFriends')
+			a.active.sub.item(href="/friends/years") 또래 모임
+		else
+			a.sub.item(href="/friends/years") 또래 모임
 		//- a.sub.item(onclick="SubMenuFriendClicked(3)") 또래 친구들
 		//- if auth=="manager" || auth=="developer" || auth=="executive" 
 		div.ui.right.secondary.menu
