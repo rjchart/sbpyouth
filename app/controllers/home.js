@@ -13,8 +13,8 @@ var fs = require('fs');
 var multiparty = require('multiparty');
 var title = '신반포 중앙교회 청년부';
 
-var accessKey = 'pnOhpX2pEOye58E2gtlU5gVGzUbFVk3GcNYerm4RDuNuzoqsSB06v28oy3EF/wUZo6cUq/SUNdH0AQqek6rg7Q==';
-var storageAccount = 'sbpccyouth';
+var accessKey = 'Fh/+XVXWJOFP9O7bfN/ucFEK9/jt5nu4fdUYRJGzwMuH4KB8fFaCk/gmer20nZ4vs3AiJdqB3FYgPCZqibK2Bw==';
+var storageAccount = 'sbpyouth';
 var entGen = azure.TableUtilities.entityGenerator;
 
 // Compile the template to a function string
@@ -229,11 +229,30 @@ router.get('/history', function (req, res, next) {
 
     sbp_member.GetSBPDatas('Event', input, function (error, result) {
         if (!error) {
+
+            // for (var value in result) {
+            //     var tmp = result[value];
+            //     var change = "https://sbpccyouth.blob.core.windows.net/imgcontainer/";
+            //     tmp.photoName = tmp.photo.replace(change, "");
+            // }
+
+            // sbp_data.AddSBPDatas('sbpcc', result, function (error, resultx) {
+            //     if (error) {
+            //         ;
+            //     }
+            //     else {
+            //         ;
+            //     }
+            //     ;
+            // });
+            
                 // var inputData = {};
                 // for (var index in result) {
                 //     var value = result[index];
                 //     inputData[value.RowKey] = value;
                 // }
+            
+            
             result2 = MakeTimePhotos(result);
             user.datas = result2.result;
             result2.keys = result2.keys.sort(function(a,b) {
@@ -242,6 +261,7 @@ router.get('/history', function (req, res, next) {
                 else return 0;
             });
             user.keys = result2.keys;
+
             // user.year = year;
                   
             res.render('history', user);

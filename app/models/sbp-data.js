@@ -1,6 +1,6 @@
 var azure = require('azure-storage');
-var accessKey = 'pnOhpX2pEOye58E2gtlU5gVGzUbFVk3GcNYerm4RDuNuzoqsSB06v28oy3EF/wUZo6cUq/SUNdH0AQqek6rg7Q==';
-var storageAccount = 'sbpccyouth';
+var accessKey = 'Fh/+XVXWJOFP9O7bfN/ucFEK9/jt5nu4fdUYRJGzwMuH4KB8fFaCk/gmer20nZ4vs3AiJdqB3FYgPCZqibK2Bw==';
+var storageAccount = 'sbpyouth';
 var util = require('util');
 var sbp_time = require('../models/sbp-time');
 var multiparty = require('multiparty');
@@ -60,7 +60,27 @@ module.exports.AddDatas = function (addData, tableName, next) {
             next(error, null);
     });
 }
-
+module.exports.AddSBPDatas = function (tableName, addData, next) {
+    var batch = new azure.TableBatch();
+    for (var key in addData) {
+        var data = addData[key];
+		if (data.deleteRow == "true") {
+			SetEntityGen(data);
+			batch.deleteEntity(data,{echoContent: true});
+		}
+		else {
+			SetEntityGen(data);
+			batch.insertOrMergeEntity(data,{echoContent: true});
+		}
+    }
+    tableService.executeBatch(tableName, batch, function (error, result, response) {
+        if(!error) {
+            next(null, result);
+        }
+        else
+            next(error, null);
+    });
+}
 
 module.exports.AddBank = function (addData, next) {
     var batch = new azure.TableBatch();
@@ -132,6 +152,7 @@ module.exports.MultipartyFunction = function (req, id, next) {
 				if (!error) {
 					console.log("photo upload ok");
 					fields.photo = urlString;
+					fields.photoName = filename;
 				}
 				else 
                     next(error);

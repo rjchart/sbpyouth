@@ -46,8 +46,8 @@ block sub_content
                                 each data in dataArray
                                     div.ui.big.card
                                         div.image.outImg(style="background-color:black")
-                                            if (data.photo) 
-                                                img.fitImg#photo(src="#{data.photo||''}")
+                                            if (data.photoName) 
+                                                img.fitImg#photo(src="https://sbpyouth.blob.core.windows.net/thumbnails/#{data.photoName||''}")
                                             else
                                                 img.fitImg(src="/public/img/image.png")
                                         div.content
@@ -77,8 +77,8 @@ block sub_content
                                 each data in dataArray
                                     div.ui.big.card
                                         div.image.outImg(style="background-color:black")
-                                            if (data.photo) 
-                                                img.fitImg#photo(src="#{data.photo||''}")
+                                            if (data.photoName) 
+                                                img.fitImg#photo(src="https://sbpyouth.blob.core.windows.net/thumbnails/#{data.photoName||''}")
                                             else
                                                 img.fitImg(src="/public/img/image.png")
                                         div.content
