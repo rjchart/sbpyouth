@@ -36,15 +36,14 @@ block sub_content
                                         div.content
                                             div.header #{data.name}
                                             div.meta
-                                                if (data.birthYear)
-                                                    |#{data.birthYear}
+                                                |#{data.birthYear}.#{data.birthMonth}.#{data.birthDay}
                                                 //- span.members #{data.event_part}
-                                            if (data.name)
+                                            if (data.branch)
                                                 div.description
-                                                    |#{data.name}
-                                            if (data.name)
+                                                    |브랜치: #{data.branch}
+                                            if (data.attendDesc)
                                                 div.description(style="color:gray; font-size:10px")
-                                                    | >> #{data.name}
+                                                    | >> #{data.attendDesc}
                         div.ui.fitted.divider
                     else
                         div.title
@@ -73,12 +72,12 @@ block sub_content
                                             div.meta
                                                 |#{data.birthYear}.#{data.birthMonth}.#{data.birthDay}
                                                 //- span.members #{data.event_part}
-                                            if (data.name)
+                                            if (data.branch)
                                                 div.description
-                                                    |#{data.name}
-                                            if (data.name)
+                                                    |브랜치: #{data.branch}
+                                            if (data.attendDesc)
                                                 div.description(style="color:gray; font-size:10px")
-                                                    | >> #{data.name}
+                                                    | >> #{data.attendDesc}
                         div.ui.fitted.divider
                 if !isLogin
                     br
