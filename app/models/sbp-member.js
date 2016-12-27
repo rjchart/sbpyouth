@@ -43,6 +43,8 @@ function SetBirthFormat (data) {
     if (!data)
         return;
     var year = parseInt(data.birthYear);
+    if (year > 1900)
+        year -= 1900;
     // var yu = false;
     // if (data.RowKey == "유진열")
     //     yu = true;
@@ -234,10 +236,10 @@ function SetFriendsWithObject (member) {
 module.exports.GetMemberWithName = function (name, next) {
     var query = new azure.TableQuery()
     .top(1)
-    .where('RowKey eq ?', name.toString());
+    .where("PartitionKey eq 'Member' and RowKey eq ?", name.toString());
 
     // 데이터베이스 쿼리를 실행합니다.
-    tableService.queryEntities('members', query, null, function entitiesQueried(error, result) {
+    tableService.queryEntities('sbpcc', query, null, function entitiesQueried(error, result) {
         if (!error) {
             var getData = result.entries[0];
             RemoveEntityGen(getData);
@@ -266,7 +268,7 @@ module.exports.GetMembersWithQuery = function (queryString, next, top) {
         query.where(queryString);
 
     // 데이터베이스 쿼리를 실행합니다.
-    tableService.queryEntities('members', query, null, function entitiesQueried(error, result) {
+    tableService.queryEntities('sbpcc', query, null, function entitiesQueried(error, result) {
         if (!error) {
             RemoveEntityGenList(result.entries);     
             return next(null, result.entries);
@@ -290,7 +292,8 @@ module.exports.GetMembersAndLogWithNames = function (names, next) {
 }
 
 module.exports.GetMembersAndLogWithYear = function (year, next) {
-    exports.GetMembersAndLogWithQueryAndYear(null, year, next);
+    var query = MakeQuery("Member", null);
+    exports.GetMembersAndLogWithQueryAndYear(query, year, next);
 }
 
 module.exports.GetMembersAndLogWithQueryAndYear = function (query, year, next, top) {
@@ -301,7 +304,7 @@ module.exports.GetMembersAndLogWithQueryAndYear = function (query, year, next, t
         memberQuery.top(top);
 
     // 데이터베이스 쿼리를 실행합니다.
-    tableService.queryEntities('members', memberQuery, null, function (error, member) {
+    tableService.queryEntities('sbpcc', memberQuery, null, function (error, member) {
         if (!error) {
             RemoveEntityGenList(member.entries);
             if (year == null || year == '' || year == 0)
@@ -339,109 +342,6 @@ module.exports.GetMembersAndLogWithQueryAndYear = function (query, year, next, t
 /***                                                                         ****
 ****                       Member and Branch save                            ****
 ****                                                                         ***/
-
-module.exports.MemberSave = function(fields) {
-	var response = fields['res'];
-	var tableService = fields['table'];
-
-	var urlString = fields['urlString'];
-	console.log("member save: " + urlString);
-	var maxCount = 2;
-	var count = 0;
-    var year = parseInt(fields['birthYear']);
-    if (year > 1900)
-        year -= 1900;
-    var curYear = new Date().getYear();
-	var age = curYear - year + 1;
-    var ttore = year;
-    var month = parseInt(fields['birthMonth']);
-    if (year <= 102 && month < 3 && month != 0)
-        ttore--;
-	var entity = {
-		PartitionKey: entGen.String(fields['PartitionKey']),
-		RowKey: entGen.String(fields['RowKey']),
-		gender: entGen.String(fields['gender']),
-		phone: entGen.String(fields['phone']),
-		birthYear: entGen.Int32(year),
-		birthMonth: entGen.Int32(fields['birthMonth']),
-		birthDay: entGen.Int32(fields['birthDay']),
-		attendDesc: entGen.String(fields['attendDesc']),
-		tension: entGen.Int32(fields['tension']),
-        mail: entGen.String(fields['mail']),
-        locate: entGen.String(fields['locate'])
-	};
-	if (urlString) {
-		entity.photo = entGen.String(urlString);
-    }
-    
-    var saved = entity;
-    
-	// 데이터베이스에 entity를 추가합니다.
-	tableService.insertOrMergeEntity('members', entity, function(error, result, res) {
-		if (!error) {
-			console.log("member done");
-			count++;
-			if (count >= maxCount)
-				response.send({result:true,
-                    field:saved});
-		}
-		else {
-			count++;
-			console.log("error in member save");
-			if (count >= maxCount)
-				response.send({result:true,
-                    field:saved});
-		}
-	});
-
-	var yearData = fields['year'].replace('-2','.5');
-	var entity2 = {
-		PartitionKey: entGen.String(fields['year']),
-		RowKey: entGen.String(fields['RowKey']),
-		branch: entGen.String(fields['branch']),
-		birthYear: entGen.Int32(year),
-		age: entGen.Int32(age),
-		attend: entGen.Int32(fields['attend']),
-		part: entGen.String(fields['part']),
-		branchYear: entGen.String(yearData),
-        charge: entGen.String(fields['charge']),
-		attendDesc: entGen.String(fields['attendDesc']),
-        service: entGen.String(fields['service'])
-	};
-    
-    for (var key in entity2) {
-        // saved[key] = {"_":, fields[key]};
-        if (key == "PartitionKey")
-            saved["year"] = entity2[key];
-        else
-            saved[key] = entity2[key];
-    }
-    saved["attendString"] = entGen.String(exports.AttendToString(fields['attend']));
-    saved["tensionString"] = entGen.String(TensionToString(fields['tension']));
-    if (fields["urlString"] != null)
-        saved["photo"] = entGen.String(fields["urlString"]);
-    else
-        saved["photo"] = entGen.String("");
-    
-    RemoveEntityGen(saved);
-	// 데이터베이스에 entity를 추가합니다.
-	tableService.insertOrMergeEntity('branchlog', entity2, function(error, result) {
-		if (!error) {
-			console.log("branch done");
-			count++;
-			if (count >= maxCount)
-				response.send({result:true,
-                    field:saved});
-		}
-		else {
-			count++;
-			console.log("error in branchlog save");
-			if (count >= maxCount)
-				response.send({result:true,
-                    field:saved});
-		}
-	});
-}
 
 module.exports.GetCurrentMemberWithGroup = function (group, next) {
     var getDate = new Date();
@@ -683,11 +583,11 @@ module.exports.GetMemberWithGroup = function (year, group, next) {
 }
 
 module.exports.SaveMember = function (member, next) {
-    if (member.birthYear && member.birthYear > 1900)
+    if (member.birthYear && member.birthYear >= 1900)
         member.birthYear = member.birthYear - 1900; 
     SetEntityGen(member);
 
-	tableService.insertOrMergeEntity('members', member, function(error, result) {
+	tableService.insertOrMergeEntity('sbpcc', member, function(error, result) {
 		if (!error) {
             next(null, result);
 		}
@@ -922,7 +822,7 @@ module.exports.AddMember = function (addData, next) {
     addData.forEach(function(data, index) {
         SetEntityGen(data);
         // 데이터베이스에 entity를 추가합니다.
-        tableService.insertOrMergeEntity('members', data, function(error, result) {
+        tableService.insertOrMergeEntity('sbpcc', data, function(error, result) {
             count++;
             if (!error) {
                 if (count >= maxLength)
@@ -942,15 +842,10 @@ module.exports.AddMember = function (addData, next) {
 }
 
 module.exports.RemoveMember = function (data, next) {
-    var year = parseInt(data.PartitionKey);
-    // var month = parseInt(data.month);
-    if (year > 1900)
-        year -= 1900;
     // if (102 > year && 3 > month)
     //     year--;
-    data.PartitionKey = year; 
     SetEntityGen(data);
-    tableService.deleteEntity('members', data, function(error, result) {
+    tableService.deleteEntity('sbpcc', data, function(error, result) {
         if (!error) {
             next(null, result);
         }
@@ -1112,7 +1007,7 @@ module.exports.UpdateRelation = function (key, name, relation, list, next) {
     entity[relation] = JSON.stringify(list);
     SetEntityGen(entity);
 
-    tableService.insertOrMergeEntity('members',entity, function(error, result) {
+    tableService.insertOrMergeEntity('sbpcc',entity, function(error, result) {
         if (!error) {
             next(null, result);
         }

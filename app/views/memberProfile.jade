@@ -46,9 +46,9 @@ block sub_content
                                 label.image.outImg(style="background-color:#e5e5e5", for="uploadInput")
                                     if (data.usingPhoto == 'true')
                                         img#photo.fitImg(src="#{data.userPhoto||''}")
-                                    else if (data.photo)
-                                        img#updateImage.fitImg(src="#{data.photo||''}") 
-                                        input(type="hidden", name="photo", value="#{data.photo||''}")
+                                    else if (data.photoName)
+                                        img#updateImage.fitImg(src="https://sbpyouth.blob.core.windows.net/imgcontainer/#{data.photoName||''}") 
+                                        input(type="hidden", name="photo", value="https://sbpyouth.blob.core.windows.net/imgcontainer/#{data.photoName||''}")
                                     else
                                         img#updateImage.fitImg(src="/public/img/image.png")
                             div

@@ -1,13 +1,13 @@
 form#uploadForm(action="/saveProfile/#{name}", enctype="multipart/form-data", method="post")
     div.ui.card
-        input(type="hidden", name="PartitionKey", value="#{PartitionKey}")
+        input(type="hidden", name="PartitionKey", value="Member")
         input(type="hidden", name="RowKey", value="#{name}")
         input(type="hidden", name="year", value="#{year}")
         input(type="hidden", name="charge", value="#{charge}")
         label.image.outImg(style="background-color:#e5e5e5", for="uploadInput")
             if (photo)
-                img#updateImage.fitImg(src="#{photo}") 
-                input(type="hidden", name="photo", value="#{photo}")
+                img#updateImage.fitImg(src="https://sbpyouth.blob.core.windows.net/imgcontainer/#{photoName}") 
+                input(type="hidden", name="photo", value="https://sbpyouth.blob.core.windows.net/imgcontainer/#{photoName}")
             else
                 img#updateImage.fitImg(src="/public/img/image.png")
         div.content

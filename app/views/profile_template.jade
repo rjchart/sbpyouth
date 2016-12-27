@@ -2,8 +2,8 @@ div.ui.card
     div.image.outImg(style="background-color:#e5e5e5")
         if (usingPhoto == 'true')
             img.fitImg(src="#{userPhoto||''}")
-        else if (photo)
-            img.fitImg(src="#{photo}")
+        else if (photoName)
+            img.fitImg(src="https://sbpyouth.blob.core.windows.net/imgcontainer/#{photoName}")
         else
             img.fitImg(src="/public/img/image.png")
     div.content

@@ -60,9 +60,27 @@ module.exports.AddDatas = function (addData, tableName, next) {
             next(error, null);
     });
 }
+
 module.exports.AddSBPDatas = function (tableName, addData, next) {
     var batch = new azure.TableBatch();
+	var count = 0;
+	var sendCount = 1;
+	var finishCount = 0;
     for (var key in addData) {
+		if (count >= 100) {
+			sendCount++;
+			count = 0;
+			tableService.executeBatch(tableName, batch, function (error, result, response) {
+				if(!error) {
+					finishCount++;
+					if (finishCount >= sendCount)
+						next(null, result);
+				}
+				else
+					next(error, null);
+			});
+			batch = new azure.TableBatch();
+		}
         var data = addData[key];
 		if (data.deleteRow == "true") {
 			SetEntityGen(data);
@@ -72,10 +90,13 @@ module.exports.AddSBPDatas = function (tableName, addData, next) {
 			SetEntityGen(data);
 			batch.insertOrMergeEntity(data,{echoContent: true});
 		}
+		count++;
     }
     tableService.executeBatch(tableName, batch, function (error, result, response) {
         if(!error) {
-            next(null, result);
+			finishCount++;
+			if (finishCount >= sendCount)
+				next(null, result);
         }
         else
             next(error, null);

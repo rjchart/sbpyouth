@@ -578,6 +578,14 @@ router.get('/friends', function (req, res, next) {
         if (!error) {
             var memberList2 = [];
             memberList.forEach(function (item, index) {
+
+                // var change = "https://sbpccyouth.blob.core.windows.net/imgcontainer/";
+                // if (item.photo)
+                //     item.photoName = item.photo.replace(change, "");
+                // item.PartitionKey = "Member";
+                // item.name = item.RowKey;
+
+
                 var isOut = false;
                 if (item.attendDesc == "결혼" || item.attendDesc == "제외" ||item.attendDesc == "장기결석" || item.attendDesc == "교회 옮김" || item.attendDesc == "교회옮김" || item.attendDesc == "타교회")
                     isOut = true;
@@ -585,7 +593,7 @@ router.get('/friends', function (req, res, next) {
                     if (query) {
                         if (item.RowKey.includes(query))
                             memberList2.push(item);
-                        if (item.PartitionKey == query)
+                        if (item.birthYear == query)
                             memberList2.push(item);
                         if (item.birthYear.includes(query))
                             memberList2.push(item);
@@ -606,6 +614,17 @@ router.get('/friends', function (req, res, next) {
                         memberList2.push(item);
                 }   
             });
+
+
+            // sbp_data.AddSBPDatas('sbpcc', memberList, function (error, resultx) {
+            //     if (error) {
+            //         ;
+            //     }
+            //     else {
+            //         ;
+            //     }
+            //     ;
+            // });
 
             // CombineElements(user, input)
             user.memberList = memberList2;
@@ -1270,13 +1289,13 @@ router.post('/addMember', function (req, res, next) {
         keys.forEach (function(key, index) {
             var addkey = "add_" + key;
             tmp[key] = body[addkey][k];
-            var year = parseInt(tmp.birthYear);
-            if (year > 1900)
-                year -= 1900;
-            var partitionKey = year;
-            if (parseInt(tmp.birthMonth) < 3)
-                partitionKey--;
-            tmp.PartitionKey = partitionKey;
+            // var year = parseInt(tmp.birthYear);
+            // if (year > 1900)
+            //     year -= 1900;
+            // var partitionKey = year;
+            // if (parseInt(tmp.birthMonth) < 3)
+            //     partitionKey--;
+            tmp.PartitionKey = 'Member';
             tmp.RowKey = tmp.name; 
         }, this);
         addData.push(tmp);
