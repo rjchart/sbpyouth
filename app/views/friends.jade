@@ -485,11 +485,19 @@ block script
 		}
 			
 block header_item03
-	div.main.item.active(href="/friends")
+	div.main.item.active(href="/branch")
 		i.child.icon 
 		|Friends
 block content
 	div.ui.secondary.pointing.menu.navbar.grid.computer.tablet.only.row
+		div.ui.dropdown.sub.item 브랜치 모임
+			i.dropdown.icon
+			div.menu
+				a.sub.item(href="/branch?year=2017") 2017
+				a.sub.item(href="/branch?year=2016-2") 2016-2
+				a.sub.item(href="/branch?year=2016") 2016
+				a.sub.item(href="/branch?year=2015-2") 2015-2
+				a.sub.item(href="/branch?year=2015") 2015
 		if (sub == 'total')
 			a.active.sub.item(href="/friends") 전체 맴버 현황
 		else

@@ -1,25 +1,29 @@
 extends branch
 block sub_item01
-	if (year == '2017')
-		a.active.sub.item(href="branch?year=2017") 2017
-	else 
-		a.sub.item(href="branch?year=2017") 2017
-	if (year == '2016-2')
-		a.active.sub.item(href="branch?year=2016-2") 2016-2
-	else
-		a.sub.item(href="branch?year=2016-2") 2016-2
-	if (year == '2016')
-		a.active.sub.item(href="branch?year=2016") 2016
-	else
-		a.sub.item(href="branch?year=2016") 2016
-	if (year == '2015-2')
-		a.active.sub.item(href="branch?year=2015-2") 2015-2
-	else
-		a.sub.item(href="branch?year=2015-2") 2015-2
-	if (year == '2015')
-		a.active.sub.item(href="branch?year=2015") 2015
-	else
-		a.sub.item(href="branch?year=2015") 2015
+	div.ui.dropdown.sub.item
+		strong 브랜치 모임
+		i.dropdown.icon
+		div.menu
+			if (year == '2017')
+				a.active.sub.item(href="branch?year=2017") 2017
+			else 
+				a.sub.item(href="branch?year=2017") 2017
+			if (year == '2016-2')
+				a.active.sub.item(href="branch?year=2016-2") 2016-2
+			else
+				a.sub.item(href="branch?year=2016-2") 2016-2
+			if (year == '2016')
+				a.active.sub.item(href="branch?year=2016") 2016
+			else
+				a.sub.item(href="branch?year=2016") 2016
+			if (year == '2015-2')
+				a.active.sub.item(href="branch?year=2015-2") 2015-2
+			else
+				a.sub.item(href="branch?year=2015-2") 2015-2
+			if (year == '2015')
+				a.active.sub.item(href="branch?year=2015") 2015
+			else
+				a.sub.item(href="branch?year=2015") 2015
 	//- a.active.sub.item(href="/branch?year=2016-2") 2016-2
 	//- div.active.ui.dropdown.sub.item 2016-2
 	//- 	i.dropdown.icon

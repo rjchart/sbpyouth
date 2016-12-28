@@ -1,0 +1,102 @@
+extends index
+mixin detail(key, dataArray)
+    div.ui.blue.tag.label
+        i.dropdown.icon 
+        |#{key}
+    span &nbsp;&nbsp;&nbsp;&nbsp;
+        - var arrayFirst = 0;
+        if (dataArray)
+            each data in dataArray
+                if (arrayFirst == 0)
+                    |#{data.name}
+                    - arrayFirst = 1;
+                else 
+                    |, #{data.name}
+mixin detail2(key, dataArray)
+    p(style="color:gray") #{chargeDesc[key]}
+    div.ui.three.stackable.cards
+        if (dataArray)
+            each data in dataArray
+                div.ui.big.card
+                    div.image.outImg(style="background-color:#e5e5e5")
+                        if (data.photoName) 
+                            img.fitImg#photo(src="https://sbpyouth.blob.core.windows.net/imgcontainer/#{data.photoName||''}")
+                        else
+                            img.fitImg(src="/public/img/image.png")
+                    div.content
+                        div.header #{data.name}
+                        div.meta
+                            span.right.floated.time #{data.birthYear}.#{data.birthMonth}.#{data.birthDay}
+                            span.charge #{data.RowKey}
+                            //- span.members #{data.event_part}
+                        //- if (data.branch)
+                        //-     div.description
+                        //-         |브랜치: #{data.branch}
+                        //- if (data.attendDesc)
+                        //-     div.description(style="color:gray; font-size:10px")
+                        //-         | >> #{data.attendDesc}
+                    if (data.branch || data.showPhone || authShow)
+                        div.extra.content
+                            div
+                                if data.showPhone || authShow
+                                    span #{data.phone}
+                                if data.branch
+                                    span.right.floated
+                                        i.tag.icon
+                                        |#{data.branch}
+block sub_item01
+    a.active.sub.item(href="/") 청년부 사역자
+block sub_content
+    - var authShow = false;
+    - if (auth == "developer" || auth == "manager" || auth == "executive") authShow = true;
+    div.ui.main.container
+        div.ui.five.top.attached.buttons
+            if (year == 2017)
+                a.ui.button.active(href="leader?year=2017") 2017
+            else 
+                a.ui.button(href="leader?year=2017") 2017
+            if (year == 2016)
+                a.ui.button.active(href="leader?year=2016") 2016
+            else
+                a.ui.button(href="leader?year=2016") 2016
+            if (year == 2015)
+                a.ui.button.active(href="leader?year=2015") 2015
+            else
+                a.ui.button(href="leader?year=2015") 2015
+            if (year == 2014)
+                a.ui.button.active(href="leader?year=2014") 2014
+            else 
+                a.ui.button(href="leader?year=2014") 2014
+            if (year == 2013)
+                a.ui.button.active(href="leader?year=2013") 2013
+            else 
+                a.ui.button(href="leader?year=2013") 2013
+        div.ui.attached.segment
+            h3.ui.header 청년부 사역자들
+                div.sub.header #{year}년 신반포 중앙교회 청년부를 이끌어 갈 사람들
+            div.ui.accordion
+                div.ui.fitted.divider
+                - var first = 0;
+                each key in keys
+                    - var dataArray = datas[key];
+                    if (first == 0)
+                        div.active.title
+                            mixin detail(key, dataArray)
+                    else 
+                        div.title
+                            mixin detail(key, dataArray)
+                    if (first == 0)
+                        div.active.content
+                            mixin detail2(key, dataArray)
+                    else
+                        div.content
+                            mixin detail2(key, dataArray)
+                    div.ui.fitted.divider
+                    if (first == 0)
+                        - first = 1;
+                if !isLogin
+                    br
+                    br
+            if !isLogin
+                div.ui.bottom.attached.label 간단하니 가능하면 <a href="/auth/login?ret=/" style="color:red">로그인</a> 해주세요.
+                        

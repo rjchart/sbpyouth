@@ -232,24 +232,35 @@ block script
 			}
 	block script_part02
 		
-block header_item02
+block header_item03
 	a.main.item.active(href="/branch")
-		i.grid.layout.icon
-		|Branches
+		i.child.icon
+		|Friends
 block content
 	//- script(src="/javascript/menu.js")
 	//- div.ui.masthead.vertical.tab.segment
 	div.ui.secondary.pointing.menu.navbar.grid.computer.only.row
 		block sub_item01
-			a.sub.item(href="/branch?year=#{year}") 전체 브랜치 현황
+			div.ui.dropdown.sub.item 브랜치 모임
+				i.dropdown.icon
+				div.menu
+					a.sub.item(href="branch?year=2017") 2017
+					a.sub.item(href="branch?year=2016-2") 2016-2
+					a.sub.item(href="branch?year=2016") 2016
+					a.sub.item(href="branch?year=2015-2") 2015-2
+					a.sub.item(href="branch?year=2015") 2015
+		a.sub.item(href="/friends") 전체 맴버 현황
+		a.sub.item(href="/friends/soccer") 축구 맴버
+		a.sub.item(href="/friends/tablepingpong") 탁구 맴버
+		a.sub.item(href="/friends/years") 또래 모임
 		block sub_item02
 			//- - bsList.forEach( function(item,index) {
 			//- 	a.sub.item(href="/branch_segment/#{item.branch}?year=#{year}&tag=#{branchTag}") #{item.branch}
 			//- - });
 		if auth=="manager" || auth=="developer" 
-			div.ui.right.secondary.menu
+			div.ui.right.secondary.menu(style="position:absolute; top:-10px; right:0px")
 				div.item
-					div.ui.buttons
+					div.ui.small.buttons
 						button.ui.blue.small.button(onclick="AddBranchButton()", data-content="브랜치원의 브랜치 정보를 추가하거나 수정할 수 있다.")
 							|Edit B
 						div.divier.or
@@ -257,7 +268,18 @@ block content
 							|Make B
 	div.ui.secondary.pointing.menu.navbar.grid.tablet.only.row
 		block sub_item01
-			a.sub.item(href="/branch") 전체 브랜치 현황
+			div.ui.dropdown.sub.item 브랜치 모임
+				i.dropdown.icon
+				div.menu
+					a.sub.item(href="branch?year=2017") 2017
+					a.sub.item(href="branch?year=2016-2") 2016-2
+					a.sub.item(href="branch?year=2016") 2016
+					a.sub.item(href="branch?year=2015-2") 2015-2
+					a.sub.item(href="branch?year=2015") 2015
+		a.sub.item(href="/friends") 전체 맴버 현황
+		a.sub.item(href="/friends/soccer") 축구 맴버
+		a.sub.item(href="/friends/tablepingpong") 탁구 맴버
+		a.sub.item(href="/friends/years") 또래 모임
 		//- block sub_item02
 		//- 	- bsList.forEach( function(item,index) {
 		//- 		a.sub.item(href="/branch_segment/#{item.branch}?year=#{year}&tag=#{branchTag}") #{item.branch}

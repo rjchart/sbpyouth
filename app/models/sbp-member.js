@@ -531,6 +531,61 @@ module.exports.GetSBPDatas = function (partitionKey, others, next) {
     });
 }
 
+module.exports.GetLeadersWithYear = function (year, next) {
+    
+    var query = new azure.TableQuery()
+    .where('PartitionKey eq ?', year);
+
+    // 데이터베이스 쿼리를 실행합니다.
+    tableService.queryEntities('saveData', query, null, function (error, result) {
+        if (!error) {
+            // var testString = JSON.stringify(result.entries);
+            // var entries = JSON.parse(testString);
+            var members = [];
+            for (var index in result.entries) {
+                var data = result.entries[index];
+                RemoveEntityGen(data);
+                members.push(data.data);
+            }
+            if (members.length == 0)
+                next(null, []);
+            else {
+                module.exports.GetMembersAndLogWithNames(members, function (error2, result2) {
+                    if (!error2) {
+                        var getList = [];
+                        for (var index in result2) {
+                            var data = result2[index];
+                            for (var j in result.entries) {
+                                var data2 = result.entries[j];
+                                if (data2.data == data.name) {
+                                    var newData = {};
+                                    for (var key in data) {
+                                        newData[key] = data[key];
+                                    }
+                                    for (var key in data2) {
+                                        if (key == "data")
+                                            newData['name'] = data2[key];
+                                        else
+                                            newData[key] = data2[key];
+                                    }
+                                    getList.push(newData);
+                                }
+                            }
+                        }
+                        next(null, getList);
+                    }
+                    else
+                        next(error);
+                });
+            }
+        }
+        else {
+            console.log("error:" + error);
+            next(error);
+        }
+            
+    });
+}
 
 module.exports.GetMemberWithGroup = function (year, group, next) {
     

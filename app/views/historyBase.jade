@@ -221,31 +221,20 @@ block script
 			}
 
 	block script_part02
-block header_item01
-	a.main.item.active(href="/")
-		i.home.icon
-		|Home  
+block header_item02
+	a.main.item.active(href="/history")
+		i.calendar.icon
+		|History
 block content
 	div.ui.secondary.pointing.menu.navbar.grid.computer.only.row
 		block sub_item01
-			a.sub.item(href="/") 청년부 사역자
-		block sub_item02
-			a.sub.item(href="/services") 타부서 사역자
-			//- div.ui.dropdown.sub.item 부서 사역자
-				//- i.dropdown.icon
-				//- div.menu
-				//- 	a.item(href="/services/유치부") 유치부
-				//- 	a.item(href="/services/유년부") 유년부
-				//- 	a.item(href="/services/초등부") 초등부
-				//- 	a.item(href="/services/중고등부") 중고등부
-				//- 	a.item(href="/services/글로리아 찬양대") 글로리아 찬양대
-				//- 	a.item(href="/services/할렐루야 찬양대") 할렐루야 찬양대
+			a.sub.item(href="/history") 청년부 발자취
 		if auth=="manager" || auth=="developer" 
 			div.ui.right.secondary.menu
 				div.item
-					div.ui.right.floated.small.primary.labeled.icon.button(onclick="AddMemberButton()", data-content="임원을 추가합니다.")
-						i.child.icon 
-						|Add Member
+					div.ui.right.floated.small.primary.labeled.icon.button(onclick="AddEventButton()", data-content="이벤트를 추가합니다.")
+						i.calendar.outline.icon 
+						|Add Event
 	block sub_content
 	block modal_content
 		div.ui.member.modal

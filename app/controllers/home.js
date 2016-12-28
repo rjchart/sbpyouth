@@ -48,7 +48,7 @@ function CombineElements(one, two) {
 router.get('/', function (req, res, next) {
     // var user = sbp_data.CheckLogin(req);
 
-    res.redirect('/churchLeader');
+    res.redirect('/leader');
     return;
 });
 
@@ -139,6 +139,43 @@ router.get('/bankList', function (req, res, next) {
         }
     });
 });
+
+router.get('/leader', function (req, res, next) {
+    var user = sbp_data.CheckLogin(req);
+
+    var year = req.query.year;
+    var getDate = new Date();
+    if (year == null)
+        year = getDate.getFullYear().toString();
+
+    sbp_member.GetLeadersWithYear(year, function (error, result) {
+        if (!error) {
+            var result2 = MakeLeaderList(result);
+
+            var chargeOrder = ['교회 지도자', '임원', '팀장', '브랜치 리더(BS)', '부장 집사'];
+            var chargeDesc = {
+                '교회 지도자': '청년부의 지도를 맡고 계시는 목사님, 강도사님 및 전도사님',
+                '임원': '청년부의 전반적인 일을 맡고 있으며, 청년부의 일에 앞장서는 청년들',
+                '팀장': '청년부의 사역, 찬양, 다과 대접, 새가족 환영 등의 일을 분담하여 맡아 하는 청년들',
+                '브랜치 리더(BS)': '청년부의 브랜치 그룹의 리더로 예배 후, 각자 맡은 브랜치의 교육을 맡으며 브랜치원들을 돕는 청년들',
+                '부장 집사': '청년부의 멘토이자 뒤에서 이끌어주시는 집사님들'
+            };
+            //ㄴ var inputData = {};
+            // for (var index in result) {
+            //     var value = result[index];
+            //     inputData[value.RowKey] = value;
+            // }
+            user.keys = chargeOrder;
+            user.datas = result2.result;
+            user.chargeDesc = chargeDesc;
+            user.year = year;
+                  
+            res.render('leaders', user);
+        }
+    });
+});
+
+
 
 router.get('/churchLeader', function (req, res, next) {
     var user = sbp_data.CheckLogin(req);
@@ -244,6 +281,76 @@ function MakeYearFriends (datas) {
     };
 }
 
+function MakeLeaderList (datas) {
+    result = {};
+    var keys = [];
+    for (var i = 0; i < datas.length; i++) {
+        data = datas[i];
+        var key = data.chargeGroup;
+        if (key == '교회')
+            key = '교회 지도자';
+        else if (key == 'BS')
+            key = '브랜치 리더(BS)';
+        if (!result[key]) {
+            var newArray = [];
+            result[key] = newArray;
+            keys.push(key);
+        }
+        result[key].push(data);
+    }
+
+    for (var key in result) {
+        result[key] = result[key].sort(function(a,b) {
+            var aa = 0;
+            var bb = 0;
+            var chargeOrder = ['청년부 회장', '청년2부 총무', '청년1부 총무', '청년2부 부총무', '청년1부 부총무', '청년2부 회계', '청년1부 회계', '청년부 서기'];
+            if (chargeOrder.indexOf(a.RowKey) != -1)
+                aa = 10 - chargeOrder.indexOf(a.RowKey);
+            if (chargeOrder.indexOf(b.RowKey) != -1)
+                bb = 10 - chargeOrder.indexOf(b.RowKey);
+
+            if (aa > bb) return -1;
+            else if (aa < bb) return 1;
+            else return 0;
+        });
+    }
+
+    return {
+        result: result,
+        keys: keys
+    };
+}
+
+function MakeServiceList (datas) {
+    result = {};
+    var keys = [];
+    for (var i = 0; i < datas.length; i++) {
+        data = datas[i];
+        var key = data.service;
+        if (!result[key]) {
+            var newArray = [];
+            result[key] = newArray;
+            keys.push(key);
+        }
+        result[key].push(data);
+    }
+
+    for (var key in result) {
+        result[key] = result[key].sort(function(a,b) {
+            var aa = 0;
+            var bb = 0;
+
+            if (aa > bb) return -1;
+            else if (aa < bb) return 1;
+            else return 0;
+        });
+    }
+
+    return {
+        result: result,
+        keys: keys
+    };
+}
 router.get('/history', function (req, res, next) {
     var user = sbp_data.CheckLogin(req);
 
@@ -451,8 +558,40 @@ router.get('/branchleader', function (req, res, next) {
 });
 
 router.get('/services', function (req, res, next) {
-    res.redirect('/services/0');
+    var user = sbp_data.CheckLogin(req);
+    var year = sbp_time.getYear();
+    var service = req.params.id;
+    if (!service || service == '' || service == 0)
+        service = '유치부';
+
+    // var queryString = "service eq '" + service + "'";
+    var serviceOrder = ['유치부', '유년부', '초등부', '중고등부', '글로리아 찬양대', '할렐루야 찬양대'];
+    var queryArray = [];
+    for (var key in serviceOrder) {
+        var value = serviceOrder[key];
+        var queryString = "service eq '" + value + "'";
+        queryArray.push(queryString);
+    }
+    var querySum = queryArray.join(" or ");
+    var headers = '';
+
+    sbp_member.GetMembersAndLogWithQueryAndYear(querySum, year, function (error, result) {
+        if (!error) {
+
+            result2 = MakeServiceList(result);
+            user.datas = result2.result;
+            user.keys = serviceOrder;
+            user.year = year;
+            // user.header = header;
+            res.render('services', user);
+
+        }
+        else 
+            res.status(500).send(service + ' 관련 데이터를 받아오는데 실패하였습니다.');
+    });
+    
 });
+
 
 router.get('/services/:id', function (req, res, next) {
     var user = sbp_data.CheckLogin(req);

@@ -218,9 +218,9 @@ html(lang='en')
                         i.home.icon
                         |Home  
                     block header_item02
-                      a.main.item(href="/branch")
-                        i.grid.layout.icon 
-                        |Branches
+                      a.main.item(href="/history")
+                        i.calendar.icon 
+                        |History
                     block header_item03
                       a.main.item(href="/friends")
                         i.child.icon 
@@ -253,20 +253,24 @@ html(lang='en')
                       |Home
                       div.menu
                         a.item(href="/") 청년부 지도자 
-                        a.item(href="/deacons") 부장 집사
-                        a.item(href="/executives") 임원
-                        a.item(href="/teamleader") 팀장
-                        a.item(href="/branchleader") 브랜치 리더
                         a.item(href="/services/유치부") 유치부 교사
                         a.item(href="/services/유년부") 유년부 교사
                         a.item(href="/services/초등부") 초등부 교사
                         a.item(href="/services/중고등부") 중고등부 교사
                         a.item(href="/services/글로리아 찬양대") 글로리아 찬양대
-                        a.item(href="/services/할렐루야 찬양대") 할렐루야 찬양대
-                        a.item(href="/history") 히스토리
-                    a.main.item(href="/branch")
+                        a.item(href="/services/할렐루야 찬양대") 할렐루야 찬양대s
+                    a.main.item(href="/history")
+                      i.calendar.icon 
+                      |History
+                    div.main.item(href="/branch")
                       i.grid.layout.icon 
                       |Branches
+                      div.menu
+                        a.item(href="/branch?year=2017") 2017 상반기
+                        a.item(href="/branch?year=2016-2") 2016 하반기
+                        a.item(href="/branch?year=2016") 2016 상반기
+                        a.item(href="/branch?year=2015-2") 2015 하반기
+                        a.item(href="/branch?year=2015") 2015 상반기
                     div.main.item(href="/friends")
                       i.child.icon 
                       |Friends

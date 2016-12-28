@@ -8,8 +8,8 @@ div.ui.raised.segment
                 div.image.outImg(style="background-color:#e5e5e5")
                     if (data.usingPhoto == 'true')
                         img#photo.fitImg(src="#{data.userPhoto||''}")
-                    else if (data.photo)
-                        img#photo.fitImg(src="#{data.photo||''}")
+                    else if (data.photoName)
+                        img#photo.fitImg(src="https://sbpyouth.blob.core.windows.net/imgcontainer/#{data.photoName||''}")
                     else
                         img.fitImg(src="/public/img/image.png")
         div.eleven.wide.streched.column
