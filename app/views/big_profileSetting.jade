@@ -1,3 +1,95 @@
+mixin card()
+    div.ui.card
+        label#clickPhoto.image.outImg(style="background-color:#e5e5e5; #{usingPhoto=='true' ? '' : 'cursor: pointer'};", for="#{usingPhoto=='true' ? '' : 'uploadInput'}")
+            if (usingPhoto == 'true')
+                img#photo.fitImg(src="#{userPhoto}")
+            else if (photoName)
+                img#photo.fitImg(src="https://sbpyouth.blob.core.windows.net/imgcontainer/#{photoName}")
+            else
+                img#photo.fitImg(src="/public/img/image.png")
+        div.ui.pointing.green.basic.label 기본사진: 클릭하여 수정이 가능 합니다.
+mixin content(isDesc)
+    div.ui.container
+        h3.ui.header
+            div.content
+                |#{RowKey}   
+                div.sub.header #{part}: #{birthYear}.#{birthMonth}.#{birthDay}
+            div.ui.mini.relaxed.celled.list
+                div.item
+                    div.right.floated
+                        if isDesc == 1
+                            div.ui.right.pointing.green.basic.label 기본사진: 사진을 클릭하여 수정이 가능 합니다.
+                        div.ui.mini.buttons
+                            button.usingPhoto.false.ui.button(onclick="SettingButton('usingPhoto', false)", class="#{usingPhoto!='true'?'positive':''}") 기본 사진
+                            div.or
+                            button.usingPhoto.true.ui.button(onclick="SettingButton('usingPhoto', true)", class="#{usingPhoto=='true'?'positive':''}") 로그인 정보
+                    i.big.info.circle.middle.aligned.icon
+                    div.content
+                        div.header 사진 사용
+                            div.description(style="color:gray")
+                                if useAnotherPhoto
+                                    |로그인 정보
+                                else
+                                    |기본 사진
+                    
+                div.item
+                    div.right.floated
+                        if isDesc == 1
+                            div.ui.right.pointing.green.basic.label 비공개라도 임원에게는 공개됩니다.
+                        div.ui.mini.buttons
+                            button.showPhoto.false.ui.button(onclick="SettingButton('showPhoto', false)", class="#{showPhoto!='true'?'positive':''}") 비공개
+                            div.or
+                            button.showPhoto.true.ui.button(onclick="SettingButton('showPhoto', true)", class="#{showPhoto=='true'?'positive':''}") 공개
+                    i.big.photo.middle.aligned.icon
+                    div.content
+                        div.header 사진 일람
+                            div.description(style="color:gray")
+                                |공개
+                div.item
+                    div.right.floated
+                        if isDesc == 1
+                            div.ui.right.pointing.green.basic.label 비공개라도 임원에게는 공개됩니다.
+                        div.ui.mini.buttons
+                            button.showPhone.false.ui.button(onclick="SettingButton('showPhone', false)", class="#{showPhone!='true'?'positive':''}") 비공개
+                            div.or
+                            button.showPhone.true.ui.button(onclick="SettingButton('showPhone', true)", class="#{showPhone=='true'?'positive':''}") 공개
+                    i.big.phone.middle.aligned.icon
+                    div.content
+                        div.header 전화번호
+                            div.description(style="color:gray")
+                                |#{phone}
+                div.item
+                    div.right.floated
+                        if isDesc == 1
+                            div.ui.right.pointing.green.basic.label 비공개라도 임원에게는 공개됩니다.
+                        div.ui.mini.buttons
+                            button.showMail.false.ui.button(onclick="SettingButton('showMail', false)", class="#{showMail!='true'?'positive':''}") 비공개
+                            div.or
+                            button.showMail.true.ui.button(onclick="SettingButton('showMail', true)", class="#{showMail=='true'?'positive':''}") 공개
+                    i.big.mail.middle.aligned.icon
+                    div.content
+                        div.header 메일
+                            div.description(style="color:gray")
+                                |#{mail}
+                div.item
+                    div.right.floated
+                        if isDesc == 1
+                            div.ui.right.pointing.green.basic.label 비공개라도 임원에게는 공개됩니다.
+                        div.ui.mini.buttons
+                            button.showLocate.false.ui.button(onclick="SettingButton('showLocate', false)", class="#{!showLocate?'positive':''}") 비공개
+                            div.or
+                            button.showLocate.true.ui.button(onclick="SettingButton('showLocate', true)", class="#{showLocate?'positive':''}") 공개
+                    i.big.building.middle.aligned.icon
+                    div.content
+                        div.header 거주지
+                            div.description(style="color:gray")
+                                |#{locate}
+                div.item
+                    div.right.floated
+                        div.ui.right.pointing.red.basic.label 결정 사항을 저장합니다.
+                        button.ui.mini.red.button(onclick="SettingSave()") 저장
+                        
+
 div.ui.raised.segment
     h2.ui.header
         i.settings.icon
@@ -5,89 +97,20 @@ div.ui.raised.segment
             |Profile
             div.sub.header 현재 청년부 정보를 보여줍니다.
     div.ui.grid
-        div.four.wide.streched.column
-            div.ui.card
-                label#clickPhoto.image.outImg(style="background-color:#e5e5e5; #{usingPhoto=='true' ? '' : 'cursor: pointer'};", for="#{usingPhoto=='true' ? '' : 'uploadInput'}")
-                    if (usingPhoto == 'true')
-                        img#photo.fitImg(src="#{userPhoto}")
-                    else if (photoName)
-                        img#photo.fitImg(src="https://sbpyouth.blob.core.windows.net/imgcontainer/#{photoName}")
-                    else
-                        img#photo.fitImg(src="/public/img/image.png")
-                div.ui.pointing.green.basic.label 기본사진: 클릭하여 수정이 가능 합니다.
-        div.twelve.wide.streched.column
-            div.ui.container
-                h3.ui.header
-                    div.content
-                        |#{RowKey}   
-                        div.sub.header #{part}: #{birthYear}.#{birthMonth}.#{birthDay}
-                    div.ui.mini.relaxed.celled.list
-                        div.item
-                            div.right.floated.content
-                                //- div.ui.right.pointing.green.basic.label 기본사진: 사진을 클릭하여 수정이 가능 합니다.
-                                div.ui.mini.buttons
-                                    button.usingPhoto.false.ui.button(onclick="SettingButton('usingPhoto', false)", class="#{usingPhoto!='true'?'positive':''}") 기본 사진
-                                    div.or
-                                    button.usingPhoto.true.ui.button(onclick="SettingButton('usingPhoto', true)", class="#{usingPhoto=='true'?'positive':''}") 로그인 정보
-                            i.big.info.circle.middle.aligned.icon
-                            div.content
-                                div.header 사진 사용
-                                    div.description(style="color:gray")
-                                        if useAnotherPhoto
-                                            |로그인 정보
-                                        else
-                                            |기본 사진
-                            
-                        div.item
-                            div.right.floated.content
-                                //- div.ui.right.pointing.green.basic.label 비공개라도 임원에게는 공개됩니다.
-                                div.ui.mini.buttons
-                                    button.showPhoto.false.ui.button(onclick="SettingButton('showPhoto', false)", class="#{showPhoto!='true'?'positive':''}") 비공개
-                                    div.or
-                                    button.showPhoto.true.ui.button(onclick="SettingButton('showPhoto', true)", class="#{showPhoto=='true'?'positive':''}") 공개
-                            i.big.photo.middle.aligned.icon
-                            div.content
-                                div.header 사진 일람
-                                    div.description(style="color:gray")
-                                        |공개
-                        div.item
-                            div.right.floated.content
-                                //- div.ui.right.pointing.green.basic.label 비공개라도 임원에게는 공개됩니다.
-                                div.ui.mini.buttons
-                                    button.showPhone.false.ui.button(onclick="SettingButton('showPhone', false)", class="#{showPhone!='true'?'positive':''}") 비공개
-                                    div.or
-                                    button.showPhone.true.ui.button(onclick="SettingButton('showPhone', true)", class="#{showPhone=='true'?'positive':''}") 공개
-                            i.big.phone.middle.aligned.icon
-                            div.content
-                                div.header 전화번호
-                                    div.description(style="color:gray")
-                                        |#{phone}
-                        div.item
-                            div.right.floated.content
-                                //- div.ui.right.pointing.green.basic.label 비공개라도 임원에게는 공개됩니다.
-                                div.ui.mini.buttons
-                                    button.showMail.false.ui.button(onclick="SettingButton('showMail', false)", class="#{showMail!='true'?'positive':''}") 비공개
-                                    div.or
-                                    button.showMail.true.ui.button(onclick="SettingButton('showMail', true)", class="#{showMail=='true'?'positive':''}") 공개
-                            i.big.mail.middle.aligned.icon
-                            div.content
-                                div.header 메일
-                                    div.description(style="color:gray")
-                                        |#{mail}
-                        div.item
-                            div.right.floated.content
-                                //- div.ui.right.pointing.green.basic.label 비공개라도 임원에게는 공개됩니다.
-                                div.ui.mini.buttons
-                                    button.showLocate.false.ui.button(onclick="SettingButton('showLocate', false)", class="#{!showLocate?'positive':''}") 비공개
-                                    div.or
-                                    button.showLocate.true.ui.button(onclick="SettingButton('showLocate', true)", class="#{showLocate?'positive':''}") 공개
-                            i.big.building.middle.aligned.icon
-                            div.content
-                                div.header 거주지
-                                    div.description(style="color:gray")
-                                        |#{locate}
-                        div.item
-                            div.right.floated.content
-                                //- div.ui.right.pointing.red.basic.label 결정 사항을 저장합니다.
-                                button.ui.mini.red.button(onclick="SettingSave()") 저장
+        div.computer.only.row
+            div.four.wide.streched.column
+                mixin card()
+            div.twelve.wide.streched.column
+                mixin content(1)
+        div.tablet.only.row
+            div.six.wide.streched.column
+                mixin card()
+            div.ten.wide.streched.column
+                mixin content(0)
+        div.mobile.only.row
+            div
+                mixin card()
+                br
+            div
+                mixin content(0)
     input#uploadInput.filebox.upload(type="file", name="upload", accept="image/*", onchange="ReadURL(this)")

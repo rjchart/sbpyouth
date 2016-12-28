@@ -490,30 +490,32 @@ block header_item03
 		|Friends
 block content
 	div.ui.secondary.pointing.menu.navbar.grid.computer.tablet.only.row
-		div.ui.dropdown.sub.item 브랜치 모임
-			i.dropdown.icon
-			div.menu
-				a.sub.item(href="/branch?year=2017") 2017
-				a.sub.item(href="/branch?year=2016-2") 2016-2
-				a.sub.item(href="/branch?year=2016") 2016
-				a.sub.item(href="/branch?year=2015-2") 2015-2
-				a.sub.item(href="/branch?year=2015") 2015
-		if (sub == 'total')
-			a.active.sub.item(href="/friends") 전체 맴버 현황
-		else
-			a.sub.item(href="/friends") 전체 맴버 현황
-		if (sub == 'soccer')
-			a.active.sub.item(href="/friends/soccer") 축구 맴버
-		else 
-			a.sub.item(href="/friends/soccer") 축구 맴버
-		if (sub == 'tablepingpong')
-			a.active.sub.item(href="/friends/tablepingpong") 탁구 맴버
-		else
-			a.sub.item(href="/friends/tablepingpong") 탁구 맴버
-		if (sub == 'yearFriends')
-			a.active.sub.item(href="/friends/years") 또래 모임
-		else
-			a.sub.item(href="/friends/years") 또래 모임
+		block sub_item01
+			div.ui.dropdown.sub.item 브랜치 모임
+				i.dropdown.icon
+				div.menu
+					a.sub.item(href="/branch?year=2017") 2017
+					a.sub.item(href="/branch?year=2016-2") 2016-2
+					a.sub.item(href="/branch?year=2016") 2016
+					a.sub.item(href="/branch?year=2015-2") 2015-2
+					a.sub.item(href="/branch?year=2015") 2015
+		block sub_item01_2
+			if (sub == 'total')
+				a.active.sub.item(href="/friends") 전체 맴버 현황
+			else
+				a.sub.item(href="/friends") 전체 맴버 현황
+			if (sub == 'soccer')
+				a.active.sub.item(href="/friends/soccer") 축구 맴버
+			else 
+				a.sub.item(href="/friends/soccer") 축구 맴버
+			if (sub == 'tablepingpong')
+				a.active.sub.item(href="/friends/tablepingpong") 탁구 맴버
+			else
+				a.sub.item(href="/friends/tablepingpong") 탁구 맴버
+			if (sub == 'yearFriends')
+				a.active.sub.item(href="/friends/years") 또래 모임
+			else
+				a.sub.item(href="/friends/years") 또래 모임
 		//- a.sub.item(onclick="SubMenuFriendClicked(3)") 또래 친구들
 		//- if auth=="manager" || auth=="developer" || auth=="executive" 
 		div.ui.right.secondary.menu

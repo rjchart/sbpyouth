@@ -249,10 +249,11 @@ block content
 					a.sub.item(href="branch?year=2016") 2016
 					a.sub.item(href="branch?year=2015-2") 2015-2
 					a.sub.item(href="branch?year=2015") 2015
-		a.sub.item(href="/friends") 전체 맴버 현황
-		a.sub.item(href="/friends/soccer") 축구 맴버
-		a.sub.item(href="/friends/tablepingpong") 탁구 맴버
-		a.sub.item(href="/friends/years") 또래 모임
+		block sub_item01_2
+			a.sub.item(href="/friends") 전체 맴버 현황
+			a.sub.item(href="/friends/soccer") 축구 맴버
+			a.sub.item(href="/friends/tablepingpong") 탁구 맴버
+			a.sub.item(href="/friends/years") 또래 모임
 		block sub_item02
 			//- - bsList.forEach( function(item,index) {
 			//- 	a.sub.item(href="/branch_segment/#{item.branch}?year=#{year}&tag=#{branchTag}") #{item.branch}
@@ -276,10 +277,12 @@ block content
 					a.sub.item(href="branch?year=2016") 2016
 					a.sub.item(href="branch?year=2015-2") 2015-2
 					a.sub.item(href="branch?year=2015") 2015
-		a.sub.item(href="/friends") 전체 맴버 현황
-		a.sub.item(href="/friends/soccer") 축구 맴버
-		a.sub.item(href="/friends/tablepingpong") 탁구 맴버
-		a.sub.item(href="/friends/years") 또래 모임
+		block sub_item01_2
+			a.sub.item(href="/friends") 전체 맴버 현황
+			a.sub.item(href="/friends/soccer") 축구 맴버
+			a.sub.item(href="/friends/tablepingpong") 탁구 맴버
+			a.sub.item(href="/friends/years") 또래 모임
+		block sub_item02
 		//- block sub_item02
 		//- 	- bsList.forEach( function(item,index) {
 		//- 		a.sub.item(href="/branch_segment/#{item.branch}?year=#{year}&tag=#{branchTag}") #{item.branch}
