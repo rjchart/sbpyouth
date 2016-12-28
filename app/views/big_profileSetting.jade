@@ -24,7 +24,7 @@ div.ui.raised.segment
                     div.ui.mini.relaxed.celled.list
                         div.item
                             div.right.floated.content
-                                div.ui.right.pointing.green.basic.label 기본사진: 사진을 클릭하여 수정이 가능 합니다.
+                                //- div.ui.right.pointing.green.basic.label 기본사진: 사진을 클릭하여 수정이 가능 합니다.
                                 div.ui.mini.buttons
                                     button.usingPhoto.false.ui.button(onclick="SettingButton('usingPhoto', false)", class="#{usingPhoto!='true'?'positive':''}") 기본 사진
                                     div.or
@@ -40,7 +40,7 @@ div.ui.raised.segment
                             
                         div.item
                             div.right.floated.content
-                                div.ui.right.pointing.green.basic.label 비공개라도 임원에게는 공개됩니다.
+                                //- div.ui.right.pointing.green.basic.label 비공개라도 임원에게는 공개됩니다.
                                 div.ui.mini.buttons
                                     button.showPhoto.false.ui.button(onclick="SettingButton('showPhoto', false)", class="#{showPhoto!='true'?'positive':''}") 비공개
                                     div.or
@@ -52,7 +52,7 @@ div.ui.raised.segment
                                         |공개
                         div.item
                             div.right.floated.content
-                                div.ui.right.pointing.green.basic.label 비공개라도 임원에게는 공개됩니다.
+                                //- div.ui.right.pointing.green.basic.label 비공개라도 임원에게는 공개됩니다.
                                 div.ui.mini.buttons
                                     button.showPhone.false.ui.button(onclick="SettingButton('showPhone', false)", class="#{showPhone!='true'?'positive':''}") 비공개
                                     div.or
@@ -64,7 +64,7 @@ div.ui.raised.segment
                                         |#{phone}
                         div.item
                             div.right.floated.content
-                                div.ui.right.pointing.green.basic.label 비공개라도 임원에게는 공개됩니다.
+                                //- div.ui.right.pointing.green.basic.label 비공개라도 임원에게는 공개됩니다.
                                 div.ui.mini.buttons
                                     button.showMail.false.ui.button(onclick="SettingButton('showMail', false)", class="#{showMail!='true'?'positive':''}") 비공개
                                     div.or
@@ -76,7 +76,7 @@ div.ui.raised.segment
                                         |#{mail}
                         div.item
                             div.right.floated.content
-                                div.ui.right.pointing.green.basic.label 비공개라도 임원에게는 공개됩니다.
+                                //- div.ui.right.pointing.green.basic.label 비공개라도 임원에게는 공개됩니다.
                                 div.ui.mini.buttons
                                     button.showLocate.false.ui.button(onclick="SettingButton('showLocate', false)", class="#{!showLocate?'positive':''}") 비공개
                                     div.or
@@ -88,6 +88,6 @@ div.ui.raised.segment
                                         |#{locate}
                         div.item
                             div.right.floated.content
-                                div.ui.right.pointing.red.basic.label 결정 사항을 저장합니다.
+                                //- div.ui.right.pointing.red.basic.label 결정 사항을 저장합니다.
                                 button.ui.mini.red.button(onclick="SettingSave()") 저장
     input#uploadInput.filebox.upload(type="file", name="upload", accept="image/*", onchange="ReadURL(this)")
