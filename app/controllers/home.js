@@ -1201,7 +1201,7 @@ router.post('/addBank', function (req, res, next) {
     var getDate = new Date();
     var year = getDate.getFullYear().toString();
     var month = getDate.getMonth();
-    var day = getDate.getDay();
+    var day = getDate.getDate();
 
 
     var add_year = req.body.add_year;
@@ -1321,7 +1321,7 @@ router.post('/editBank', function (req, res, next) {
     var getDate = new Date();
     var year = getDate.getFullYear().toString();
     var month = getDate.getMonth();
-    var day = getDate.getDay();
+    var day = getDate.getDate();
 
     var date = req.body.date;
     var section = req.body.section;
