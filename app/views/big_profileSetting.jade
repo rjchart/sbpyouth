@@ -10,8 +10,8 @@ div.ui.raised.segment
                 label#clickPhoto.image.outImg(style="background-color:#e5e5e5; #{usingPhoto=='true' ? '' : 'cursor: pointer'};", for="#{usingPhoto=='true' ? '' : 'uploadInput'}")
                     if (usingPhoto == 'true')
                         img#photo.fitImg(src="#{userPhoto}")
-                    else if (photo)
-                        img#photo.fitImg(src="#{photo}")
+                    else if (photoName)
+                        img#photo.fitImg(src="https://sbpyouth.blob.core.windows.net/imgcontainer/#{photoName}")
                     else
                         img#photo.fitImg(src="/public/img/image.png")
                 div.ui.pointing.green.basic.label 기본사진: 클릭하여 수정이 가능 합니다.
