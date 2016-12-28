@@ -19,7 +19,9 @@ mixin detail2(key, dataArray)
             each data in dataArray
                 div.ui.big.card
                     div.image.outImg(style="background-color:#e5e5e5")
-                        if (data.photoName) 
+                        if (data.usingPhoto == 'true')
+                            img#photo.fitImg(src="#{data.userPhoto||''}")
+                        else if (data.photoName) 
                             img.fitImg#photo(src="https://sbpyouth.blob.core.windows.net/imgcontainer/#{data.photoName||''}")
                         else
                             img.fitImg(src="/public/img/image.png")
@@ -27,14 +29,6 @@ mixin detail2(key, dataArray)
                         div.header #{data.name}
                         div.meta
                             span.time #{data.birthYear}.#{data.birthMonth}.#{data.birthDay}
-                            //- span.charge #{data.service}
-                            //- span.members #{data.event_part}
-                        //- if (data.branch)
-                        //-     div.description
-                        //-         |브랜치: #{data.branch}
-                        //- if (data.attendDesc)
-                        //-     div.description(style="color:gray; font-size:10px")
-                        //-         | >> #{data.attendDesc}
                     if (data.branch || data.showPhone || authShow)
                         div.extra.content
                             div

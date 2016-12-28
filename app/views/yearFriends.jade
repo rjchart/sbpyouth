@@ -1,7 +1,47 @@
 extends friends
+mixin detail(key, dataArray)
+    div.ui.blue.tag.label
+        i.dropdown.icon 
+        |#{key.substring(2,4)} 또래
+    span &nbsp;&nbsp;&nbsp;&nbsp;
+        - var arrayFirst = 0;
+        each data in dataArray
+            if (arrayFirst == 0)
+                |#{data.name}
+                - arrayFirst = 1;
+            else 
+                |, #{data.name}
+mixin detail2(key, dataArray)
+    //- p(style="color:gray") #{chargeDesc[key]}
+    div.ui.three.stackable.cards
+        if (dataArray)
+            each data in dataArray
+                div.ui.big.card
+                    div.image.outImg(style="background-color:#e5e5e5")
+                        if (data.usingPhoto == 'true')
+                            img#photo.fitImg(src="#{data.userPhoto||''}")
+                        else if (data.photoName) 
+                            img.fitImg#photo(src="https://sbpyouth.blob.core.windows.net/imgcontainer/#{data.photoName||''}")
+                        else
+                            img.fitImg(src="/public/img/image.png")
+                    div.content
+                        div.header #{data.name}
+                        div.meta
+                            span.time #{data.birthYear}.#{data.birthMonth}.#{data.birthDay}
+                    if (data.branch || data.showPhone || authShow)
+                        div.extra.content
+                            div
+                                if data.showPhone || authShow
+                                    span #{data.phone}
+                                if data.branch
+                                    span.right.floated
+                                        i.tag.icon
+                                        |#{data.branch}
 block sub_item07
     a.active.sub.item(href="/history") 히스토리
 block sub_content
+    - var authShow = false;
+    - if (auth == "developer" || auth == "manager" || auth == "executive") authShow = true;
     div.ui.main.container
         div.ui.segment
             h3.ui.dividing.header 청년부 또래별 정리
@@ -13,71 +53,15 @@ block sub_content
                     if (first == 0)
                         - first = 1;
                         div.active.title
-                            div.ui.blue.tag.label
-                                i.dropdown.icon 
-                                |#{key.substring(2,4)} 또래
-                            span &nbsp;&nbsp;&nbsp;&nbsp;
-                                - var arrayFirst = 0;
-                                each data in dataArray
-                                    if (arrayFirst == 0)
-                                        |#{data.name}
-                                        - arrayFirst = 1;
-                                    else 
-                                        |, #{data.name}
+                            mixin detail(key, dataArray)
                         div.active.content
-                            div.ui.three.stackable.cards
-                                each data in dataArray
-                                    div.ui.big.card
-                                        div.image.outImg(style="background-color:black")
-                                            if (data.photoName) 
-                                                img.fitImg#photo(src="https://sbpyouth.blob.core.windows.net/imgcontainer/#{data.photoName||''}")
-                                            else
-                                                img.fitImg(src="/public/img/image.png")
-                                        div.content
-                                            div.header #{data.name}
-                                            div.meta
-                                                |#{data.birthYear}.#{data.birthMonth}.#{data.birthDay}
-                                                //- span.members #{data.event_part}
-                                            if (data.branch)
-                                                div.description
-                                                    |브랜치: #{data.branch}
-                                            if (data.attendDesc)
-                                                div.description(style="color:gray; font-size:10px")
-                                                    | >> #{data.attendDesc}
+                            mixin detail2(key, dataArray)
                         div.ui.fitted.divider
                     else
                         div.title
-                            div.ui.blue.tag.label
-                                i.dropdown.icon 
-                                |#{key.substring(2,4)} 또래
-                            span &nbsp;&nbsp;&nbsp;&nbsp;
-                                - var arrayFirst = 0;
-                                each data in dataArray
-                                    if (arrayFirst == 0)
-                                        |#{data.name}
-                                        - arrayFirst = 1;
-                                    else 
-                                        |, #{data.name}
+                            mixin detail(key, dataArray)
                         div.content
-                            div.ui.three.stackable.cards
-                                each data in dataArray
-                                    div.ui.big.card
-                                        div.image.outImg(style="background-color:black")
-                                            if (data.photoName) 
-                                                img.fitImg#photo(src="https://sbpyouth.blob.core.windows.net/imgcontainer/#{data.photoName||''}")
-                                            else
-                                                img.fitImg(src="/public/img/image.png")
-                                        div.content
-                                            div.header #{data.name}
-                                            div.meta
-                                                |#{data.birthYear}.#{data.birthMonth}.#{data.birthDay}
-                                                //- span.members #{data.event_part}
-                                            if (data.branch)
-                                                div.description
-                                                    |브랜치: #{data.branch}
-                                            if (data.attendDesc)
-                                                div.description(style="color:gray; font-size:10px")
-                                                    | >> #{data.attendDesc}
+                            mixin detail2(key, dataArray)
                         div.ui.fitted.divider
                 if !isLogin
                     br
