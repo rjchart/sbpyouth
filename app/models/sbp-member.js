@@ -8,6 +8,17 @@ var sbp_branch = require('../models/sbp-branch');
 var tableService = azure.createTableService(storageAccount, accessKey);
 var entGen = azure.TableUtilities.entityGenerator;
 
+function MakeQuery(partitionKey, other) {
+    var queryString = "PartitionKey eq '" + partitionKey + "'";
+    var tt = typeof other;
+    if (typeof other != undefined) {
+        for (var key in other) {
+            queryString += " and " + key + " eq '" + other[key] + "'";
+        }
+    }
+    return queryString;
+}
+
 function RemoveEntityGenList (list) {
     for (var key in list) {
         var data = list[key];
@@ -483,45 +494,6 @@ module.exports.GetDatas = function (partitionKey, tableName, next) {
             if (tableName == "bankList")
                 SetBankListSort(banklogs);
             next(null, banklogs);
-        }
-        else {
-            console.log("error:" + error);
-            next(error);
-        }
-            
-    });
-}
-
-function MakeQuery(partitionKey, other) {
-    var queryString = "PartitionKey eq '" + partitionKey + "'";
-    var tt = typeof other;
-    if (typeof other != undefined) {
-        for (var key in other) {
-            queryString += " and " + key + " eq '" + other[key] + "'";
-        }
-    }
-    return queryString;
-}
-
-module.exports.GetSBPDatas = function (partitionKey, others, next) {
-    
-    var queryString = MakeQuery(partitionKey, others);
-
-    // queryString1 = "PartitionKey eq 'Event'";
-    var query = new azure.TableQuery()
-    .where(queryString);
-    // .where('PartitionKey eq ?', partitionKey);
-
-    // 데이터베이스 쿼리를 실행합니다.
-    tableService.queryEntities('sbpcc', query, null, function (error, result) {
-        if (!error) {
-            var resultDatas = [];
-            for (var index in result.entries) {
-                var data = result.entries[index];
-                RemoveEntityGen(data);
-                resultDatas.push(data);
-            }
-            next(null, resultDatas);
         }
         else {
             console.log("error:" + error);

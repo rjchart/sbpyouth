@@ -1,0 +1,62 @@
+extends layout
+block script
+	block script_part01
+		script(type="text/javascript", src="../javascript/templates.js")
+		script(type="text/javascript", src="../javascript/runtime.js")
+		script.
+			var makeStep = 0;
+			$(document).ready(function(){
+				$('#profileData').hide();
+				$('.small.button').popup();
+				$('.ui.dropdown').dropdown();
+				$('.ui.checkbox').checkbox();
+			});
+
+			function SaveAttendanceButton() {
+				$('#saveAttendance').submit();
+			}
+
+			function LoadAttendanceButton() {
+				
+			}
+
+	block script_part02
+		
+block header_item04
+	div.ui.dropdown.item
+		i.tasks.icon 
+		|Tasks
+		i.dropdown.icon
+		div.menu
+			a.active.item(href="/checkAttendance") 출석체크
+			a.item(href="/bank") 회계
+			a.item(href="/bankList") 기타
+block content
+	form#saveAttendance.ui.fluid.form(action="/saveAttendance", method="post")
+		div.ui.secondary.pointing.menu.navbar.grid
+			block sub_item01
+				div.ui.selection.dropdown.sub.item
+					input(type="hidden", name="check_time")
+					i.dropdown.icon
+					div.text
+					div.menu
+						- for (var key in checks)
+							- var check = checks[key]
+							div.item(data-value="#{check.year}.#{check.month}.#{check.date}") #{check.year}년 #{check.month}월 #{check.date}일
+				div.ui.sub.item 출석 체크
+			block sub_item01_2
+			block sub_item02
+			if auth=="manager" || auth=="developer" 
+				div.ui.right.secondary.menu(style="position:absolute; top:-10px; right:0px")
+					div.item
+						div.ui.small.buttons
+							button.ui.blue.small.button(onclick="LoadAttendanceButton()", data-content="선택된 날짜의 출석 정보를 불러온다.")
+								|불러오기
+							div.divier.or
+							button.ui.red.small.button(onclick="SaveAttendanceButton()", data-content="선택된 날짜의 출석 정보를 저장한다.")
+								|저장
+		block sub_content
+		block modal_content
+			div.ui.edit.modal
+		block make_content
+			div.ui.make.modal

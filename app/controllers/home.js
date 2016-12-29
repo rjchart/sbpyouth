@@ -176,7 +176,6 @@ router.get('/leader', function (req, res, next) {
 });
 
 
-
 router.get('/churchLeader', function (req, res, next) {
     var user = sbp_data.CheckLogin(req);
 
@@ -373,7 +372,7 @@ router.get('/history', function (req, res, next) {
     user.month = month;
     user.day = day;
 
-    sbp_member.GetSBPDatas('Event', input, function (error, result) {
+    sbp_data.GetSBPDatas('Event', input, function (error, result) {
         if (!error) {
 
             // for (var value in result) {
@@ -654,9 +653,101 @@ router.get('/branch', function (req, res, next) {
         else 
             console.log(error);
     }, attendSet);
+});
+
+router.get('/checkAttendance', function (req, res, next) {
+    var user = sbp_data.CheckLogin(req);
+
+    var year = req.query.year;
+    var month = req.query.month;
+    var date = req.query.date;
+    if (!year)
+        year = new Date().getFullYear();
+    if (!month)
+        month = new Date().getMonth() + 1;
+    if (!date)
+        date = new Date().getDate();
+	var attendSet = req.query['attendValue'];
+	if (!attendSet)
+		attendSet = 0;
+          
+    sbp_data.GetSBPDatas('Attend', null, function (error, attendResult) {
+        if (error) {
+            attendResult = [];
+        }
+
+        attendResult.forEach(function (item, index) {
+            item.members = item.members.split(',');
+        });
 
 
+        var getTable = sbp_member.GetUnionBranchMembers(year, function (error, result) {
+            if (!error) {
+                var branchs = [];
+                result.bsList.forEach (function (item) {
+                    branchs.push(item.branch);
+                });
+                result.branchTag = JSON.stringify(branchs);
+                result.title = title;
+                
+                CombineElements(user, result)
 
+                if (!year)
+                    year = new Date().getFullYear();
+                if (!month)
+                    month = new Date().getMonth() + 1;
+                if (!date)
+                    date = new Date().getDate();
+
+                while (1) {
+                    var checkTime = new Date(year, month-1, date);
+                    var week = checkTime.getDay();
+                    if (week == 0)
+                        break;
+                    date--;
+                }
+                var checkYear, checkMonth, checkDate;
+                var curYear = year, curMonth = month;
+                var dateDatas = {};
+                dateDatas[curYear] = {};
+                var weeks = [];
+                var checks = [];
+                dateDatas[curYear][curMonth] = weeks;
+                for (var i=0; i <80; i += 7) {
+                    var checkTime = new Date(year, month-1, date-i);
+                    checkYear = checkTime.getFullYear();
+                    checkMonth = checkTime.getMonth()+1;
+                    checkDate = checkTime.getDate();
+                    var tmp = {};
+                    tmp.year = checkYear;
+                    tmp.month = checkMonth;
+                    tmp.date = checkDate;
+                    if (checkYear != curYear) {
+                        curYear = checkYear;
+                        curMonth = checkMonth;
+                        dateDatas[curYear] = {};
+                        weeks = [];
+                        dateDatas[curYear][curMonth] = weeks;
+                    }
+                    else if (checkMonth != curMonth) {
+                        curMonth = checkMonth;
+                        weeks = [];
+                        dateDatas[curYear][curMonth] = weeks;
+                    }
+                    weeks.push(tmp);
+                    checks.push(tmp);
+                }
+
+                user.month = month;
+                user.date = date;
+                user.checks = checks;
+                user.weeks = weeks;
+                res.render('checkAttendance', user);
+            }
+            else 
+                console.log(error);
+        }, attendSet);
+    }); 
   
 });
 
@@ -755,7 +846,7 @@ router.get('/friends/years', function (req, res, next) {
             var memberList2 = [];
             memberList.forEach(function (item, index) {
                 var isOut = false;
-                if (item.attendDesc == "결혼" || item.attendDesc == "제외" ||item.attendDesc == "장기결석" || item.attendDesc == "교회 옮김" || item.attendDesc == "교회옮김" || item.attendDesc == "타교회")
+                if (item.attendDesc == "결혼" || item.attendDesc == "제외" ||item.attendDesc == "장기결석" || item.attendDesc == "교회 옮김" || item.attendDesc == "교회옮김" || item.attendDesc == "타교회" || item.attendDesc == "목사" || item.attendDesc == "목사님" || item.attendDesc == "전도사" || item.attendDesc == "강도사" || item.part == "교회")
                     isOut = true;
                 if (item.attend >= attendSet && !isOut) {
                     memberList2.push(item);
@@ -1491,6 +1582,25 @@ router.post('/addCharge', function (req, res, next) {
     
 });
 
+router.post('/saveAttendance', function (req, res, next) {
+    var body = req.body;
+    var att = body.attendance;
+    var keys = Object.keys(att);
+    var saveString = keys.join(',');
+    
+    var addData = {
+        PartitionKey: 'Attend',
+        RowKey: body.check_time,
+        members: saveString
+    };
+    
+    sbp_data.AddSBPData(addData, function (error, result) {
+        if (!error) {
+            res.send("ok");
+        }
+    });
+    
+});
 
 router.post('/addMember', function (req, res, next) {
     var keys = ['name', 'gender', 'phone', 'birthYear', 'birthMonth', 'birthDay', 'tension', 'attend'];

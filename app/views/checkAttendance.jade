@@ -1,0 +1,67 @@
+extends checkAttendanceBase
+block sub_item01
+	div.ui.selection.dropdown.sub.item
+		input(type="hidden", name="check_time", value="#{checks[0].year}.#{checks[0].month}.#{checks[0].date}", style="text-align:center")
+		i.dropdown.icon
+		div.text(style="text-align:center")
+		div.menu
+			- for (var key in checks)
+				- var check = checks[key]
+				div.item(data-value="#{check.year}.#{check.month}.#{check.date}", style="text-align:center") #{check.year}년 #{check.month}월 #{check.date}일
+block sub_content
+	div.ui.main.container
+		div.ui.container
+			table.ui.celled.striped.structured.unstackable.table
+				thead
+					tr
+						th 브랜치
+						- bsList.forEach( function(item,index) {
+						th #{item.branch}	
+						- });
+						//- th(colspan="#{maxLength.one}") 브랜치 맴버
+						//- th(colspan="#{maxLength.arm}") 군입대자
+						//- th(colspan="#{maxLength.out}") 유학자
+				tbody
+					tr
+						td: strong 브랜치장
+						each item in bsList
+							td
+								div.ui.checkbox
+									label#profile(onclick="ProfileBS('#{item.RowKey}','#{year}','#{item.branch}','#{item.attend}')") #{item.RowKey}
+									input(type="checkbox", name="attendance[#{item.RowKey}]", checked="checked")
+					- for(var i = 0; i < maxLength.one; i++) {
+					tr 
+						if i == 0
+							td(rowspan="#{maxLength.one}") 
+								strong 브랜치 맴버
+						each item in bsList
+							td
+								if item.one.length > i
+									div.ui.checkbox
+										label#profile(onclick="ProfileBS('#{item.one[i].RowKey}','#{year}','#{item.one[i].branch}','#{item.one[i].attend}')") #{item.one[i].RowKey}
+										input(type="checkbox", name="attendance[#{item.one[i].RowKey}]")
+					- }
+					- for(var i = 0; i < maxLength.arm; i++) {
+					tr 
+						if i == 0
+							td(rowspan="#{maxLength.arm}") 
+								strong 군입대자
+						each item in bsList
+							td
+								if item.arm.length > i 
+									div.ui.checkbox
+										label#profile(onclick="ProfileBS('#{item.arm[i].RowKey}','#{year}','#{item.arm[i].branch}','#{item.arm[i].attend}')") #{item.arm[i].RowKey}
+										input(type="checkbox", name="attendance[#{item.arm[i].RowKey}]")
+					- }
+					- for(var i = 0; i < maxLength.out; i++) {
+					tr 
+						if i == 0
+							td(rowspan="#{maxLength.out}") 
+								strong 유학자
+						each item in bsList
+							td
+								if item.out.length > i 
+									div.ui.checkbox
+										label#profile(onclick="ProfileBS('#{item.out[i].RowKey}','#{year}','#{item.out[i].branch}','#{item.out[i].attend}')") #{item.out[i].RowKey}
+										input(type="checkbox", name="attendance[#{item.out[i].RowKey}]")
+					- }
