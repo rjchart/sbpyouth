@@ -13,6 +13,22 @@ block script
 			var checks = JSON.parse(checkString.replace(/&quot;/g,'"'));
 
 			$(document).ready(function(){
+				var useuser = {
+					onChange: function(value, text, $selectedItem) {
+						var getKey = value;
+						var array = [];
+						for (var key in result) {
+							if (result[key].RowKey == getKey)
+								array = result[key].members;
+						}
+						$('.ui.checkbox').checkbox('set unchecked');
+						for (var key in array) {
+							var name = array[key];
+							var checkVal = '.ui.checkbox' + '.' + name;
+							$(checkVal).checkbox('set checked');
+						}
+					}
+				}
 				$('#profileData').hide();
 				$('.small.button').popup();
 				$('.ui.dropdown').dropdown();
@@ -50,20 +66,17 @@ block script
 					getResult = 0;
 
 				var getKey = checks[getResult.toString()].timeString;
-				//- var setValue = 'set value(' + getKey + ')';
+
 				$('.ui.selection.dropdown.times.sub.item').dropdown('set selected', getKey);
 				var array = [];
 				for (var key in result) {
 					if (result[key].RowKey == getKey)
 						array = result[key].members;
 				}
-				//- $('input.checkName').removeAttr('checked');
 				$('.ui.checkbox').checkbox('set unchecked');
 				for (var key in array) {
 					var name = array[key];
-					//- var queryVal = 'input.checkName' + '.' + name;
 					var checkVal = '.ui.checkbox' + '.' + name;
-					//- $(queryVal).attr('checked', 'checked')
 					$(checkVal).checkbox('set checked');
 				}
 			});
@@ -117,15 +130,15 @@ block content
 				div.ui.sub.item 출석 체크
 			block sub_item01_2
 			block sub_item02
-			if auth=="manager" || auth=="developer" 
-				div.ui.right.secondary.menu
-					div.item(style="margin-bottom:0px; padding-bottom:0px; margin-top:0px; padding-top:0px;")
-						div.ui.small.buttons
-							a.ui.blue.small.button(onclick="LoadAttendanceButton()", data-content="선택된 날짜의 출석 정보를 불러온다.")
-								|불러오기
-							div.divier.or
-							a.ui.red.small.button(onclick="SaveAttendanceButton()", data-content="선택된 날짜의 출석 정보를 저장한다.")
-								|저장
+			//- if auth=="manager" || auth=="developer" 
+			div.ui.right.secondary.menu
+				div.item(style="margin-bottom:0px; padding-bottom:0px; margin-top:0px; padding-top:0px;")
+					div.ui.small.buttons
+						a.ui.blue.small.button(onclick="LoadAttendanceButton()", data-content="선택된 날짜의 출석 정보를 불러온다.")
+							|불러오기
+						div.divier.or
+						a.ui.red.small.button(onclick="SaveAttendanceButton()", data-content="선택된 날짜의 출석 정보를 저장한다.")
+							|저장
 		block sub_content
 		block modal_content
 			div.ui.edit.modal

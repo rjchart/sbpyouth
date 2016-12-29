@@ -3,7 +3,7 @@ mixin tableDisplay(array, maxLength)
 	- var max = 0;
 	each bm,index in array
 		td: div.ui.checkbox(class="#{bm.RowKey}") 
-			label(style="font-size:10px") #{bm.RowKey}
+			label.large(style="font-size:10px") #{bm.RowKey}
 			if (attendList && attendList.indexOf(bm.RowKey) != -1)
 				input.checkName(class="#{bm.RowKey}", type="checkbox", name="attendance[#{bm.RowKey}]", checked="checked")
 			else
@@ -24,7 +24,7 @@ block sub_item01
 block sub_content
 	div.ui.main.container
 		div.ui.container
-			table.ui.celled.striped.structured.table(style="font-size:10px")
+			table.large.ui.celled.striped.structured.table(style="font-size:10px")
 				thead
 					tr
 						th 브랜치
@@ -37,7 +37,7 @@ block sub_content
 						tr
 							td: strong #{item.branch}
 							td: div.ui.checkbox(class="#{item.RowKey}")
-								label(style="font-size:10px") #{item.RowKey}
+								label.large(style="font-size:10px") #{item.RowKey}
 								if (attendList && attendList.indexOf(item.RowKey) != -1)
 									input.checkName(class = "#{item.RowKey}", type="checkbox", name="attendance[#{item.RowKey}]", checked="checked")
 								else
