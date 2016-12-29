@@ -10,5 +10,12 @@ function getYear() {
 	return current_year;
 } 
 
-module.exports.getYear = getYear;
+function getFullYear() {
+	var date = new Date();
+	var current_year = date.getFullYear();
+	current_year = 2017;
+	return current_year;
+} 
 
+module.exports.getYear = getYear;
+module.exports.getFullYear = getFullYear;

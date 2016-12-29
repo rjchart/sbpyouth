@@ -146,7 +146,7 @@ router.get('/leader', function (req, res, next) {
     var year = req.query.year;
     var getDate = new Date();
     if (year == null)
-        year = getDate.getFullYear().toString();
+        year = sbp_time.getFullYear().toString();
 
     sbp_member.GetLeadersWithYear(year, function (error, result) {
         if (!error) {
