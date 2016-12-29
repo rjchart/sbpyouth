@@ -10,14 +10,26 @@ block script
 				$('.small.button').popup();
 				$('.ui.dropdown').dropdown();
 				$('.ui.checkbox').checkbox();
+				//- $('table').tablesort();
 			});
 
 			function SaveAttendanceButton() {
-				$('#saveAttendance').submit();
+				$('#saveAttendance').ajaxSubmit({
+					error: function (xhr) {
+						alert('저장에 실패했습니다.\n' + xhr.responseText);
+					},
+					success: function (response) {
+						alert('저장 했습니다.');
+						//- document.location.reload();
+					}
+				});
 			}
 
 			function LoadAttendanceButton() {
-				
+				var value = $('#time').val();
+				var sp = value.split('.');
+
+				location = "/checkAttendance?year=" + sp[0] + "&month=" + sp[1] + "&date=" + sp[2];
 			}
 
 	block script_part02
@@ -47,13 +59,13 @@ block content
 			block sub_item01_2
 			block sub_item02
 			if auth=="manager" || auth=="developer" 
-				div.ui.right.secondary.menu(style="position:absolute; top:-10px; right:0px")
-					div.item
+				div.ui.right.secondary.menu
+					div.item(style="margin-bottom:0px; padding-bottom:0px; margin-top:0px; padding-top:0px;")
 						div.ui.small.buttons
-							button.ui.blue.small.button(onclick="LoadAttendanceButton()", data-content="선택된 날짜의 출석 정보를 불러온다.")
+							a.ui.blue.small.button(onclick="LoadAttendanceButton()", data-content="선택된 날짜의 출석 정보를 불러온다.")
 								|불러오기
 							div.divier.or
-							button.ui.red.small.button(onclick="SaveAttendanceButton()", data-content="선택된 날짜의 출석 정보를 저장한다.")
+							a.ui.red.small.button(onclick="SaveAttendanceButton()", data-content="선택된 날짜의 출석 정보를 저장한다.")
 								|저장
 		block sub_content
 		block modal_content

@@ -564,7 +564,7 @@ router.get('/services', function (req, res, next) {
         service = '유치부';
 
     // var queryString = "service eq '" + service + "'";
-    var serviceOrder = ['유치부', '유년부', '초등부', '중고등부', '글로리아 찬양대', '할렐루야 찬양대'];
+    var serviceOrder = ['영아부', '유치부', '유년부', '초등부', '중고등부', '글로리아 찬양대', '할렐루야 찬양대'];
     var queryArray = [];
     for (var key in serviceOrder) {
         var value = serviceOrder[key];
@@ -604,7 +604,7 @@ router.get('/services/:id', function (req, res, next) {
     if (service == '영아부')
         header = '신반포 중앙교회 영아부는 0~4세의 아이들을 돌보며 가르치는 부서입니다.';
     else if (service == '유치부')
-        header = '신반포 중앙교회 유치부는 0~4세의 아이들을 돌보며 가르치는 부서입니다.';
+        header = '신반포 중앙교회 유치부는 5~7세의 아이들을 돌보며 가르치는 부서입니다.';
     else if (service == '유년부')
         header = '신반포 중앙교회 유년부는 초등학교 1학년부터 3학년까지의 아이들과 예배하며 가르치는 부서입니다.';
     else if (service == '초등부')
@@ -661,12 +661,23 @@ router.get('/checkAttendance', function (req, res, next) {
     var year = req.query.year;
     var month = req.query.month;
     var date = req.query.date;
+    var cur_year = new Date().getFullYear();
+    var cur_month = new Date().getMonth() + 1;
+    var cur_date = new Date().getDate();
+    while (1) {
+        var checkTime = new Date(cur_year, cur_month-1, cur_date);
+        var week = checkTime.getDay();
+        if (week == 0)
+            break;
+        cur_date--;
+    }
     if (!year)
-        year = new Date().getFullYear();
+        year = cur_year;
     if (!month)
-        month = new Date().getMonth() + 1;
+        month = cur_month;
     if (!date)
-        date = new Date().getDate();
+        date = cur_date;
+
 	var attendSet = req.query['attendValue'];
 	if (!attendSet)
 		attendSet = 0;
@@ -693,28 +704,21 @@ router.get('/checkAttendance', function (req, res, next) {
                 CombineElements(user, result)
 
                 if (!year)
-                    year = new Date().getFullYear();
+                    year = cur_year;
                 if (!month)
-                    month = new Date().getMonth() + 1;
+                    month = cur_month;
                 if (!date)
-                    date = new Date().getDate();
+                    date = cur_date;
 
-                while (1) {
-                    var checkTime = new Date(year, month-1, date);
-                    var week = checkTime.getDay();
-                    if (week == 0)
-                        break;
-                    date--;
-                }
                 var checkYear, checkMonth, checkDate;
-                var curYear = year, curMonth = month;
+                var curYear = cur_year, curMonth = cur_month;
                 var dateDatas = {};
                 dateDatas[curYear] = {};
                 var weeks = [];
                 var checks = [];
                 dateDatas[curYear][curMonth] = weeks;
                 for (var i=0; i <80; i += 7) {
-                    var checkTime = new Date(year, month-1, date-i);
+                    var checkTime = new Date(cur_year, cur_month-1, cur_date-i);
                     checkYear = checkTime.getFullYear();
                     checkMonth = checkTime.getMonth()+1;
                     checkDate = checkTime.getDate();
@@ -738,10 +742,134 @@ router.get('/checkAttendance', function (req, res, next) {
                     checks.push(tmp);
                 }
 
+                var attendKey = year + "." + month + "." + date;
+                var attendList = [];
+                attendResult.forEach(function(item) {
+                    if (item.RowKey == attendKey)
+                        attendList = item;
+                });
+                // attendList.forEach(function(item,index) {
+
+                // });
+
+                user.year = year;
                 user.month = month;
                 user.date = date;
                 user.checks = checks;
                 user.weeks = weeks;
+                user.attendList = attendList.members;
+                res.render('checkAttendance02', user);
+            }
+            else 
+                console.log(error);
+        }, attendSet);
+    }); 
+  
+});
+
+router.get('/checkAttendance2', function (req, res, next) {
+    var user = sbp_data.CheckLogin(req);
+
+    var year = req.query.year;
+    var month = req.query.month;
+    var date = req.query.date;
+    var cur_year = new Date().getFullYear();
+    var cur_month = new Date().getMonth() + 1;
+    var cur_date = new Date().getDate();
+    while (1) {
+        var checkTime = new Date(cur_year, cur_month-1, cur_date);
+        var week = checkTime.getDay();
+        if (week == 0)
+            break;
+        cur_date--;
+    }
+    if (!year)
+        year = cur_year;
+    if (!month)
+        month = cur_month;
+    if (!date)
+        date = cur_date;
+
+	var attendSet = req.query['attendValue'];
+	if (!attendSet)
+		attendSet = 0;
+          
+    sbp_data.GetSBPDatas('Attend', null, function (error, attendResult) {
+        if (error) {
+            attendResult = [];
+        }
+
+        attendResult.forEach(function (item, index) {
+            item.members = item.members.split(',');
+        });
+
+
+        var getTable = sbp_member.GetUnionBranchMembers(year, function (error, result) {
+            if (!error) {
+                var branchs = [];
+                result.bsList.forEach (function (item) {
+                    branchs.push(item.branch);
+                });
+                result.branchTag = JSON.stringify(branchs);
+                result.title = title;
+                
+                CombineElements(user, result)
+
+                if (!year)
+                    year = cur_year;
+                if (!month)
+                    month = cur_month;
+                if (!date)
+                    date = cur_date;
+
+                var checkYear, checkMonth, checkDate;
+                var curYear = cur_year, curMonth = cur_month;
+                var dateDatas = {};
+                dateDatas[curYear] = {};
+                var weeks = [];
+                var checks = [];
+                dateDatas[curYear][curMonth] = weeks;
+                for (var i=0; i <80; i += 7) {
+                    var checkTime = new Date(cur_year, cur_month-1, cur_date-i);
+                    checkYear = checkTime.getFullYear();
+                    checkMonth = checkTime.getMonth()+1;
+                    checkDate = checkTime.getDate();
+                    var tmp = {};
+                    tmp.year = checkYear;
+                    tmp.month = checkMonth;
+                    tmp.date = checkDate;
+                    if (checkYear != curYear) {
+                        curYear = checkYear;
+                        curMonth = checkMonth;
+                        dateDatas[curYear] = {};
+                        weeks = [];
+                        dateDatas[curYear][curMonth] = weeks;
+                    }
+                    else if (checkMonth != curMonth) {
+                        curMonth = checkMonth;
+                        weeks = [];
+                        dateDatas[curYear][curMonth] = weeks;
+                    }
+                    weeks.push(tmp);
+                    checks.push(tmp);
+                }
+
+                var attendKey = year + "." + month + "." + date;
+                var attendList = [];
+                attendResult.forEach(function(item) {
+                    if (item.RowKey == attendKey)
+                        attendList = item;
+                });
+                // attendList.forEach(function(item,index) {
+
+                // });
+
+                user.year = year;
+                user.month = month;
+                user.date = date;
+                user.checks = checks;
+                user.weeks = weeks;
+                user.attendList = attendList.members;
                 res.render('checkAttendance', user);
             }
             else 

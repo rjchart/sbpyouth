@@ -1,0 +1,47 @@
+extends checkAttendanceBase
+mixin tableDisplay(array, maxLength)
+	- var max = 0;
+	each bm,index in array
+		td: div.ui.checkbox 
+			label(style="font-size:10px") #{bm.RowKey}
+			if (attendList && attendList.indexOf(bm.RowKey) != -1)
+				input(type="checkbox", name="attendance[#{bm.RowKey}]", checked="checked")
+			else
+				input(type="checkbox", name="attendance[#{bm.RowKey}]")
+		- max++
+	- while(max < maxLength)
+		td
+		- max++
+block sub_item01
+	div.ui.selection.dropdown.sub.item
+		input#time(type="hidden", name="check_time", value="#{year}.#{month}.#{date}", style="text-align:center")
+		i.dropdown.icon
+		div.text(style="text-align:center")
+		div.menu
+			- for (var key in checks)
+				- var check = checks[key]
+				div.item(data-value="#{check.year}.#{check.month}.#{check.date}", style="text-align:center") #{check.year}년 #{check.month}월 #{check.date}일
+block sub_content
+	div.ui.main.container
+		div.ui.container
+			table.ui.celled.striped.structured.table(style="font-size:10px")
+				thead
+					tr
+						th 브랜치
+						th: strong 브랜치장
+						th(colspan="#{maxLength.one}") 브랜치 맴버
+						th(colspan="#{maxLength.arm}") 군입대자
+						th(colspan="#{maxLength.out}") 유학자
+				tbody
+					each item in bsList
+						tr
+							td: strong #{item.branch}
+							td: div.ui.checkbox 
+								label(style="font-size:10px") #{item.RowKey}
+								if (attendList && attendList.indexOf(item.RowKey) != -1)
+									input(type="checkbox", name="attendance[#{item.RowKey}]", checked="checked")
+								else
+									input(type="checkbox", name="attendance[#{item.RowKey}]")
+							mixin tableDisplay(item.one, maxLength.one)
+							mixin tableDisplay(item.arm, maxLength.arm)
+							mixin tableDisplay(item.out, maxLength.out)

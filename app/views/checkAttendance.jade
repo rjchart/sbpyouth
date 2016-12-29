@@ -1,7 +1,7 @@
 extends checkAttendanceBase
 block sub_item01
 	div.ui.selection.dropdown.sub.item
-		input(type="hidden", name="check_time", value="#{checks[0].year}.#{checks[0].month}.#{checks[0].date}", style="text-align:center")
+		input#time(type="hidden", name="check_time", value="#{year}.#{month}.#{date}", style="text-align:center")
 		i.dropdown.icon
 		div.text(style="text-align:center")
 		div.menu
@@ -11,7 +11,7 @@ block sub_item01
 block sub_content
 	div.ui.main.container
 		div.ui.container
-			table.ui.celled.striped.structured.unstackable.table
+			table.ui.celled.striped.compacked.structured.table
 				thead
 					tr
 						th 브랜치
@@ -28,7 +28,10 @@ block sub_content
 							td
 								div.ui.checkbox
 									label#profile(onclick="ProfileBS('#{item.RowKey}','#{year}','#{item.branch}','#{item.attend}')") #{item.RowKey}
-									input(type="checkbox", name="attendance[#{item.RowKey}]", checked="checked")
+									if (attendList && attendList.indexOf(item.RowKey) != -1)
+										input(type="checkbox", name="attendance[#{item.RowKey}]", checked="checked")
+									else
+										input(type="checkbox", name="attendance[#{item.RowKey}]")
 					- for(var i = 0; i < maxLength.one; i++) {
 					tr 
 						if i == 0
@@ -39,7 +42,10 @@ block sub_content
 								if item.one.length > i
 									div.ui.checkbox
 										label#profile(onclick="ProfileBS('#{item.one[i].RowKey}','#{year}','#{item.one[i].branch}','#{item.one[i].attend}')") #{item.one[i].RowKey}
-										input(type="checkbox", name="attendance[#{item.one[i].RowKey}]")
+										if (attendList && attendList.indexOf(item.one[i].RowKey) != -1)
+											input(type="checkbox", name="attendance[#{item.one[i].RowKey}]", checked="checked")
+										else 
+											input(type="checkbox", name="attendance[#{item.one[i].RowKey}]")
 					- }
 					- for(var i = 0; i < maxLength.arm; i++) {
 					tr 
@@ -51,7 +57,10 @@ block sub_content
 								if item.arm.length > i 
 									div.ui.checkbox
 										label#profile(onclick="ProfileBS('#{item.arm[i].RowKey}','#{year}','#{item.arm[i].branch}','#{item.arm[i].attend}')") #{item.arm[i].RowKey}
-										input(type="checkbox", name="attendance[#{item.arm[i].RowKey}]")
+										if (attendList && attendList.indexOf(item.arm[i].RowKey) != -1)
+											input(type="checkbox", name="attendance[#{item.arm[i].RowKey}]", checked="checked")
+										else
+											input(type="checkbox", name="attendance[#{item.arm[i].RowKey}]")
 					- }
 					- for(var i = 0; i < maxLength.out; i++) {
 					tr 
@@ -63,5 +72,8 @@ block sub_content
 								if item.out.length > i 
 									div.ui.checkbox
 										label#profile(onclick="ProfileBS('#{item.out[i].RowKey}','#{year}','#{item.out[i].branch}','#{item.out[i].attend}')") #{item.out[i].RowKey}
-										input(type="checkbox", name="attendance[#{item.out[i].RowKey}]")
+										if (attendList && attendList.indexOf(item.out[i].RowKey) != -1)
+											input(type="checkbox", name="attendance[#{item.out[i].RowKey}]", checked="checked")
+										else
+											input(type="checkbox", name="attendance[#{item.out[i].RowKey}]")
 					- }
