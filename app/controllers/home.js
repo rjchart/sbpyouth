@@ -688,9 +688,9 @@ router.get('/checkAttendance', function (req, res, next) {
         }
 
         attendResult.forEach(function (item, index) {
+            item.memberString = item.members;
             item.members = item.members.split(',');
         });
-
 
         var getTable = sbp_member.GetUnionBranchMembers(year, function (error, result) {
             if (!error) {
@@ -726,6 +726,7 @@ router.get('/checkAttendance', function (req, res, next) {
                     tmp.year = checkYear;
                     tmp.month = checkMonth;
                     tmp.date = checkDate;
+                    tmp.timeString = checkYear + "." + checkMonth + "." + checkDate;
                     if (checkYear != curYear) {
                         curYear = checkYear;
                         curMonth = checkMonth;
@@ -758,6 +759,7 @@ router.get('/checkAttendance', function (req, res, next) {
                 user.checks = checks;
                 user.weeks = weeks;
                 user.attendList = attendList.members;
+                user.attendResult = attendResult;
                 res.render('checkAttendance02', user);
             }
             else 
@@ -800,9 +802,9 @@ router.get('/checkAttendance2', function (req, res, next) {
         }
 
         attendResult.forEach(function (item, index) {
+            item.memberString = item.members;
             item.members = item.members.split(',');
         });
-
 
         var getTable = sbp_member.GetUnionBranchMembers(year, function (error, result) {
             if (!error) {
@@ -864,12 +866,14 @@ router.get('/checkAttendance2', function (req, res, next) {
 
                 // });
 
+
                 user.year = year;
                 user.month = month;
                 user.date = date;
                 user.checks = checks;
                 user.weeks = weeks;
                 user.attendList = attendList.members;
+                user.attendResult = attendResult;
                 res.render('checkAttendance', user);
             }
             else 

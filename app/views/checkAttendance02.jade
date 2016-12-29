@@ -2,18 +2,18 @@ extends checkAttendanceBase
 mixin tableDisplay(array, maxLength)
 	- var max = 0;
 	each bm,index in array
-		td: div.ui.checkbox 
+		td: div.ui.checkbox(class="#{bm.RowKey}") 
 			label(style="font-size:10px") #{bm.RowKey}
 			if (attendList && attendList.indexOf(bm.RowKey) != -1)
-				input(type="checkbox", name="attendance[#{bm.RowKey}]", checked="checked")
+				input.checkName(class="#{bm.RowKey}", type="checkbox", name="attendance[#{bm.RowKey}]", checked="checked")
 			else
-				input(type="checkbox", name="attendance[#{bm.RowKey}]")
+				input.checkName(class="#{bm.RowKey}", type="checkbox", name="attendance[#{bm.RowKey}]")
 		- max++
 	- while(max < maxLength)
 		td
 		- max++
 block sub_item01
-	div.ui.selection.dropdown.sub.item
+	div.ui.selection.dropdown.times.sub.item
 		input#time(type="hidden", name="check_time", value="#{year}.#{month}.#{date}", style="text-align:center")
 		i.dropdown.icon
 		div.text(style="text-align:center")
@@ -36,12 +36,12 @@ block sub_content
 					each item in bsList
 						tr
 							td: strong #{item.branch}
-							td: div.ui.checkbox 
+							td: div.ui.checkbox(class="#{item.RowKey}")
 								label(style="font-size:10px") #{item.RowKey}
 								if (attendList && attendList.indexOf(item.RowKey) != -1)
-									input(type="checkbox", name="attendance[#{item.RowKey}]", checked="checked")
+									input.checkName(class = "#{item.RowKey}", type="checkbox", name="attendance[#{item.RowKey}]", checked="checked")
 								else
-									input(type="checkbox", name="attendance[#{item.RowKey}]")
+									input.checkName(class = "#{item.RowKey}", type="checkbox", name="attendance[#{item.RowKey}]")
 							mixin tableDisplay(item.one, maxLength.one)
 							mixin tableDisplay(item.arm, maxLength.arm)
 							mixin tableDisplay(item.out, maxLength.out)
