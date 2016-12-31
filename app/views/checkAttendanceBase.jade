@@ -41,6 +41,7 @@ block script
 				var keyCode = event.keyCode;
 				var value = $('.ui.selection.dropdown.times.sub.item').dropdown('get value');
 				var getResult = -1;
+				var checkNext = 0;
 				for (var key in checks) {
 					var tmp = checks[key];
 					if (tmp.timeString == value)
@@ -50,34 +51,41 @@ block script
 				//- $('.year.dropdown').dropdown('set selected', '2017');
 				if (keyCode == 40) {
 					getResult++;
+					checkNext = 1;
 				}
 				else if (keyCode == 39) {
 					getResult--;
+					checkNext = 1;
 				}
 				else if (keyCode == 38) {
 					getResult--;
+					checkNext = 1;
 				}
 				else if (keyCode == 37) {
 					getResult++;
+					checkNext = 1;
 				}
-				if (getResult >= checks.length)
-					getResult = checks.length-1;
-				else if (getResult < 0)
-					getResult = 0;
 
-				var getKey = checks[getResult.toString()].timeString;
+				if (checkNext == 1) {
+					if (getResult >= checks.length)
+						getResult = checks.length-1;
+					else if (getResult < 0)
+						getResult = 0;
 
-				$('.ui.selection.dropdown.times.sub.item').dropdown('set selected', getKey);
-				var array = [];
-				for (var key in result) {
-					if (result[key].RowKey == getKey)
-						array = result[key].members;
-				}
-				$('.ui.checkbox').checkbox('set unchecked');
-				for (var key in array) {
-					var name = array[key];
-					var checkVal = '.ui.checkbox' + '.' + name;
-					$(checkVal).checkbox('set checked');
+					var getKey = checks[getResult.toString()].timeString;
+
+					$('.ui.selection.dropdown.times.sub.item').dropdown('set selected', getKey);
+					var array = [];
+					for (var key in result) {
+						if (result[key].RowKey == getKey)
+							array = result[key].members;
+					}
+					$('.ui.checkbox').checkbox('set unchecked');
+					for (var key in array) {
+						var name = array[key];
+						var checkVal = '.ui.checkbox' + '.' + name;
+						$(checkVal).checkbox('set checked');
+					}
 				}
 			});
 

@@ -302,7 +302,7 @@ function MakeLeaderList (datas) {
         result[key] = result[key].sort(function(a,b) {
             var aa = 0;
             var bb = 0;
-            var chargeOrder = ['청년부 회장', '청년2부 총무', '청년1부 총무', '청년2부 부총무', '청년1부 부총무', '청년2부 회계', '청년1부 회계', '청년부 서기'];
+            var chargeOrder = ['청년2부 목사', '청년1부 목사', '청년2부 강도사', '청년1부 강도사', '청년2부 전도사', '청년1부 전도사', '청년부 회장', '청년2부 총무', '청년1부 총무', '청년2부 부총무', '청년1부 부총무', '청년2부 회계', '청년1부 회계', '청년부 서기'];
             if (chargeOrder.indexOf(a.RowKey) != -1)
                 aa = 10 - chargeOrder.indexOf(a.RowKey);
             if (chargeOrder.indexOf(b.RowKey) != -1)
