@@ -4,6 +4,10 @@ block script
 		script(type="text/javascript", src="/javascript/templates.js")
 		script(type="text/javascript", src="/javascript/runtime.js")
 		script.
+			var result = '#{JSON.stringify(data)}';
+			result = result.replace(/&quot;/g,'"');
+			var data = JSON.parse(result);
+
 			function AddMemberButton() {
 				$('.ui.modal')
 					.modal({
@@ -24,17 +28,73 @@ block script
 									var year = response.year;
 									var month = response.month;
 									var part = response.part;
+									var added = response.added;
+									added.forEach(function(item) {
+										data.push(item);
+									});
 									var urlString = "/bank?year=" + year + "&month=" + month + "&part=" + part;
-									document.location.replace(urlString);
+									//- document.location.replace(urlString);
+
+
+									var user = {
+										data: data,
+										auth: '#{auth}',
+										curMoney: 0,
+										bankMoney: 0,
+										spenSum: 0
+									};
+									var innerString = window.bankTable(user);
+									document.getElementById('bankTable').innerHTML = innerString;
+									$('.dropdown').dropdown();
+
+									$('.bank.dropdown').dropdown({
+										direction:'downward',
+										onChange: function(value, text, $selectedItem) {
+											var bank = $selectedItem.attr('bank');
+											var number = $selectedItem.attr('number');
+											if (bank) {
+												$('input.bankName.txt').val(bank);
+												$('input.bankNumber.txt').val(number);
+												$('input.bankReceive.txt').val(value);
+											}
+											else {
+												$('input.bankName.txt').val('');
+												$('input.bankNumber.txt').val('');
+												$('input.bankReceive.txt').val('');
+											}
+											//- $('.month.dropdown').dropdown('set selected', '7');
+										}
+									});
+
+										//- $('.year.dropdown').dropdown('set selected', '2017');
+									$('input.txt').keydown(function(event) {
+										var keyCode = event.keyCode;
+										if (keyCode == 40) {
+											var className = event.target.className;
+											var classes = className.split(' ');
+											//- if (classes[3]!='0')
+											var num = parseInt(classes[2])+1;
+											classes[2] = num.toString();
+											className = 'input.' + classes.join('.');
+											$(className).focus();
+										}
+										else if (keyCode == 38) {
+											var className = event.target.className;
+											var classes = className.split(' ');
+											//- if (classes[3]!='0')
+											var num = parseInt(classes[2])-1;
+											classes[2] = num.toString();
+											className = 'input.' + classes.join('.');
+											$(className).focus();
+										}
+									});
 								}
 							});
 							//- window.alert('Approved!');
 						}
 					});
 				$('.ui.modal')
-					.modal('show');
-
-					
+					.modal('show');	
 			}
 
 			function EditButton() {
@@ -97,7 +157,6 @@ block script
 				$('.bank.dropdown').dropdown({
 					direction:'downward',
 					onChange: function(value, text, $selectedItem) {
-						console.log("abc");
 						var bank = $selectedItem.attr('bank');
 						var number = $selectedItem.attr('number');
 						if (bank) {
@@ -253,7 +312,7 @@ block content
 								i.dropdown.icon
 								div.text
 								div.menu
-									- var sections = ['브랜치 모임', '훈련/회의비', '소모임/단합친교비', '생일축하 및 상품', '심방비(경조사)', '팀별/부서사역비', '격려/환송/결혼', '소모품/기타', '성경교재/교육자료', '임원/리더워크숍', '체육행사', '예산', '특강비', '겨울수련회', '여름수련회', '야유회'];
+									- var sections = ['브랜치 모임', '훈련/회의비', '예산', '소모임/단합친교비', '생일축하 및 상품', '특새', '심방비(경조사)', '팀별/부서사역비', '격려/환송/결혼', '소모품/기타', '성경교재/교육자료', '임원/리더워크숍', '체육행사', '특강비', '겨울수련회', '여름수련회', '야유회', '말씀사경회'];
 									each ss in sections
 										div.item(data-value="#{ss}") #{ss}
 					div.four.fields
@@ -274,7 +333,6 @@ block content
 								i.dropdown.icon
 								div.text
 								div.menu
-									- var sections = ['브랜치 모임', '훈련/회의비', '소모임/단합친교비', '생일축하 및 상품', '심방비(경조사)', '팀별/부서사역비', '격려/환송/결혼', '소모품/기타', '성경교재/교육자료', '임원/리더워크숍', '체육행사', '예산', '특강비', '겨울수련회', '여름수련회', '야유회'];
 									if (bankList)
 										div.item(data-value="직접입력") 직접입력 
 										each ss in bankList

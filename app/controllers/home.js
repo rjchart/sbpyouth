@@ -29,11 +29,22 @@ var jsFunctionString8 = jade.compileFileClient('app/views/addBranch_second.jade'
 var jsFunctionString9 = jade.compileFileClient('app/views/addNameBS_template.jade', {name: "addNameBS_template"});
 var jsFunctionString10 = jade.compileFileClient('app/views/detailProfile_template.jade', {name: "detailProfile_template"});
 var jsFunctionString11 = jade.compileFileClient('app/views/modalMemberProfile.jade', {name: "modalMemberProfile"});
+var jsFunctionString12 = jade.compileFileClient('app/views/bankTable.jade', {name: "bankTable"});
 jsFunctionString += "\n" + jsFunctionString2 + "\n" + jsFunctionString3 + "\n"
  + jsFunctionString4 + "\n" + jsFunctionString5 + "\n" + jsFunctionString6 + "\n" 
  + jsFunctionString7 + "\n" + jsFunctionString8 + "\n" + jsFunctionString9 + "\n"
-+ jsFunctionString10 + "\n" + jsFunctionString11;
++ jsFunctionString10 + "\n" + jsFunctionString11 + "\n" + jsFunctionString12;
 fs.writeFileSync("javascript/templates.js", jsFunctionString);
+
+function RemoveEntityGen (entity) {
+    // var resultData = {};
+    for (var key in entity) {
+        var valueOfKey = entity[key];
+        if (typeof valueOfKey == "object")
+            entity[key] = valueOfKey._;
+    }
+    // return resultData;
+}
 
 module.exports = function (app) {
   app.use('/', router);
@@ -692,7 +703,7 @@ router.get('/checkAttendance', function (req, res, next) {
             item.members = item.members.split(',');
         });
 
-        var getTable = sbp_member.GetUnionBranchMembers(year, function (error, result) {
+        var getTable = sbp_member.GetUnionBranchMembers('2016-2', function (error, result) {
             if (!error) {
                 var branchs = [];
                 result.bsList.forEach (function (item) {
@@ -1465,7 +1476,13 @@ router.post('/addBank', function (req, res, next) {
                 tmp.section = add_section[i];
                 tmp.content = add_content[i];
                 tmp.money = add_money[i];
-                if (tmp.section != "예산") {
+
+                if (tmp.section == '예산')
+                    tmp.gain = tmp.money;
+                else
+                    tmp.spend = tmp.money;
+
+                if (tmp.section != "예산" && tmp.section != "특강비" ) {
                     tmp.receiptNo = receiptNo;
                     receiptNo = receiptNo+1;
                 }
@@ -1485,11 +1502,18 @@ router.post('/addBank', function (req, res, next) {
             }
             
             sbp_data.AddBank(addData, function (error, result) {
+                addData.forEach(function(item) {
+                    RemoveEntityGen(item);
+                    item.gain = MakeMoneyData(item.gain);
+                    item.spend = MakeMoneyData(item.spend);
+                    item.curMoney = MakeMoneyData(item.curMoney);
+                });
                 if (!error) {
                     res.send({
                             year: add_year[0],
                             month: add_month[0],
-                            part: add_part[0]
+                            part: add_part[0],
+                            added: addData
                         });
                 }
             });

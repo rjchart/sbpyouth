@@ -277,3 +277,233 @@ buf.push("<img id=\"updateImage\" src=\"/public/img/image.png\" class=\"fitImg\"
 }
 buf.push("</label></div><div><table class=\"ui center aligned very basic small table\"><tbody><tr><td>교회 출석</td><td class=\"center aligned\"><div class=\"ui selection dropdown\"><input type=\"hidden\" name=\"attend\"" + (jade.attr("value", "" + (data.attend || 0) + "", true, false)) + "/><i class=\"dropdown icon\"></i><div class=\"text\"></div><div class=\"menu\"><div data-value=\"0\" class=\"item\">안나옴</div><div data-value=\"1\" class=\"item\">잘 모름</div><div data-value=\"2\" class=\"item\">종종 나옴</div><div data-value=\"3\" class=\"item\">잘 나옴</div><div data-value=\"4\" class=\"item\">매주 나옴</div></div></div></td></tr><tr><td>사교성</td><td class=\"center aligned\"><div class=\"ui selection dropdown\"><input type=\"hidden\" name=\"tension\"" + (jade.attr("value", "" + (data.tension || 0) + "", true, false)) + "/><i class=\"dropdown icon\"></i><div class=\"text\"></div><div class=\"menu\"><div data-value=\"0\" class=\"item\">알수없음</div><div data-value=\"1\" class=\"item\">모자람</div><div data-value=\"2\" class=\"item\">평범함</div><div data-value=\"3\" class=\"item\">좋음</div><div data-value=\"4\" class=\"item\">특출남</div></div></div></td></tr><tr><td>행사 참여</td><td class=\"center aligned\"><div class=\"ui selection dropdown\"><input type=\"hidden\" name=\"attendEvent\"" + (jade.attr("value", "" + (data.attendEvent || 0) + "", true, false)) + "/><i class=\"dropdown icon\"></i><div class=\"text\"></div><div class=\"menu\"><div data-value=\"0\" class=\"item\">안나옴</div><div data-value=\"1\" class=\"item\">잘 모름</div><div data-value=\"2\" class=\"item\">종종 참여</div><div data-value=\"3\" class=\"item\">잘 참여</div><div data-value=\"4\" class=\"item\">거의 참여</div></div></div></td></tr><tr><td>신앙 지식</td><td class=\"center aligned\"><div class=\"ui selection dropdown\"><input type=\"hidden\" name=\"theology\"" + (jade.attr("value", "" + (data.theology || 0) + "", true, false)) + "/><i class=\"dropdown icon\"></i><div class=\"text\"></div><div class=\"menu\"><div data-value=\"0\" class=\"item\">알수없음</div><div data-value=\"1\" class=\"item\">모자람</div><div data-value=\"2\" class=\"item\">평범함</div><div data-value=\"3\" class=\"item\">좋음</div><div data-value=\"4\" class=\"item\">특출남</div></div></div></td></tr><tr><td>성실함</td><td class=\"center aligned\"><div class=\"ui selection dropdown\"><input type=\"hidden\" name=\"faithful\"" + (jade.attr("value", "" + (data.faithful || 0) + "", true, false)) + "/><i class=\"dropdown icon\"></i><div class=\"text\"></div><div class=\"menu\"><div data-value=\"0\" class=\"item\">알수없음</div><div data-value=\"1\" class=\"item\">모자람</div><div data-value=\"2\" class=\"item\">평범함</div><div data-value=\"3\" class=\"item\">좋음</div><div data-value=\"4\" class=\"item\">특출남</div></div></div></td></tr><tr><td>배려심</td><td class=\"center aligned\"><div class=\"ui selection dropdown\"><input type=\"hidden\" name=\"care\"" + (jade.attr("value", "" + (data.care || 0) + "", true, false)) + "/><i class=\"dropdown icon\"></i><div class=\"text\"></div><div class=\"menu\"><div data-value=\"0\" class=\"item\">알수없음</div><div data-value=\"1\" class=\"item\">모자람</div><div data-value=\"2\" class=\"item\">평범함</div><div data-value=\"3\" class=\"item\">좋음</div><div data-value=\"4\" class=\"item\">특출남</div></div></div></td></tr><tr><td>운동 능력</td><td class=\"center aligned\"><div class=\"ui selection dropdown\"><input type=\"hidden\" name=\"physical\"" + (jade.attr("value", "" + (data.physical || 0) + "", true, false)) + "/><i class=\"dropdown icon\"></i><div class=\"text\"></div><div class=\"menu\"><div data-value=\"0\" class=\"item\">알수없음</div><div data-value=\"1\" class=\"item\">모자람</div><div data-value=\"2\" class=\"item\">평범함</div><div data-value=\"3\" class=\"item\">좋음</div><div data-value=\"4\" class=\"item\">특출남</div></div></div></td></tr><tr><td>지혜</td><td class=\"center aligned\"><div class=\"ui selection dropdown\"><input type=\"hidden\" name=\"wisdom\"" + (jade.attr("value", "" + (data.wisdom || 0) + "", true, false)) + "/><i class=\"dropdown icon\"></i><div class=\"text\"></div><div class=\"menu\"><div data-value=\"0\" class=\"item\">알수없음</div><div data-value=\"1\" class=\"item\">모자람</div><div data-value=\"2\" class=\"item\">평범함</div><div data-value=\"3\" class=\"item\">좋음</div><div data-value=\"4\" class=\"item\">특출남</div></div></div></td></tr><tr><td>순발력</td><td class=\"center aligned\"><div class=\"ui selection dropdown\"><input type=\"hidden\" name=\"impulse\"" + (jade.attr("value", "" + (data.impulse || 0) + "", true, false)) + "/><i class=\"dropdown icon\"></i><div class=\"text\"></div><div class=\"menu\"><div data-value=\"0\" class=\"item\">알수없음</div><div data-value=\"1\" class=\"item\">모자람</div><div data-value=\"2\" class=\"item\">평범함</div><div data-value=\"3\" class=\"item\">좋음</div><div data-value=\"4\" class=\"item\">특출남</div></div></div></td></tr><tr><td>유머</td><td class=\"center aligned\"><div class=\"ui selection dropdown\"><input type=\"hidden\" name=\"sociality\"" + (jade.attr("value", "" + (data.sociality || 0) + "", true, false)) + "/><i class=\"dropdown icon\"></i><div class=\"text\"></div><div class=\"menu\"><div data-value=\"0\" class=\"item\">알수없음</div><div data-value=\"1\" class=\"item\">모자람</div><div data-value=\"2\" class=\"item\">평범함</div><div data-value=\"3\" class=\"item\">좋음</div><div data-value=\"4\" class=\"item\">특출남</div></div></div></td></tr><tr><td>인내력(멘탈)</td><td class=\"center aligned\"><div class=\"ui selection dropdown\"><input type=\"hidden\" name=\"endurance\"" + (jade.attr("value", "" + (data.endurance || 0) + "", true, false)) + "/><i class=\"dropdown icon\"></i><div class=\"text\"></div><div class=\"menu\"><div data-value=\"0\" class=\"item\">알수없음</div><div data-value=\"1\" class=\"item\">모자람</div><div data-value=\"2\" class=\"item\">평범함</div><div data-value=\"3\" class=\"item\">좋음</div><div data-value=\"4\" class=\"item\">특출남</div></div></div></td></tr><tr><td>세심함</td><td class=\"center aligned\"><div class=\"ui selection dropdown\"><input type=\"hidden\" name=\"careful\"" + (jade.attr("value", "" + (data.careful || 0) + "", true, false)) + "/><i class=\"dropdown icon\"></i><div class=\"text\"></div><div class=\"menu\"><div data-value=\"0\" class=\"item\">알수없음</div><div data-value=\"1\" class=\"item\">모자람</div><div data-value=\"2\" class=\"item\">평범함</div><div data-value=\"3\" class=\"item\">좋음</div><div data-value=\"4\" class=\"item\">특출남</div></div></div></td></tr><tr><td>기억력</td><td class=\"center aligned\"><div class=\"ui selection dropdown\"><input type=\"hidden\" name=\"memory\"" + (jade.attr("value", "" + (data.memory || 0) + "", true, false)) + "/><i class=\"dropdown icon\"></i><div class=\"text\"></div><div class=\"menu\"><div data-value=\"0\" class=\"item\">알수없음</div><div data-value=\"1\" class=\"item\">모자람</div><div data-value=\"2\" class=\"item\">평범함</div><div data-value=\"3\" class=\"item\">좋음</div><div data-value=\"4\" class=\"item\">특출남</div></div></div></td></tr><tr><td>감수성</td><td class=\"center aligned\"><div class=\"ui selection dropdown\"><input type=\"hidden\" name=\"sensitivity\"" + (jade.attr("value", "" + (data.sensitivity || 0) + "", true, false)) + "/><i class=\"dropdown icon\"></i><div class=\"text\"></div><div class=\"menu\"><div data-value=\"0\" class=\"item\">알수없음</div><div data-value=\"1\" class=\"item\">모자람</div><div data-value=\"2\" class=\"item\">평범함</div><div data-value=\"3\" class=\"item\">좋음</div><div data-value=\"4\" class=\"item\">특출남</div></div></div></td></tr></tbody></table></div></div><div class=\"twelve wide streched column\"><div class=\"ui container\"><h3 class=\"ui header\"><div style=\"width:100%\" class=\"content ui grid\"><div class=\"two column row\"><div class=\"twelve wide streched column\">" + (jade.escape((jade_interp = data.RowKey) == null ? '' : jade_interp)) + "<div class=\"sub header\">" + (jade.escape((jade_interp = data.birthYear) == null ? '' : jade_interp)) + "." + (jade.escape((jade_interp = data.birthMonth) == null ? '' : jade_interp)) + "." + (jade.escape((jade_interp = data.birthDay) == null ? '' : jade_interp)) + "</div></div><div class=\"four wide streched column\"><a onclick=\"EditSubmit()\" style=\"position:absolute; right:0px\" class=\"ui big red label\"><i class=\"write icon\"> </i>수정</a></div></div></div><div class=\"ui mini relaxed celled list\"><div class=\"item\"><div class=\"ui blue image label\"><i style=\"width:15px; padding-left:2px\" class=\"big calendar middle aligned icon\"></i></div><div class=\"content\"><div class=\"header\">나이 (수정 불가)</div><div><h3 style=\"color:gray\" class=\"description\"> \n" + (jade.escape((jade_interp = data.age) == null ? '' : jade_interp)) + "</h3></div></div></div><div class=\"item\"><div class=\"ui blue image label\"><i style=\"width:15px; padding-left:0px\" class=\"big heterosexual middle aligned icon\"></i></div><div class=\"content\"><div class=\"header\">성별</div><div><div class=\"ui input\"><input type=\"text\" name=\"gender\"" + (jade.attr("value", "" + (data.gender || '') + "", true, false)) + " placeholder=\"알수없음\"/></div></div></div></div><div class=\"item\"><div class=\"ui blue image label\"><i style=\"width:15px; padding-left:6px\" class=\"big theme middle aligned icon\"></i></div><div class=\"content\"><div class=\"header\">혈액형</div><div><div class=\"ui input\"><input type=\"text\" name=\"blood\"" + (jade.attr("value", "" + (data.blood || '') + "", true, false)) + " placeholder=\"알수없음\"/></div></div></div></div><div class=\"item\"><div class=\"ui blue image label\"><i style=\"width:15px; padding-left:3px\" class=\"big certificate middle aligned icon\"></i></div><div class=\"content\"><div class=\"header\">브랜치</div><div><div class=\"ui input\"><input type=\"text\" name=\"branch\"" + (jade.attr("value", "" + (data.branch || '') + "", true, false)) + " placeholder=\"알수없음\"/></div></div></div></div><div class=\"item\"><div class=\"ui blue image label\"><i style=\"width:15px; padding-left:3px\" class=\"big phone middle aligned icon\"></i></div><div class=\"content\"><div class=\"header\">전화번호</div><div><div class=\"ui input\"><input type=\"text\" name=\"phone\"" + (jade.attr("value", "" + (data.phone || '') + "", true, false)) + "/></div></div></div></div><div class=\"item\"><div class=\"ui blue image label\"><i style=\"width:15px; padding-left:1px\" class=\"big mail middle aligned icon\"></i></div><div class=\"content\"><div class=\"header\">메일</div><div><div class=\"ui input\"><input type=\"text\" name=\"mail\"" + (jade.attr("value", "" + (data.mail || '') + "", true, false)) + " placeholder=\"알수없음\"/></div></div></div></div><div class=\"item\"><div class=\"ui blue image label\"><i style=\"width:15px; padding-left:1px\" class=\"big music middle aligned icon\"></i></div><div class=\"content\"><div class=\"header\">연주 가능 악기</div><div><div class=\"ui input\"><input type=\"text\" name=\"instrument\"" + (jade.attr("value", "" + (data.instrument || '') + "", true, false)) + " placeholder=\"알수없음\"/></div></div></div></div><div class=\"item\"><div class=\"ui blue image label\"><i style=\"width:15px; padding-left:3px\" class=\"big tag middle aligned icon\"></i></div><div class=\"content\"><div class=\"header\">봉사 부서</div><div><div class=\"ui input\"><input type=\"text\" name=\"service\"" + (jade.attr("value", "" + (data.service || '') + "", true, false)) + " placeholder=\"없음\"/></div></div></div></div><div class=\"item\"><div class=\"ui blue image label\"><i style=\"width:15px; padding-left:1px\" class=\"big browser middle aligned icon\"></i></div><div class=\"content\"><div class=\"header\">봉사 이력</div><div><div class=\"ui input\"><input type=\"text\" name=\"serviceHistory\"" + (jade.attr("value", "" + (data.serviceHistory || '') + "", true, false)) + " placeholder=\"없음\"/></div></div></div></div><div class=\"item\"><div class=\"ui blue image label\"><i style=\"width:15px; padding-left:3px\" class=\"big write middle aligned icon\"></i></div><div class=\"content\"><div class=\"header\">학과</div><div><div class=\"ui input\"><input type=\"text\" name=\"major\"" + (jade.attr("value", "" + (data.major || '') + "", true, false)) + " placeholder=\"알수없음\"/></div></div></div></div><div class=\"item\"><div class=\"ui blue image label\"><i style=\"width:15px; padding-left:1px\" class=\"big soccer middle aligned icon\"></i></div><div class=\"content\"><div class=\"header\">좋아하는 운동</div><div><div class=\"ui input\"><input type=\"text\" name=\"likeSports\"" + (jade.attr("value", "" + (data.likeSports || '') + "", true, false)) + " placeholder=\"알수없음\"/></div></div></div></div><div class=\"item\"><div class=\"ui blue image label\"><i style=\"width:15px; padding-left:1px\" class=\"big game middle aligned icon\"></i></div><div class=\"content\"><div class=\"header\">좋아하는 게임</div><div><div class=\"ui input\"><input type=\"text\" name=\"likeGames\"" + (jade.attr("value", "" + (data.likeGames || '') + "", true, false)) + " placeholder=\"알수없음\"/></div></div></div></div><div class=\"item\"><div class=\"ui blue image label\"><i style=\"width:15px; padding-left:6px\" class=\"big male middle aligned icon\"></i></div><div class=\"content\"><div class=\"header\">단짝 친구</div><div><div class=\"ui input\"><input type=\"text\" name=\"likeFriends\"" + (jade.attr("value", "" + (data.likeFriends || '') + "", true, false)) + " placeholder=\"알수없음\"/></div></div></div></div><div class=\"item\"><div class=\"ui blue image label\"><i style=\"width:15px; padding-left:2px\" class=\"big home middle aligned icon\"></i></div><div class=\"content\"><div class=\"header\">거주지</div><div><div class=\"ui input\"><input type=\"text\" name=\"locate\"" + (jade.attr("value", "" + (data.locate || '') + "", true, false)) + " placeholder=\"알수없음\"/></div></div></div></div><div class=\"item\"><div class=\"ui blue image label\"><i style=\"width:15px; padding-left:9px\" class=\"big info middle aligned icon\"></i></div><div class=\"content\"><div class=\"header\">특이사항</div><div><div class=\"ui input\"><input type=\"text\" name=\"attendDesc\"" + (jade.attr("value", "" + (data.attendDesc || '') + "", true, false)) + " placeholder=\"\"/></div></div></div></div></div></h3></div><input id=\"uploadInput\" type=\"file\" name=\"upload\" accept=\"image/*\" onchange=\"ReadURL(this)\" class=\"filebox upload\"/></div></div></div></div></form>");}.call(this,"data" in locals_for_with?locals_for_with.data:typeof data!=="undefined"?data:undefined));;return buf.join("");
 }
+function bankTable(locals) {
+var buf = [];
+var jade_mixins = {};
+var jade_interp;
+;var locals_for_with = (locals || {});(function (auth, bankMoney, curMoney, data, month, off, spendSum, undefined) {
+buf.push("<div class=\"computer tablet only row\"><div class=\"ui main container\"><div class=\"ui twelve top attached buttons\">");
+if ( (month == 1))
+{
+buf.push("<a href=\"bank?month=1\" class=\"ui button active\">1월</a>");
+}
+else
+{
+buf.push("<a href=\"bank?month=1\" class=\"ui button\">1월</a>");
+}
+if ( (month == 2))
+{
+buf.push("<a href=\"bank?month=2\" class=\"ui button active\">2월</a>");
+}
+else
+{
+buf.push("<a href=\"bank?month=2\" class=\"ui button\">2월</a>");
+}
+if ( (month == 3))
+{
+buf.push("<a href=\"bank?month=3\" class=\"ui button active\">3월</a>");
+}
+else
+{
+buf.push("<a href=\"bank?month=3\" class=\"ui button\">3월</a>");
+}
+if ( (month == 4))
+{
+buf.push("<a href=\"bank?month=4\" class=\"ui button active\">4월</a>");
+}
+else
+{
+buf.push("<a href=\"bank?month=4\" class=\"ui button\">4월</a>");
+}
+if ( (month == 5))
+{
+buf.push("<a href=\"bank?month=5\" class=\"ui button active\">5월</a>");
+}
+else
+{
+buf.push("<a href=\"bank?month=5\" class=\"ui button\">5월</a>");
+}
+if ( (month == 6))
+{
+buf.push("<a href=\"bank?month=6\" class=\"ui button active\">6월</a>");
+}
+else
+{
+buf.push("<a href=\"bank?month=6\" class=\"ui button\">6월</a>");
+}
+if ( (month == 7))
+{
+buf.push("<a href=\"bank?month=7\" class=\"ui button active\">7월</a>");
+}
+else
+{
+buf.push("<a href=\"bank?month=7\" class=\"ui button\">7월</a>");
+}
+if ( (month == 8))
+{
+buf.push("<a href=\"bank?month=8\" class=\"ui button active\">8월</a>");
+}
+else
+{
+buf.push("<a href=\"bank?month=8\" class=\"ui button\">8월</a>");
+}
+if ( (month == 9))
+{
+buf.push("<a href=\"bank?month=9\" class=\"ui button active\">9월</a>");
+}
+else
+{
+buf.push("<a href=\"bank?month=9\" class=\"ui button\">9월</a>");
+}
+if ( (month == 10))
+{
+buf.push("<a href=\"bank?month=10\" class=\"ui button active\">10월</a>");
+}
+else
+{
+buf.push("<a href=\"bank?month=10\" class=\"ui button\">10월</a>");
+}
+if ( (month == 11))
+{
+buf.push("<a href=\"bank?month=11\" class=\"ui button active\">11월</a>");
+}
+else
+{
+buf.push("<a href=\"bank?month=11\" class=\"ui button\">11월</a>");
+}
+if ( (month == 12))
+{
+buf.push("<a href=\"bank?month=12\" class=\"ui button active\">12월</a>");
+}
+else
+{
+buf.push("<a href=\"bank?month=12\" class=\"ui button\">12월</a>");
+}
+buf.push("</div><div class=\"ui attached segment\"><table class=\"bank ui celled unstackable table\"><thead style=\"text-align:center\"><tr><th>집행 날짜</th><th>구분</th><th>상세 내역</th><th>No</th><th>수입 금액</th><th>지출 금액</th><th>남은 금액</th><th>비고</th><th>정보</th><th>이체</th><th>삭제</th></tr></thead><tfoot><tr style=\"text-align:center\"><th colspan=\"4\">은행 금액: " + (jade.escape((jade_interp = bankMoney) == null ? '' : jade_interp)) + "</th><th colspan=\"2\">총 지출액: " + (jade.escape((jade_interp = spendSum) == null ? '' : jade_interp)) + "</th><th colspan=\"2\">남은 금액: " + (jade.escape((jade_interp = curMoney) == null ? '' : jade_interp)) + "</th><th colspan=\"3\"></th></tr></tfoot>");
+if ( auth=="manager" || auth=="developer" )
+{
+buf.push("<tbody>");
+// iterate data
+;(function(){
+  var $$obj = data;
+  if ('number' == typeof $$obj.length) {
+
+    for (var index = 0, $$l = $$obj.length; index < $$l; index++) {
+      var item = $$obj[index];
+
+buf.push("<input type=\"hidden\"" + (jade.attr("name", "RowKey[" + (index) + "]", true, false)) + (jade.attr("value", "" + (item.RowKey) + "", true, false)) + "/><input type=\"hidden\"" + (jade.attr("name", "PartitionKey[" + (index) + "]", true, false)) + (jade.attr("value", "" + (item.PartitionKey) + "", true, false)) + "/><input type=\"hidden\"" + (jade.attr("name", "deleteRow[" + (index) + "]", true, false)) + " value=\"false\"" + (jade.cls(["delete" + (index) + ""], [true])) + "/><tr onclick=\"SelectRow()\" href=\"#\"" + (jade.cls(["tr" + (index) + ""], [true])) + "><td> <div class=\"ui input\"><input type=\"text\"" + (jade.attr("name", "date[" + (index) + "]", true, false)) + (jade.attr("value", "" + (item.year) + "." + (item.month) + "." + (item.day) + "", true, false)) + " style=\"max-width:80px;\"" + (jade.cls(['txt','date',"" + (index) + ""], [null,null,true])) + "/></div></td><td class=\"center aligned\"><div class=\"ui selection dropdown\"><input type=\"hidden\"" + (jade.attr("name", "section[" + (index) + "]", true, false)) + (jade.attr("value", "" + (item.section) + "", true, false)) + "/><i style=\"position:absolute; right:0px\" class=\"dropdown icon\"></i><div class=\"text\"> </div><div class=\"menu\">");
+var sections = ['브랜치 모임', '훈련/회의비', '예산', '소모임/단합친교비', '생일축하 및 상품', '특새', '심방비(경조사)', '팀별/부서사역비', '격려/환송/결혼', '소모품/기타', '성경교재/교육자료', '임원/리더워크숍', '체육행사', '특강비', '겨울수련회', '여름수련회', '야유회', '말씀사경회'];
+// iterate sections
+;(function(){
+  var $$obj = sections;
+  if ('number' == typeof $$obj.length) {
+
+    for (var $index = 0, $$l = $$obj.length; $index < $$l; $index++) {
+      var ss = $$obj[$index];
+
+buf.push("<div" + (jade.attr("data-value", "" + (ss) + "", true, false)) + " style=\"font-size:9px\" class=\"item\">" + (jade.escape((jade_interp = ss) == null ? '' : jade_interp)) + "</div>");
+    }
+
+  } else {
+    var $$l = 0;
+    for (var $index in $$obj) {
+      $$l++;      var ss = $$obj[$index];
+
+buf.push("<div" + (jade.attr("data-value", "" + (ss) + "", true, false)) + " style=\"font-size:9px\" class=\"item\">" + (jade.escape((jade_interp = ss) == null ? '' : jade_interp)) + "</div>");
+    }
+
+  }
+}).call(this);
+
+buf.push("</div></div></td><td><div class=\"ui input\"><input type=\"text\"" + (jade.attr("name", "content[" + (index) + "]", true, false)) + (jade.attr("value", "" + (item.content||'') + "", true, false)) + " style=\"max-width:100px\"" + (jade.cls(['txt','content',"" + (index) + ""], [null,null,true])) + "/></div></td><td> <div class=\"ui input\"><input type=\"text\"" + (jade.attr("name", "receiptNo[" + (index) + "]", true, false)) + (jade.attr("value", "" + (item.receiptNo || '') + "", true, false)) + " style=\"max-width:20px\"" + (jade.cls(['txt','receiptNo',"" + (index) + ""], [null,null,true])) + "/></div></td><td> <div class=\"ui input\"><input type=\"text\"" + (jade.attr("name", "gain[" + (index) + "]", true, false)) + (jade.attr("value", "" + (item.gain || '') + "", true, false)) + " style=\"max-width:70px\"" + (jade.cls(['txt','gain',"" + (index) + ""], [null,null,true])) + "/></div></td><td> <div class=\"ui input\"><input type=\"text\"" + (jade.attr("name", "spend[" + (index) + "]", true, false)) + (jade.attr("value", "" + (item.spend || '') + "", true, false)) + " style=\"max-width:70px\"" + (jade.cls(['txt','spend',"" + (index) + ""], [null,null,true])) + "/></div></td><td>" + (jade.escape((jade_interp = item.curMoney || '') == null ? '' : jade_interp)) + "</td><td> <div class=\"ui input\"><input type=\"text\"" + (jade.attr("name", "detail[" + (index) + "]", true, false)) + (jade.attr("value", "" + (item.detail || item.bankReceive || '') + "", true, false)) + " style=\"max-width:70px\"" + (jade.cls(['txt','detail',"" + (index) + ""], [null,null,true])) + "/></div></td><td><i" + (jade.attr("data-content", "계좌번호: " + (item.bankNumber||'') + "(" + (item.bankName||'') + ")", true, false)) + " class=\"ui circular info icon\"></i></td><td><div class=\"ui fitted toggle checkbox\"><input type=\"checkbox\"" + (jade.attr("name", "paid[" + (index) + "]", true, false)) + (jade.attr("checked", item.paid||off, true, false)) + (jade.attr("value", index, true, false)) + "/><label></label></div></td><td style=\"text-align:center\"><div" + (jade.attr("onclick", "DeleteRow(" + (index) + ")", true, false)) + " class=\"small ui red circular ban icon button\"><i class=\"icon ban\"></i></div></td></tr>");
+    }
+
+  } else {
+    var $$l = 0;
+    for (var index in $$obj) {
+      $$l++;      var item = $$obj[index];
+
+buf.push("<input type=\"hidden\"" + (jade.attr("name", "RowKey[" + (index) + "]", true, false)) + (jade.attr("value", "" + (item.RowKey) + "", true, false)) + "/><input type=\"hidden\"" + (jade.attr("name", "PartitionKey[" + (index) + "]", true, false)) + (jade.attr("value", "" + (item.PartitionKey) + "", true, false)) + "/><input type=\"hidden\"" + (jade.attr("name", "deleteRow[" + (index) + "]", true, false)) + " value=\"false\"" + (jade.cls(["delete" + (index) + ""], [true])) + "/><tr onclick=\"SelectRow()\" href=\"#\"" + (jade.cls(["tr" + (index) + ""], [true])) + "><td> <div class=\"ui input\"><input type=\"text\"" + (jade.attr("name", "date[" + (index) + "]", true, false)) + (jade.attr("value", "" + (item.year) + "." + (item.month) + "." + (item.day) + "", true, false)) + " style=\"max-width:80px;\"" + (jade.cls(['txt','date',"" + (index) + ""], [null,null,true])) + "/></div></td><td class=\"center aligned\"><div class=\"ui selection dropdown\"><input type=\"hidden\"" + (jade.attr("name", "section[" + (index) + "]", true, false)) + (jade.attr("value", "" + (item.section) + "", true, false)) + "/><i style=\"position:absolute; right:0px\" class=\"dropdown icon\"></i><div class=\"text\"> </div><div class=\"menu\">");
+var sections = ['브랜치 모임', '훈련/회의비', '예산', '소모임/단합친교비', '생일축하 및 상품', '특새', '심방비(경조사)', '팀별/부서사역비', '격려/환송/결혼', '소모품/기타', '성경교재/교육자료', '임원/리더워크숍', '체육행사', '특강비', '겨울수련회', '여름수련회', '야유회', '말씀사경회'];
+// iterate sections
+;(function(){
+  var $$obj = sections;
+  if ('number' == typeof $$obj.length) {
+
+    for (var $index = 0, $$l = $$obj.length; $index < $$l; $index++) {
+      var ss = $$obj[$index];
+
+buf.push("<div" + (jade.attr("data-value", "" + (ss) + "", true, false)) + " style=\"font-size:9px\" class=\"item\">" + (jade.escape((jade_interp = ss) == null ? '' : jade_interp)) + "</div>");
+    }
+
+  } else {
+    var $$l = 0;
+    for (var $index in $$obj) {
+      $$l++;      var ss = $$obj[$index];
+
+buf.push("<div" + (jade.attr("data-value", "" + (ss) + "", true, false)) + " style=\"font-size:9px\" class=\"item\">" + (jade.escape((jade_interp = ss) == null ? '' : jade_interp)) + "</div>");
+    }
+
+  }
+}).call(this);
+
+buf.push("</div></div></td><td><div class=\"ui input\"><input type=\"text\"" + (jade.attr("name", "content[" + (index) + "]", true, false)) + (jade.attr("value", "" + (item.content||'') + "", true, false)) + " style=\"max-width:100px\"" + (jade.cls(['txt','content',"" + (index) + ""], [null,null,true])) + "/></div></td><td> <div class=\"ui input\"><input type=\"text\"" + (jade.attr("name", "receiptNo[" + (index) + "]", true, false)) + (jade.attr("value", "" + (item.receiptNo || '') + "", true, false)) + " style=\"max-width:20px\"" + (jade.cls(['txt','receiptNo',"" + (index) + ""], [null,null,true])) + "/></div></td><td> <div class=\"ui input\"><input type=\"text\"" + (jade.attr("name", "gain[" + (index) + "]", true, false)) + (jade.attr("value", "" + (item.gain || '') + "", true, false)) + " style=\"max-width:70px\"" + (jade.cls(['txt','gain',"" + (index) + ""], [null,null,true])) + "/></div></td><td> <div class=\"ui input\"><input type=\"text\"" + (jade.attr("name", "spend[" + (index) + "]", true, false)) + (jade.attr("value", "" + (item.spend || '') + "", true, false)) + " style=\"max-width:70px\"" + (jade.cls(['txt','spend',"" + (index) + ""], [null,null,true])) + "/></div></td><td>" + (jade.escape((jade_interp = item.curMoney || '') == null ? '' : jade_interp)) + "</td><td> <div class=\"ui input\"><input type=\"text\"" + (jade.attr("name", "detail[" + (index) + "]", true, false)) + (jade.attr("value", "" + (item.detail || item.bankReceive || '') + "", true, false)) + " style=\"max-width:70px\"" + (jade.cls(['txt','detail',"" + (index) + ""], [null,null,true])) + "/></div></td><td><i" + (jade.attr("data-content", "계좌번호: " + (item.bankNumber||'') + "(" + (item.bankName||'') + ")", true, false)) + " class=\"ui circular info icon\"></i></td><td><div class=\"ui fitted toggle checkbox\"><input type=\"checkbox\"" + (jade.attr("name", "paid[" + (index) + "]", true, false)) + (jade.attr("checked", item.paid||off, true, false)) + (jade.attr("value", index, true, false)) + "/><label></label></div></td><td style=\"text-align:center\"><div" + (jade.attr("onclick", "DeleteRow(" + (index) + ")", true, false)) + " class=\"small ui red circular ban icon button\"><i class=\"icon ban\"></i></div></td></tr>");
+    }
+
+  }
+}).call(this);
+
+buf.push("</tbody>");
+}
+else
+{
+buf.push("<tbody>");
+// iterate data
+;(function(){
+  var $$obj = data;
+  if ('number' == typeof $$obj.length) {
+
+    for (var index = 0, $$l = $$obj.length; index < $$l; index++) {
+      var item = $$obj[index];
+
+buf.push("<input type=\"hidden\"" + (jade.attr("name", "RowKey[" + (index) + "]", true, false)) + (jade.attr("value", "" + (item.RowKey) + "", true, false)) + "/><input type=\"hidden\"" + (jade.attr("name", "PartitionKey[" + (index) + "]", true, false)) + (jade.attr("value", "" + (item.PartitionKey) + "", true, false)) + "/><input type=\"hidden\"" + (jade.attr("name", "deleteRow[" + (index) + "]", true, false)) + " value=\"false\"" + (jade.cls(["delete" + (index) + ""], [true])) + "/><tr onclick=\"SelectRow()\" href=\"#\" style=\"text-align:center\"" + (jade.cls(["tr" + (index) + ""], [true])) + "><td>" + (jade.escape((jade_interp = item.year) == null ? '' : jade_interp)) + "." + (jade.escape((jade_interp = item.month) == null ? '' : jade_interp)) + "." + (jade.escape((jade_interp = item.day) == null ? '' : jade_interp)) + "</td><td>" + (jade.escape((jade_interp = item.section) == null ? '' : jade_interp)) + "</td><td style=\"max-width:120px\">" + (jade.escape((jade_interp = item.content||'') == null ? '' : jade_interp)) + " </td><td style=\"max-width:20px\">" + (jade.escape((jade_interp = item.receiptNo || '') == null ? '' : jade_interp)) + "</td><td style=\"max-width:70px\">" + (jade.escape((jade_interp = item.gain || '') == null ? '' : jade_interp)) + "</td><td style=\"max-width:70px\">" + (jade.escape((jade_interp = item.spend || '') == null ? '' : jade_interp)) + " </td><td>" + (jade.escape((jade_interp = item.curMoney || '') == null ? '' : jade_interp)) + "</td><td style=\"max-width:70px\">" + (jade.escape((jade_interp = item.detail || item.bankReceive || '') == null ? '' : jade_interp)) + "</td><td colspan=\"3\"><i" + (jade.attr("data-content", "계좌번호: " + (item.bankNumber||'') + "(" + (item.bankName||'') + ")", true, false)) + " class=\"ui circular info icon\"></i></td></tr>");
+    }
+
+  } else {
+    var $$l = 0;
+    for (var index in $$obj) {
+      $$l++;      var item = $$obj[index];
+
+buf.push("<input type=\"hidden\"" + (jade.attr("name", "RowKey[" + (index) + "]", true, false)) + (jade.attr("value", "" + (item.RowKey) + "", true, false)) + "/><input type=\"hidden\"" + (jade.attr("name", "PartitionKey[" + (index) + "]", true, false)) + (jade.attr("value", "" + (item.PartitionKey) + "", true, false)) + "/><input type=\"hidden\"" + (jade.attr("name", "deleteRow[" + (index) + "]", true, false)) + " value=\"false\"" + (jade.cls(["delete" + (index) + ""], [true])) + "/><tr onclick=\"SelectRow()\" href=\"#\" style=\"text-align:center\"" + (jade.cls(["tr" + (index) + ""], [true])) + "><td>" + (jade.escape((jade_interp = item.year) == null ? '' : jade_interp)) + "." + (jade.escape((jade_interp = item.month) == null ? '' : jade_interp)) + "." + (jade.escape((jade_interp = item.day) == null ? '' : jade_interp)) + "</td><td>" + (jade.escape((jade_interp = item.section) == null ? '' : jade_interp)) + "</td><td style=\"max-width:120px\">" + (jade.escape((jade_interp = item.content||'') == null ? '' : jade_interp)) + " </td><td style=\"max-width:20px\">" + (jade.escape((jade_interp = item.receiptNo || '') == null ? '' : jade_interp)) + "</td><td style=\"max-width:70px\">" + (jade.escape((jade_interp = item.gain || '') == null ? '' : jade_interp)) + "</td><td style=\"max-width:70px\">" + (jade.escape((jade_interp = item.spend || '') == null ? '' : jade_interp)) + " </td><td>" + (jade.escape((jade_interp = item.curMoney || '') == null ? '' : jade_interp)) + "</td><td style=\"max-width:70px\">" + (jade.escape((jade_interp = item.detail || item.bankReceive || '') == null ? '' : jade_interp)) + "</td><td colspan=\"3\"><i" + (jade.attr("data-content", "계좌번호: " + (item.bankNumber||'') + "(" + (item.bankName||'') + ")", true, false)) + " class=\"ui circular info icon\"></i></td></tr>");
+    }
+
+  }
+}).call(this);
+
+buf.push("</tbody>");
+}
+buf.push("</table></div></div></div><div class=\"mobile only row\"><div class=\"ui main container\"><table class=\"ui celled fixed single line structured compact unstackable table\"><thead style=\"text-align:center\"><tr><th style=\"max-width:50px; width:50px;\">날짜</th><th style=\"max-width:50px; width:50px;\">구분</th><th>상세 내역</th><th style=\"max-width:30px; width:30px;\">No</th><th>수입 금액</th><th>지출 금액</th><th>남은 금액</th></tr></thead><tfoot style=\"text-align:center\"><tr><th colspan=\"4\">은행 금액: " + (jade.escape((jade_interp = bankMoney) == null ? '' : jade_interp)) + "</th><th colspan=\"2\">총 지출액: " + (jade.escape((jade_interp = spendSum) == null ? '' : jade_interp)) + " </th><th>" + (jade.escape((jade_interp = curMoney) == null ? '' : jade_interp)) + "</th></tr></tfoot><tbody style=\"text-align:center\">");
+// iterate data
+;(function(){
+  var $$obj = data;
+  if ('number' == typeof $$obj.length) {
+
+    for (var $index = 0, $$l = $$obj.length; $index < $$l; $index++) {
+      var item = $$obj[$index];
+
+buf.push("<tr><td>" + (jade.escape((jade_interp = item.month) == null ? '' : jade_interp)) + "." + (jade.escape((jade_interp = item.day) == null ? '' : jade_interp)) + "</td><td>" + (jade.escape((jade_interp = item.shortSection) == null ? '' : jade_interp)) + "</td><td>" + (jade.escape((jade_interp = item.content) == null ? '' : jade_interp)) + "</td><td>" + (jade.escape((jade_interp = item.receiptNo || '') == null ? '' : jade_interp)) + "</td><td style=\"font-size:6pt\">" + (jade.escape((jade_interp = item.gain || '') == null ? '' : jade_interp)) + "</td><td><i style=\"font-size:6pt\"" + (jade.attr("data-content", "계좌번호: " + (item.bankNumber||'') + "(" + (item.bankName||'') + ")", true, false)) + " class=\"label info\">" + (jade.escape((jade_interp = item.spend || '') == null ? '' : jade_interp)) + "</i></td><td><i style=\"font-size:6pt\"" + (jade.attr("data-content", "계좌번호: " + (item.bankNumber||'') + "(" + (item.bankName||'') + ")", true, false)) + " class=\"label info\">" + (jade.escape((jade_interp = item.curMoney || '') == null ? '' : jade_interp)) + "</i></td></tr>");
+    }
+
+  } else {
+    var $$l = 0;
+    for (var $index in $$obj) {
+      $$l++;      var item = $$obj[$index];
+
+buf.push("<tr><td>" + (jade.escape((jade_interp = item.month) == null ? '' : jade_interp)) + "." + (jade.escape((jade_interp = item.day) == null ? '' : jade_interp)) + "</td><td>" + (jade.escape((jade_interp = item.shortSection) == null ? '' : jade_interp)) + "</td><td>" + (jade.escape((jade_interp = item.content) == null ? '' : jade_interp)) + "</td><td>" + (jade.escape((jade_interp = item.receiptNo || '') == null ? '' : jade_interp)) + "</td><td style=\"font-size:6pt\">" + (jade.escape((jade_interp = item.gain || '') == null ? '' : jade_interp)) + "</td><td><i style=\"font-size:6pt\"" + (jade.attr("data-content", "계좌번호: " + (item.bankNumber||'') + "(" + (item.bankName||'') + ")", true, false)) + " class=\"label info\">" + (jade.escape((jade_interp = item.spend || '') == null ? '' : jade_interp)) + "</i></td><td><i style=\"font-size:6pt\"" + (jade.attr("data-content", "계좌번호: " + (item.bankNumber||'') + "(" + (item.bankName||'') + ")", true, false)) + " class=\"label info\">" + (jade.escape((jade_interp = item.curMoney || '') == null ? '' : jade_interp)) + "</i></td></tr>");
+    }
+
+  }
+}).call(this);
+
+buf.push("</tbody></table></div></div>");}.call(this,"auth" in locals_for_with?locals_for_with.auth:typeof auth!=="undefined"?auth:undefined,"bankMoney" in locals_for_with?locals_for_with.bankMoney:typeof bankMoney!=="undefined"?bankMoney:undefined,"curMoney" in locals_for_with?locals_for_with.curMoney:typeof curMoney!=="undefined"?curMoney:undefined,"data" in locals_for_with?locals_for_with.data:typeof data!=="undefined"?data:undefined,"month" in locals_for_with?locals_for_with.month:typeof month!=="undefined"?month:undefined,"off" in locals_for_with?locals_for_with.off:typeof off!=="undefined"?off:undefined,"spendSum" in locals_for_with?locals_for_with.spendSum:typeof spendSum!=="undefined"?spendSum:undefined,"undefined" in locals_for_with?locals_for_with.undefined:typeof undefined!=="undefined"?undefined:undefined));;return buf.join("");
+}

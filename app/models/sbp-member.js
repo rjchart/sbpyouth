@@ -434,10 +434,6 @@ module.exports.GetBankWithMonthLog = function (year, month, part, next) {
             for (var index in result.entries) {
                 var data = result.entries[index];
                 RemoveEntityGen(data);
-                if (data.section == '예산')
-                    data.gain = data.money;
-                else
-                    data.spend = data.money;
                 banklogs.push(data);
             }
             SetBankSort(banklogs);
