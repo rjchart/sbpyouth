@@ -6,7 +6,6 @@ block sub_item01
         div.menu
             a.item(href="/bank?part=청년2부&year=#{year}&month=#{month}") 청년2부
             a.item(href="/bank?part=청년1부&year=#{year}&month=#{month}") 청년1부
-
     div.ui.dropdown.sub.item 
         |#{year}
         i.dropdown.icon
@@ -14,7 +13,13 @@ block sub_item01
             a.item(href="/bank?part=#{part}&year=2017&month=#{month}") 2017
             a.item(href="/bank?part=#{part}&year=2016&month=#{month}") 2016
             a.item(href="/bank?part=#{part}&year=2015&month=#{month}") 2015
-            //- a.item(href="/bank") 전체 조회
+    div.ui.dropdown.sub.item 
+        |예산 확인
+        i.dropdown.icon
+        div.menu
+            - var sections = ['브랜치 모임', '훈련/회의비', '예산', '소모임/단합친교비', '생일축하 및 상품', '특새', '성탄절/찬양준비/특송', '심방비(경조사)', '팀별/부서사역비', '격려/환송/결혼', '소모품/기타', '성경교재/교육자료', '임원/리더워크숍', '또래/수평모임', '체육행사', '특강비', '겨울수련회', '여름수련회', '야유회', '말씀사경회', '총회'];
+            each ss in sections
+                a.item(href="/bankCheck?section=#{ss}") #{ss}
 block sub_content
     form#editBank(action="/editBank" method="post")
         div.ui.grid#bankTable
