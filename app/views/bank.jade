@@ -1,14 +1,19 @@
 extends bankBase
 block sub_item01
     div.ui.dropdown.sub.item 
-        if (part == "청년2부")
-            |청년2부
-        else
-            |청년1부
+        |#{part}
         i.dropdown.icon
         div.menu
-            a.item(href="/bank?part=청년2부") 청년2부
-            a.item(href="/bank?part=청년1부") 청년1부
+            a.item(href="/bank?part=청년2부&year=#{year}&month=#{month}") 청년2부
+            a.item(href="/bank?part=청년1부&year=#{year}&month=#{month}") 청년1부
+
+    div.ui.dropdown.sub.item 
+        |#{year}
+        i.dropdown.icon
+        div.menu
+            a.item(href="/bank?part=#{part}&year=2017&month=#{month}") 2017
+            a.item(href="/bank?part=#{part}&year=2016&month=#{month}") 2016
+            a.item(href="/bank?part=#{part}&year=2015&month=#{month}") 2015
             //- a.item(href="/bank") 전체 조회
 block sub_content
     form#editBank(action="/editBank" method="post")

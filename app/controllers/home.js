@@ -102,6 +102,13 @@ router.get('/bank', function (req, res, next) {
             var bankMoney = 0;
             var spendSum = 0;
             result.forEach(function(item) {
+                if (!item.gain && !item.spend) {
+                    if (item.section == '예산')
+                        item.gain = item.money;
+                    else
+                        item.spend = item.money;
+                }
+
                 if (item.gain) {
                     curMoney = curMoney + parseInt(item.gain);
                     if (item.paid)
@@ -113,6 +120,81 @@ router.get('/bank', function (req, res, next) {
                     if (item.paid)
                         bankMoney = bankMoney - parseInt(item.spend);
                 }
+
+
+                item.curMoney = curMoney;
+                item.gain = MakeMoneyData(item.gain);
+                item.spend = MakeMoneyData(item.spend);
+                item.curMoney = MakeMoneyData(item.curMoney);
+                item.shortYear = item.year.substring(2,4);
+                if (item.section)
+                    item.shortSection = item.section.substring(0,4);
+                if (item.content)
+                    item.shortContent = item.content.substring(0,4);
+            });
+            user.spendSum = MakeMoneyData(spendSum);
+            user.curMoney = MakeMoneyData(curMoney);
+            user.bankMoney = MakeMoneyData(bankMoney);
+
+            sbp_member.GetDatas("은행리스트", 'bankList', function (error, result) {
+                if (!error) {
+                    user.bankList = result;
+                    res.render('bank', user);
+                }
+                else 
+                    res.render('bank',user);
+            });
+        }
+    });
+});
+
+router.get('/bankCheck', function (req, res, next) {
+    var user = sbp_data.CheckLogin(req);
+
+    var part = req.query.part;
+    if (part == null)
+        part = "청년2부";
+    var year = req.query.year;
+    var month = req.query.month;
+    var getDate = new Date();
+    if (year == null)
+        year = getDate.getFullYear().toString();
+    if (month == null)
+        month = (getDate.getMonth()+1).toString();
+    var day = getDate.getDate();
+    // user.year = year;
+    // res.render('bank', user);
+    sbp_member.GetBankWithMonthLog(year, month, part, function (error, result) {
+        if (!error) {
+            user.data = result;
+            user.year = year;
+            user.month = month;
+            user.day = day;
+            user.part = part;
+
+            var curMoney = 0;
+            var bankMoney = 0;
+            var spendSum = 0;
+            result.forEach(function(item) {
+                if (!item.gain && !item.spend) {
+                    if (item.section == '예산')
+                        item.gain = item.money;
+                    else
+                        item.spend = item.money;
+                }
+
+                if (item.gain) {
+                    curMoney = curMoney + parseInt(item.gain);
+                    if (item.paid)
+                        bankMoney = bankMoney + parseInt(item.gain);
+                }
+                if (item.spend) {
+                    curMoney = curMoney - parseInt(item.spend);
+                    spendSum = spendSum + parseInt(item.spend);
+                    if (item.paid)
+                        bankMoney = bankMoney - parseInt(item.spend);
+                }
+
 
                 item.curMoney = curMoney;
                 item.gain = MakeMoneyData(item.gain);
@@ -150,6 +232,25 @@ router.get('/bankList', function (req, res, next) {
         }
     });
 });
+
+router.get('/budgetList', function (req, res, next) {
+    var user = sbp_data.CheckLogin(req);
+
+    sbp_member.GetDatas("Budget", 'bank', function (error, result) {
+        if (!error) {
+            var sum = 0;
+            result.forEach(function(item, index) {
+                sum += parseInt(item.money);
+                item.money = MakeMoneyData(item.money);
+            });
+
+            user.data = result;
+            user.sum = MakeMoneyData(sum);
+            res.render('budgetList', user);
+        }
+    });
+});
+
 
 router.get('/leader', function (req, res, next) {
     var user = sbp_data.CheckLogin(req);
@@ -1562,6 +1663,67 @@ router.post('/addBankList', function (req, res, next) {
     
 });
 
+router.post('/addBudgetList', function (req, res, next) {
+
+    var add_section = req.body.add_section;
+    var add_money = req.body.add_money;
+
+    var time = new Date().getTime();
+
+    var addData = [];
+    for (i = 0; i < add_section.length; i++) {
+        var tmp = {};
+        if (add_section[i] == null || add_section[i] == '')
+            continue;
+
+        tmp.section = add_section[i];
+        if (add_money && add_money.length > i)
+            tmp.money = add_money[i];
+        tmp.PartitionKey = "Budget"
+        tmp.RowKey = time.toString(); 
+
+        addData.push(tmp);
+    }
+    
+    sbp_data.AddDatas(addData, 'bank', function (error, result) {
+        if (!error) {
+            res.send("ok");
+        }
+    });    
+});
+
+router.post('/editBudgetList', function (req, res, next) {
+    var section = req.body.section;
+    var part = req.body.part;
+    var money = req.body.money;
+    var RowKey = req.body.RowKey;
+    var PartitionKey = req.body.PartitionKey;
+    var deleteRow = req.body.deleteRow;
+
+    var addData = [];
+    for (i = 0; i < RowKey.length; i++) {
+        var tmp = {};
+        if (RowKey[i] == null || RowKey[i] == '')
+            continue;
+        var time = new Date().getTime();
+
+        tmp.section = section[i];
+        tmp.money = money[i].replace(/,/g,'');
+        tmp.part = part[i];
+        tmp.deleteRow = deleteRow[i];
+        tmp.PartitionKey = 'Budget';
+        tmp.RowKey = RowKey[i]; 
+
+        addData.push(tmp);
+    }
+    
+    sbp_data.AddDatas(addData, 'bank', function (error, result) {
+        if (!error) {
+            res.send("ok");
+        }
+    });
+    
+});
 
 router.post('/editBank', function (req, res, next) {
 
@@ -1578,9 +1740,12 @@ router.post('/editBank', function (req, res, next) {
     var spend = req.body.spend;
     var detail = req.body.detail;
     var RowKey = req.body.RowKey;
+    if (!RowKey)
+        RowKey = [];
     var PartitionKey = req.body.PartitionKey;
-    var deleteRow = req.body.deleteRow;
+    var deleteRow = req.body.deleteRow || [];
     var paidNum = req.body.paid;
+    var part = req.body.part;
     var paid = [];
     if (paidNum)
         paidNum.forEach( function(item) {
@@ -1589,11 +1754,16 @@ router.post('/editBank', function (req, res, next) {
         });
 
     var addData = [];
-    for (i = 0; i < RowKey.length; i++) {
+    for (i = 0; i < date.length; i++) {
         var tmp = {};
-        if (RowKey[i] == null || RowKey[i] == '')
-            continue;
-        var time = new Date().getTime();
+        if (!RowKey || RowKey[i] == null || RowKey[i] == '') {
+            if (date[i] != null && date[i] != '') {
+                RowKey[i] = new Date().getTime().toString() + "_" + i;
+            }
+            else
+                continue;
+        }
+        // var time = new Date().getTime();
 
 
         // tmp.date = date[i];
@@ -1603,7 +1773,10 @@ router.post('/editBank', function (req, res, next) {
         tmp.gain = gain[i].replace(/,/g,'');
         tmp.spend = spend[i].replace(/,/g,'');
         tmp.detail = detail[i];
-        tmp.deleteRow = deleteRow[i];
+        if (deleteRow[i])
+            tmp.deleteRow = deleteRow[i];
+        tmp.part = part[i];
+
         if (paid && paid.length > i && paid[i])
             tmp.paid = paid[i];
         else
@@ -1620,7 +1793,7 @@ router.post('/editBank', function (req, res, next) {
         tmp.month = dateStrings[1];
         tmp.day = dateStrings[2];
         
-        tmp.PartitionKey = PartitionKey[i];
+        tmp.PartitionKey = 'Bank';
         tmp.RowKey = RowKey[i]; 
 
 
@@ -1630,6 +1803,9 @@ router.post('/editBank', function (req, res, next) {
     sbp_data.AddBank(addData, function (error, result) {
         if (!error) {
             res.send("ok");
+        }
+        else {
+            res.status(500).send("저장에 실패했습니다. Cannot save the branch data: " + error);
         }
     });
     

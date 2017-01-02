@@ -425,7 +425,7 @@ module.exports.GetBankWithMonthLog = function (year, month, part, next) {
     
     var query = new azure.TableQuery()
     // .where('PartitionKey eq ?', year);
-    .where('PartitionKey eq ? and month eq ? and part eq ?', year, month, part);
+    .where('year eq ? and month eq ? and part eq ?', year, month, part);
 
     // 데이터베이스 쿼리를 실행합니다.
     tableService.queryEntities('bank', query, null, function (error, result) {

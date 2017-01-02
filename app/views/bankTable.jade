@@ -1,54 +1,13 @@
 div.computer.tablet.only.row
+    - var sections = ['브랜치 모임', '훈련/회의비', '예산', '소모임/단합친교비', '생일축하 및 상품', '특새', '성탄절/찬양준비/특송', '심방비(경조사)', '팀별/부서사역비', '격려/환송/결혼', '소모품/기타', '성경교재/교육자료', '임원/리더워크숍', '또래/수평모임', '체육행사', '특강비', '겨울수련회', '여름수련회', '야유회', '말씀사경회', '총회'];
     div.ui.main.container
         div.ui.twelve.top.attached.buttons
-            if (month == 1)
-                a.ui.button.active(href="bank?month=1") 1월
-            else
-                a.ui.button(href="bank?month=1") 1월
-            if (month == 2)
-                a.ui.button.active(href="bank?month=2") 2월
-            else
-                a.ui.button(href="bank?month=2") 2월
-            if (month == 3)
-                a.ui.button.active(href="bank?month=3") 3월
-            else 
-                a.ui.button(href="bank?month=3") 3월
-            if (month == 4)
-                a.ui.button.active(href="bank?month=4") 4월
-            else 
-                a.ui.button(href="bank?month=4") 4월
-            if (month == 5)
-                a.ui.button.active(href="bank?month=5") 5월
-            else
-                a.ui.button(href="bank?month=5") 5월
-            if (month == 6)
-                a.ui.button.active(href="bank?month=6") 6월
-            else
-                a.ui.button(href="bank?month=6") 6월
-            if (month == 7)
-                a.ui.button.active(href="bank?month=7") 7월
-            else 
-                a.ui.button(href="bank?month=7") 7월
-            if (month == 8)
-                a.ui.button.active(href="bank?month=8") 8월
-            else 
-                a.ui.button(href="bank?month=8") 8월
-            if (month == 9)
-                a.ui.button.active(href="bank?month=9") 9월
-            else 
-                a.ui.button(href="bank?month=9") 9월
-            if (month == 10)
-                a.ui.button.active(href="bank?month=10") 10월
-            else 
-                a.ui.button(href="bank?month=10") 10월
-            if (month == 11)
-                a.ui.button.active(href="bank?month=11") 11월
-            else 
-                a.ui.button(href="bank?month=11") 11월
-            if (month == 12)
-                a.ui.button.active(href="bank?month=12") 12월
-            else 
-                a.ui.button(href="bank?month=12") 12월
+            - var monthList = [1,2,3,4,5,6,7,8,9,10,11,12];
+            each item, index in monthList
+                if (month == item)
+                    a.ui.button.active(href="bank?part=#{part}&year=#{year}&month=#{item}") #{item}월
+                else
+                    a.ui.button(href="bank?part=#{part}&year=#{year}&month=#{item}") #{item}월
         div.ui.attached.segment
             table.bank.ui.celled.unstackable.table
                 //- selectable
@@ -73,9 +32,12 @@ div.computer.tablet.only.row
                         th(colspan="3")
                 if auth=="manager" || auth=="developer" 
                     tbody
+                        - var rowNum = 0;
                         each item, index in data
+                            - rowNum++;
                             input(type="hidden", name="RowKey[#{index}]", value="#{item.RowKey}")
                             input(type="hidden", name="PartitionKey[#{index}]", value="#{item.PartitionKey}")
+                            input(type="hidden", name="part[#{index}]", value="#{item.part}")
                             input(type="hidden", name="deleteRow[#{index}]", class="delete#{index}", value='false')
                             tr(class="tr#{index}" onclick="SelectRow()", href="#")
                                 td 
@@ -86,7 +48,6 @@ div.computer.tablet.only.row
                                     i.dropdown.icon(style="position:absolute; right:0px")
                                     div.text 
                                     div.menu
-                                        - var sections = ['브랜치 모임', '훈련/회의비', '예산', '소모임/단합친교비', '생일축하 및 상품', '특새', '심방비(경조사)', '팀별/부서사역비', '격려/환송/결혼', '소모품/기타', '성경교재/교육자료', '임원/리더워크숍', '체육행사', '특강비', '겨울수련회', '여름수련회', '야유회', '말씀사경회'];
                                         each ss in sections
                                             div.item(data-value="#{ss}", style="font-size:9px") #{ss}
                                 
@@ -115,6 +76,42 @@ div.computer.tablet.only.row
                                 td(style="text-align:center")
                                     div.small.ui.red.circular.ban.icon.button(onclick="DeleteRow(#{index})")
                                         i.icon.ban
+                        - var index = rowNum
+                        while (index < 35)
+                            input(type="hidden", name="part[#{index}]", value="#{part}")
+                            tr(class="tr#{index}" onclick="SelectRow()", href="#")
+                                td 
+                                    div.ui.input
+                                        input.txt.date(class="#{index}", type="text", name="date[#{index}]", value="", style="max-width:80px;")
+                                td.center.aligned: div.ui.selection.dropdown
+                                    input(type="hidden", name="section[#{index}]", value="")
+                                    i.dropdown.icon(style="position:absolute; right:0px")
+                                    div.text 
+                                    div.menu
+                                        each ss in sections
+                                            div.item(data-value="#{ss}", style="font-size:9px") #{ss}
+                                
+                                td
+                                    div.ui.input
+                                        input.txt.content(class="#{index}", type="text", name="content[#{index}]", value="", style="max-width:100px") 
+                                td 
+                                    div.ui.input
+                                        input.txt.receiptNo(class="#{index}", type="text", name="receiptNo[#{index}]", value="", style="max-width:20px")
+                                td 
+                                    div.ui.input
+                                        input.txt.gain(class="#{index}", type="text", name="gain[#{index}]", value="", style="max-width:70px")
+                                td 
+                                    div.ui.input
+                                        input.txt.spend(class="#{index}", type="text", name="spend[#{index}]", value="", style="max-width:70px")
+                                td 
+                                td 
+                                    div.ui.input
+                                        input.txt.detail(class="#{index}", type="text", name="detail[#{index}]", value="", style="max-width:70px")
+                                td
+                                td
+                                td(style="text-align:center")
+                            - index++;
+                                    
                 else
                     tbody
                         each item, index in data
@@ -132,6 +129,7 @@ div.computer.tablet.only.row
                                 td(style="max-width:70px") #{item.detail || item.bankReceive || ''}
                                 td(colspan="3")
                                     i.ui.circular.info.icon(data-content="계좌번호: #{item.bankNumber||''}(#{item.bankName||''})")
+                                    
 
 
 
@@ -149,14 +147,14 @@ div.mobile.only.row
                     th 남은 금액
             tfoot(style="text-align:center")
                 tr
-                    th(colspan="4") 은행 금액: #{bankMoney}
-                    th(colspan="2") 총 지출액: #{spendSum} 
-                    th #{curMoney}
+                    th(colspan="4", style="font-size:6pt") 은행 금액: #{bankMoney}
+                    th(colspan="2", style="font-size:6pt") 총 지출액: #{spendSum} 
+                    th(style="font-size:6pt") #{curMoney}
             tbody(style="text-align:center")
                 each item in data
                     tr
                         td #{item.month}.#{item.day}
-                        td #{item.shortSection}
+                        td #{item.section}
                         td #{item.content}
                         td #{item.receiptNo || ''}
                         td(style="font-size:6pt") #{item.gain || ''}

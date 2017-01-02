@@ -120,7 +120,7 @@ block header_item04
 block content
     div.ui.secondary.pointing.menu.navbar.grid.computer.tablet.only.row
         block sub_item01
-            a.sub.item(href="/bankList") 전체 조회
+            a.sub.item(href="/budgetList") 전체 조회
         //- if auth=="manager" || auth=="developer" 
         if auth=="manager" || auth=="developer" 
             div.ui.right.secondary.menu
@@ -141,44 +141,49 @@ block content
                     i.user.icon 
                     |Add
     block sub_content
-        form#editBank(action="/editBankList" method="post")
+        form#editBank(action="/editBudgetList" method="post")
             div.ui.grid
+                - var sections = ['브랜치 모임', '훈련/회의비', '예산', '소모임/단합친교비', '생일축하 및 상품', '특새', '성탄절/찬양준비/특송', '심방비(경조사)', '팀별/부서사역비', '격려/환송/결혼', '소모품/기타', '성경교재/교육자료', '임원/리더워크숍', '또래/수평모임', '체육행사', '특강비', '겨울수련회', '여름수련회', '야유회', '말씀사경회', '총회'];
                 div.computer.tablet.only.row
                     div.ui.main.container
-                        table.bank.ui.celled.fix.unstackable.table
+                        table.bank.ui.celled.very.compact.fix.unstackable.table
                             //- selectable
                             thead(style="text-align:center")
                                 tr
-                                    th 이름
-                                    th 담당
-                                    th 은행 이름
-                                    th 계좌번호
-                                    th 정보
+                                    th 예산 분야
+                                    th 예산 비용
                                     th 삭제
+                            tfoot
+                                tr 
+                                    th
+                                    th(style="text-align:center") 합계
+                                    th(style="text-align:center") #{sum}
+                                    th
                             tbody
                                 each item, index in data
                                     input(type="hidden", name="RowKey[#{index}]", value="#{item.RowKey}")
                                     input(type="hidden", name="PartitionKey[#{index}]", value="#{item.PartitionKey}")
                                     input(type="hidden", name="deleteRow[#{index}]", class="delete#{index}", value='false')
                                     tr(class="tr#{index}", href="#")
-                                        td(style="max-width:90px; min-width:90px; width:90px")
-                                            div.ui.input
-                                                input.txt.name(class="#{index}", type="text", name="name[#{index}]", value="#{item.name}")
                                         td.center.aligned: div.ui.selection.dropdown
                                             input(type="hidden", name="section[#{index}]", value="#{item.section}")
                                             i.dropdown.icon(style="position:absolute; right:0px")
                                             div.text 
                                             div.menu
-                                                - var sections = ['임원', '팀장', 'BS', '기타'];
+                                                
                                                 each ss in sections
                                                     div.item(data-value="#{ss}", style="font-size:9px") #{ss}
-                                        td(style="max-width:200px; min-width:200px; width:200px")
+                                        td.center.aligned: div.ui.selection.dropdown
+                                            input(type="hidden", name="part[#{index}]", value="#{item.part}")
+                                            i.dropdown.icon(style="position:absolute; right:0px")
+                                            div.text 
+                                            div.menu
+                                                - var parts = ['청년1부', '청년2부'];
+                                                each ss in parts
+                                                    div.item(data-value="#{ss}", style="font-size:9px") #{ss}
+                                        td(style="text-align:center")
                                             div.ui.input
-                                                input.txt.bankName(class="#{index}", type="text", name="bankName[#{index}]", value="#{item.bankName||''}", style="max-width:180px; min-width:180px; width:180px; padding-right:0px") 
-                                        td(style="max-width:200px; min-width:200px; width:200px")
-                                            div.ui.input(style="text-align:center")
-                                                input.txt.bankNumber(class="#{index}", type="text", name="bankNumber[#{index}]", value="#{item.bankNumber || ''}", style="max-width:180px; min-width:180px; width:180px; padding-right:0px")
-                                        td
+                                                input.txt.bankName(class="#{index}", type="text", name="money[#{index}]", value="#{item.money||''}", style="max-width:180px; min-width:180px; width:180px; padding-right:0px") 
                                         td(style="text-align:center")
                                             div.small.ui.red.circular.ban.icon.button(onclick="DeleteRow(#{index})")
                                                 i.icon.ban
@@ -187,27 +192,20 @@ block content
             i.close.icon 
             div.header Add 
             div.ui.content
-                form#addBank.ui.fluid.form(action="/addBankList" method="post")
-                    div.four.fields
+                form#addBank.ui.fluid.form(action="/addBudgetList" method="post")
+                    div.two.fields
                         div.field
-                            label 이름
-                            input(name="add_name[0]", placeholder="상세 내역", type="text")
-                        div.field
-                            label 담당
+                            label 예산분야
                             div.ui.selection.dropdown
                                 input(type="hidden", name="add_section[0]", value="임원")
                                 i.dropdown.icon
                                 div.text
                                 div.menu
-                                    - var sections = ['임원', '팀장', 'BS', '기타'];
                                     each ss in sections
                                         div.item(data-value="#{ss}") #{ss}
                         div.field
-                            label 입금 은행
-                            input(name="add_bankName[0]", placeholder="입금은행", type="text")
-                        div.field
-                            label 계좌번호
-                            input(name="add_bankNumber[0]", placeholder="계좌번호", type="text")
+                            label 예산 비용
+                            input(name="add_money[0]", placeholder="입금은행", type="text")
             div.actions
                 div.ui.positive.right.labeled.icon.button 등록
                     i.checkmark.icon

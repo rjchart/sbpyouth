@@ -159,7 +159,7 @@ module.exports.AddBank = function (addData, next) {
     var batch = new azure.TableBatch();
     for (var key in addData) {
         var data = addData[key];
-		if (data.deleteRow == "true") {
+		if (data.deleteRow && data.deleteRow == "true") {
 			SetEntityGen(data);
 			batch.deleteEntity(data,{echoContent: true});
 		}
