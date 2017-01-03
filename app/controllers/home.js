@@ -151,33 +151,37 @@ router.get('/bank', function (req, res, next) {
 router.get('/bankCheck', function (req, res, next) {
     var user = sbp_data.CheckLogin(req);
 
+    var section = req.query.section;
     var part = req.query.part;
     if (part == null)
         part = "청년2부";
-    var year = req.query.year;
-    var month = req.query.month;
-    var getDate = new Date();
-    if (year == null)
-        year = getDate.getFullYear().toString();
-    if (month == null)
-        month = (getDate.getMonth()+1).toString();
-    var day = getDate.getDate();
+    if (part == null)
+        section = "브랜치 모임";
+    // var year = req.query.year;
+    // var month = req.query.month;
+    // var getDate = new Date();
+    // if (year == null)
+    //     year = getDate.getFullYear().toString();
+    // if (month == null)
+    //     month = (getDate.getMonth()+1).toString();
+    // var day = getDate.getDate();
     // user.year = year;
     // res.render('bank', user);
-    sbp_member.GetBankWithMonthLog(year, month, part, function (error, result) {
+    sbp_member.GetBankWithSection(section, function (error, result) {
         if (!error) {
             user.data = result;
-            user.year = year;
-            user.month = month;
-            user.day = day;
+            // user.year = year;
+            // user.month = month;
+            // user.day = day;
             user.part = part;
+            user.section = section;
 
             var curMoney = 0;
             var bankMoney = 0;
             var spendSum = 0;
             result.forEach(function(item) {
                 if (!item.gain && !item.spend) {
-                    if (item.section == '예산')
+                    if (item.section == '예산' || item.PartitionKey == 'Budget')
                         item.gain = item.money;
                     else
                         item.spend = item.money;
@@ -804,7 +808,7 @@ router.get('/checkAttendance', function (req, res, next) {
             item.members = item.members.split(',');
         });
 
-        var getTable = sbp_member.GetUnionBranchMembers('2016-2', function (error, result) {
+        var getTable = sbp_member.GetUnionBranchMembers(year, function (error, result) {
             if (!error) {
                 var branchs = [];
                 result.bsList.forEach (function (item) {

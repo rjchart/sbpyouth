@@ -393,7 +393,7 @@ function SetHappinessTwoMember(member, member2, tmp, hateData, familyData) {
 		tmp2.happy -= 50;
 	}
 
-	if (member != member2 && member.oldbranch == member2.oldbranch) {
+	if (member != member2 && member.oldbranch != undefined && member.oldbranch == member2.oldbranch) {
 		tmp.countSameOld++;
 		tmp2.countSameOld++;
 		//console.log(member.RowKey + ", " + member2.RowKey + " are same old branch: " + tmp.countSameOld + ", " + tmp2.countSameOld);
@@ -418,15 +418,21 @@ function SetHappinessTwoMember(member, member2, tmp, hateData, familyData) {
 	
 	if (tmp2.order <= -10 || tmp2.happy <= -10 || tmp.order <= -10 || tmp.happy <= -10)
 		tmp.isOk = false;
-		
-	if (member2.attend >= 3)
+	
+
+	if (member.RowKey == "장민하" || member2.RowKey == "장민하" || tmp2.RowKey == "장민하")
+		console.log("check");
+
+	if (tmp2.happy > 0)
+		tmp2.state = 'positive';
+	if (tmp2.happy < -30)
+		tmp2.state = 'warning';
+	else if (tmp2.order < 0)
+		tmp2.state = 'warning';
+	else if (member2.attend >= 3 && isNaN(tmp2.state))
 		tmp2.state = 'positive';
 	else if (member2.attend <= 1)
 		tmp2.state = 'disabled';
-	// else if (tmp2.happy > 0)
-	// 	tmp2.state = 'positive';
-	// else if (tmp2.order < 0)
-	// 	tmp2.state = 'warning';
 	else
 		tmp2.state = '';
 		
@@ -445,6 +451,15 @@ function CheckBMHappiness(member, bs, hateData, familyData) {
 	tmpfriendList = [];
 	//console.log("length:" + bs.one.length + ", " + bs.two.length);
 	var isOk = true;
+
+	var tmp2 = SetHappinessTwoMember(member, bs, tmp, tmp2, 0, 0);
+	tmp2.youth = 'bs';
+	tmp2.friendIndex = 0;
+	tmpfriendList.push(tmp2);
+	isOk = tmp.isOk;
+	if (!isOk)
+		return false;
+
 	isOk = bs.two.every(function (member2, index) {
 		if (member != member2) {
 			var tmp2 = SetHappinessTwoMember(member, member2, tmp, tmp2, 0, 0);
@@ -483,19 +498,32 @@ function CheckBMHappiness(member, bs, hateData, familyData) {
 	}
 	
 	tmpfriendList.forEach(function (friend) {
-		for (var key in friend) {
-			bs[friend.youth][friend.friendIndex][key] = friend[key];
+		if (friend.youth == 'bs') {
+			for (var key in friend) {
+				bs[key] = friend[key];
+			}
 		}
+		else {
+			for (var key in friend) {
+				bs[friend.youth][friend.friendIndex][key] = friend[key];
+			}
+		}
+
 	});
 	
-	if (member.attend >= 3)
+	if (member.RowKey == "장민하")
+		console.log("check");
+
+	if (member.happy > 0) // check
+		member.state = 'positive';
+	else if (member.happy < -30)
+		member.state = 'warning';
+	else if (member.order < 0)
+		member.state = 'warning'; // check
+	if (member.attend >= 3 && isNaN(member.state))
 		member.state = 'positive';
 	else if (member.attend <= 1)
 		member.state = 'disabled';
-	// else if (member.happy > 0)
-	// 	member.state = 'positive';
-	// else if (member.order < 0)
-	// 	member.state = 'warning';
 	else
 		member.state = '';
 	
@@ -1101,6 +1129,9 @@ module.exports.SetBSListDetail = function(bsList) {
 			SetBasicComponentNotBranchSetting(member);
 			item.pow += member.power;
 		});
+
+		SetBasicComponentNotBranchSetting(item);
+		item.pow += item.power;
 	});
 
 	bsList.forEach (function (item) {

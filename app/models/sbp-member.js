@@ -321,10 +321,10 @@ module.exports.GetMembersAndLogWithQueryAndYear = function (query, year, next, t
             if (year == null || year == '' || year == 0)
                 year = sbp_time.getYear();
                 
-            if (query)
-                query = "(" + query + ")" + " and PartitionKey eq " + "'" + year + "'";
-            else
-                query = "PartitionKey eq " + "'" + year + "'";
+            // if (query)
+            //     query = "(" + query + ")" + " and PartitionKey eq " + "'" + year + "'";
+            // else
+            query = "PartitionKey eq " + "'" + year + "'";
             var logQeury = new azure.TableQuery();
             logQeury.where(query);
             
@@ -412,6 +412,32 @@ module.exports.GetBankLog = function (year, part, next) {
             //     else
             //         next(error);
             // });
+        }
+        else {
+            console.log("error:" + error);
+            next(error);
+        }
+            
+    });
+}
+
+module.exports.GetBankWithSection = function (section, next) {
+    
+    var query = new azure.TableQuery()
+    // .where('PartitionKey eq ?', year);
+    .where('section eq ?', section);
+
+    // 데이터베이스 쿼리를 실행합니다.
+    tableService.queryEntities('bank', query, null, function (error, result) {
+        if (!error) {
+            var banklogs = [];
+            for (var index in result.entries) {
+                var data = result.entries[index];
+                RemoveEntityGen(data);
+                banklogs.push(data);
+            }
+            SetBankSort(banklogs);
+            next(null, banklogs);
         }
         else {
             console.log("error:" + error);
@@ -762,17 +788,25 @@ function SetBankSort (data) {
         var ad = parseInt(a.day);
         var bd = parseInt(b.day);
 
-        if (ay < by) return -1;
-        else if (ay > by) return 1;
+        var partitionOrder = ["Budget", "Bank"];
+        var ap = partitionOrder.indexOf(a.PartitionKey);
+        var bp = partitionOrder.indexOf(b.PartitionKey);
+
+        if (ap < bp) return -1;
+        else if (ap < bp) return 1;
         else {
-            if (am < bm) return -1;
-            else if (am > bm) return 1;
+            if (ay < by) return -1;
+            else if (ay > by) return 1;
             else {
-                if (ad < bd) return -1;
-                else if (ad > bd) return 1;
-                else if (a.section == "예산") return -1;
-                else if (b.section == "예산") return 1;
-                else return 0;
+                if (am < bm) return -1;
+                else if (am > bm) return 1;
+                else {
+                    if (ad < bd) return -1;
+                    else if (ad > bd) return 1;
+                    else if (a.section == "예산") return -1;
+                    else if (b.section == "예산") return 1;
+                    else return 0;
+                }
             }
         }
     });
@@ -897,8 +931,12 @@ module.exports.AddBranch = function (addData, next) {
                     data.age = data.PartitionKey - result.birthYear + 1;
                     if (isNaN(data.age))
                         data.age = new Date().getFullYear() - result.birthYear + 1;
+                    if (isNaN(data.age))
+                        data.age = -1;
                     data.attend = result.attend;
                     data.birthYear = result.birthYear - 1900;
+                    if (isNaN(data.birthYear))
+                        data.birthYear = '?';
                     if (data.attendDesc == "기본" && data.part == null) {
                         if (data.age >= 27)
                             data.part = "청2부";
