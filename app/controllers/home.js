@@ -126,6 +126,7 @@ router.get('/bank', function (req, res, next) {
                 item.gain = MakeMoneyData(item.gain);
                 item.spend = MakeMoneyData(item.spend);
                 item.curMoney = MakeMoneyData(item.curMoney);
+                item.yearString = item.year + "." + item.month + "." + item.day;
                 item.shortYear = item.year.substring(2,4);
                 if (item.section)
                     item.shortSection = item.section.substring(0,4);
@@ -150,23 +151,14 @@ router.get('/bank', function (req, res, next) {
 
 router.get('/bankCheck', function (req, res, next) {
     var user = sbp_data.CheckLogin(req);
+    var year = new Date().getFullYear().toString();
 
     var section = req.query.section;
     var part = req.query.part;
     if (part == null)
         part = "청년2부";
-    if (part == null)
+    if (section == null)
         section = "브랜치 모임";
-    // var year = req.query.year;
-    // var month = req.query.month;
-    // var getDate = new Date();
-    // if (year == null)
-    //     year = getDate.getFullYear().toString();
-    // if (month == null)
-    //     month = (getDate.getMonth()+1).toString();
-    // var day = getDate.getDate();
-    // user.year = year;
-    // res.render('bank', user);
     sbp_member.GetBankWithSection(section, function (error, result) {
         if (!error) {
             user.data = result;
@@ -176,51 +168,70 @@ router.get('/bankCheck', function (req, res, next) {
             user.part = part;
             user.section = section;
 
-            var curMoney = 0;
-            var bankMoney = 0;
-            var spendSum = 0;
-            result.forEach(function(item) {
-                if (!item.gain && !item.spend) {
-                    if (item.section == '예산' || item.PartitionKey == 'Budget')
-                        item.gain = item.money;
-                    else
-                        item.spend = item.money;
-                }
+            var result2 = MakeYearBank(result);
+            for (var key in result2.keys) {
+                var keyString = result2.keys[key];
+                var temp = result2.result[keyString];
+                var curMoney = 0;
+                var bankMoney = 0;
+                var spendSum = 0;
+                temp.forEach(function(item) {
+                    if (!item.gain && !item.spend) {
+                        if (item.section == '예산' || item.PartitionKey == 'Budget')
+                            item.gain = item.money;
+                        else
+                            item.spend = item.money;
+                    }
 
-                if (item.gain) {
-                    curMoney = curMoney + parseInt(item.gain);
-                    if (item.paid)
-                        bankMoney = bankMoney + parseInt(item.gain);
-                }
-                if (item.spend) {
-                    curMoney = curMoney - parseInt(item.spend);
-                    spendSum = spendSum + parseInt(item.spend);
-                    if (item.paid)
-                        bankMoney = bankMoney - parseInt(item.spend);
-                }
+                    if (item.gain) {
+                        curMoney = curMoney + parseInt(item.gain);
+                        if (item.paid)
+                            bankMoney = bankMoney + parseInt(item.gain);
+                    }
+                    if (item.spend) {
+                        curMoney = curMoney - parseInt(item.spend);
+                        spendSum = spendSum + parseInt(item.spend);
+                        if (item.paid)
+                            bankMoney = bankMoney - parseInt(item.spend);
+                    }
 
 
-                item.curMoney = curMoney;
-                item.gain = MakeMoneyData(item.gain);
-                item.spend = MakeMoneyData(item.spend);
-                item.curMoney = MakeMoneyData(item.curMoney);
-                item.shortYear = item.year.substring(2,4);
-                if (item.section)
-                    item.shortSection = item.section.substring(0,4);
-                if (item.content)
-                    item.shortContent = item.content.substring(0,4);
-            });
-            user.spendSum = MakeMoneyData(spendSum);
-            user.curMoney = MakeMoneyData(curMoney);
-            user.bankMoney = MakeMoneyData(bankMoney);
+                    item.curMoney = curMoney;
+                    item.gain = MakeMoneyData(item.gain);
+                    item.spend = MakeMoneyData(item.spend);
+                    item.curMoney = MakeMoneyData(item.curMoney);
+                    if (item.year) {
+                        item.yearString = item.year + "." + item.month + "." + item.day;
+                        item.shortYear = item.year.substring(2,4);
+                    }
+                    else {
+                        item.shortYear = item.year = item.month = item.day = item.yearString = '';
+                        item.content = "예산 금액";
+                    }
+                    if (item.section)
+                        item.shortSection = item.section.substring(0,4);
+                    if (item.content)
+                        item.shortContent = item.content.substring(0,4);
+                });
+                temp.spendSum = MakeMoneyData(spendSum);
+                temp.curMoney = MakeMoneyData(curMoney);
+                temp.bankMoney = MakeMoneyData(bankMoney);
+
+            }
+            // user.spendSum = MakeMoneyData(spendSum);
+            // user.curMoney = MakeMoneyData(curMoney);
+            // user.bankMoney = MakeMoneyData(bankMoney);
+            user.year = year;
+            user.keys = result2.keys;
+            user.result = result2.result;
 
             sbp_member.GetDatas("은행리스트", 'bankList', function (error, result) {
                 if (!error) {
                     user.bankList = result;
-                    res.render('bank', user);
+                    res.render('bankCheck', user);
                 }
                 else 
-                    res.render('bank',user);
+                    res.render('bankCheck',user);
             });
         }
     });
@@ -396,6 +407,50 @@ function MakeYearFriends (datas) {
     };
 }
 
+function MakeYearBank (datas) {
+    result = {};
+    var keys = [];
+    for (var i = 0; i < datas.length; i++) {
+        data = datas[i];
+        var year = new Date().getFullYear();
+        if (data.year)
+            year = parseInt(data.year);
+        var key = year.toString();
+
+        if (!result[key]) {
+            var newArray = [];
+            result[key] = newArray;
+            keys.push(key);
+        }
+        result[key].push(data);
+    }
+
+    for (var key in result) {
+        result[key] = result[key].sort(function(a,b) {
+            var aa = 0;
+            var bb = 0;
+            if (a.priority)
+                aa = parseInt(a.priority);
+            if (b.priority)
+                bb = parseInt(b.priority);
+
+            if (aa > bb) return -1;
+            else if (aa < bb) return 1;
+            else return 0;
+        });
+    }
+
+    keys.sort(function(a, b) {
+        if (a > b) return -1;
+        else if (a < b) return 1;
+        else return 0;
+    });
+
+    return {
+        result: result,
+        keys: keys
+    };
+}
 function MakeLeaderList (datas) {
     result = {};
     var keys = [];

@@ -42,7 +42,7 @@ div.computer.tablet.only.row
                             tr(class="tr#{index}" onclick="SelectRow()", href="#")
                                 td 
                                     div.ui.input
-                                        input.txt.date(class="#{index}", type="text", name="date[#{index}]", value="#{item.year}.#{item.month}.#{item.day}", style="max-width:80px;")
+                                        input.txt.date(class="#{index}", type="text", name="date[#{index}]", value="#{item.yearString}", style="max-width:80px;")
                                 td.center.aligned: div.ui.selection.dropdown
                                     input(type="hidden", name="section[#{index}]", value="#{item.section}")
                                     i.dropdown.icon(style="position:absolute; right:0px")
@@ -77,7 +77,7 @@ div.computer.tablet.only.row
                                     div.small.ui.red.circular.ban.icon.button(onclick="DeleteRow(#{index})")
                                         i.icon.ban
                         - var index = rowNum
-                        while (index < 35)
+                        while (index < 15)
                             input(type="hidden", name="part[#{index}]", value="#{part}")
                             tr(class="tr#{index}" onclick="SelectRow()", href="#")
                                 td 

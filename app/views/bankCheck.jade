@@ -1,0 +1,94 @@
+extends bankBase
+block sub_item01
+    div.ui.dropdown.sub.item 
+        |#{part}
+        i.dropdown.icon
+        div.menu
+            a.item(href="/bank?part=청년2부&year=#{year}&month=#{month}") 청년2부
+            a.item(href="/bank?part=청년1부&year=#{year}&month=#{month}") 청년1부
+    div.ui.dropdown.sub.item 
+        |#{year}
+        i.dropdown.icon
+        div.menu
+            a.item(href="/bank?part=#{part}&year=2017&month=#{month}") 2017
+            a.item(href="/bank?part=#{part}&year=2016&month=#{month}") 2016
+            a.item(href="/bank?part=#{part}&year=2015&month=#{month}") 2015
+    div.ui.dropdown.sub.item 
+        |예산 확인
+        i.dropdown.icon
+        div.menu
+            - var sections = ['브랜치 모임', '훈련/회의비', '예산', '소모임/단합친교비', '생일축하 및 상품', '특새', '성탄절/찬양준비/특송', '심방비(경조사)', '팀별/부서사역비', '격려/환송/결혼', '소모품/기타', '성경교재/교육자료', '임원/리더워크숍', '또래/수평모임', '체육행사', '특강비', '겨울수련회', '여름수련회', '야유회', '말씀사경회', '총회'];
+            each ss in sections
+                a.item(href="/bankCheck?section=#{ss}") #{ss}
+block sub_content
+    form#editBank(action="/editBank" method="post")
+        div.ui.grid#bankTable
+            each key, checkIndex in keys
+                - var data = result[key];
+                div.computer.tablet.only.row
+                    - var sections = ['브랜치 모임', '훈련/회의비', '예산', '소모임/단합친교비', '생일축하 및 상품', '특새', '성탄절/찬양준비/특송', '심방비(경조사)', '팀별/부서사역비', '격려/환송/결혼', '소모품/기타', '성경교재/교육자료', '임원/리더워크숍', '또래/수평모임', '체육행사', '특강비', '겨울수련회', '여름수련회', '야유회', '말씀사경회', '총회'];
+                    div.ui.main.container
+                        if checkIndex == 0
+                            div.big.ui.red.tag.label #{key}년도 회계
+                        else 
+                            div.ui.yellow.devided.selection.label #{key}년도 회계
+                        table.bank.ui.celled.unstackable.table
+                            //- selectable
+                            thead(style="text-align:center")
+                                tr
+                                    th 집행 날짜
+                                    th 구분
+                                    th 상세 내역
+                                    th No
+                                    th 수입 금액
+                                    th 지출 금액
+                                    th 남은 금액
+                                    th 비고
+                            tfoot
+                                tr(style="text-align:center")
+                                    th(colspan="4") 은행 금액: #{data.bankMoney}
+                                    th(colspan="2") 총 지출액: #{data.spendSum}
+                                    th(colspan="2") 남은 금액: #{data.curMoney}
+                            tbody
+                                each item, index in data
+                                    input(type="hidden", name="RowKey[#{index}]", value="#{item.RowKey}")
+                                    input(type="hidden", name="PartitionKey[#{index}]", value="#{item.PartitionKey}")
+                                    input(type="hidden", name="deleteRow[#{index}]", class="delete#{index}", value='false')
+                                    tr(class="tr#{index}" onclick="SelectRow()", href="#", style="text-align:center")
+                                        td #{item.yearString}
+                                        td #{item.section}
+                                        td(style="max-width:120px") #{item.content||''} 
+                                        td(style="max-width:20px") #{item.receiptNo || ''}
+                                        td(style="max-width:70px") #{item.gain || ''}
+                                        td(style="max-width:70px") #{item.spend || ''} 
+                                        td #{item.curMoney || ''}
+                                        td(style="max-width:70px") #{item.detail || item.bankReceive || ''}
+                                
+                div.mobile.only.row
+                    div.ui.main.container
+                        table.ui.celled.fixed.single.line.structured.compact.unstackable.table
+                            thead(style="text-align:center")
+                                tr
+                                    th(style="max-width:50px; width:50px;") 날짜
+                                    th(style="max-width:50px; width:50px;") 구분
+                                    th 상세 내역
+                                    th(style="max-width:30px; width:30px;") No
+                                    th 수입 금액
+                                    th 지출 금액
+                                    th 남은 금액
+                            tfoot(style="text-align:center")
+                                tr
+                                    th(colspan="4", style="font-size:6pt") 은행 금액: #{data.bankMoney}
+                                    th(colspan="2", style="font-size:6pt") 총 지출액: #{data.spendSum} 
+                                    th(style="font-size:6pt") #{curMoney}
+                            tbody(style="text-align:center")
+                                each item in data
+                                    tr
+                                        td #{item.month}.#{item.day}
+                                        td #{item.section}
+                                        td #{item.content}
+                                        td #{item.receiptNo || ''}
+                                        td(style="font-size:6pt") #{item.gain || ''}
+                                        td: i.label.info(style="font-size:6pt", data-content="계좌번호: #{item.bankNumber||''}(#{item.bankName||''})") #{item.spend || ''}
+                                        td: i.label.info(style="font-size:6pt", data-content="계좌번호: #{item.bankNumber||''}(#{item.bankName||''})") #{item.curMoney || ''}
+                            

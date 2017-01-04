@@ -10,7 +10,8 @@ var entGen = azure.TableUtilities.entityGenerator;
 tableService.createTableIfNotExists('users', function(error, result, res){
     if(!error){
         // Table exists or created
-        console.log("result:" + result);
+        // console.log("result:" + result);
+        ;
     }
     else {
         console.log("error:" + error);

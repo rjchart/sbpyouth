@@ -747,8 +747,10 @@ module.exports.GetBranchMembers = function (year, next, attendValue) {
 }
 
 module.exports.GetUnionBranchMembers = function (year, next, attendValue) {
-    if (year == null || year == '' || year == 0)
+    if (year == null || year == '' || year == 0) {
         year = sbp_time.getYear();
+        year = '2016-2'
+    }
     var query = new azure.TableQuery()
         .where("PartitionKey eq ?", year.toString());
     
@@ -789,11 +791,11 @@ function SetBankSort (data) {
         var bd = parseInt(b.day);
 
         var partitionOrder = ["Budget", "Bank"];
-        var ap = partitionOrder.indexOf(a.PartitionKey);
-        var bp = partitionOrder.indexOf(b.PartitionKey);
+        var ap = partitionOrder.indexOf(a.PartitionKey) - 1;
+        var bp = partitionOrder.indexOf(b.PartitionKey) - 1;
 
         if (ap < bp) return -1;
-        else if (ap < bp) return 1;
+        else if (ap > bp) return 1;
         else {
             if (ay < by) return -1;
             else if (ay > by) return 1;
