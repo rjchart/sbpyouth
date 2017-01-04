@@ -1654,7 +1654,7 @@ router.post('/addBank', function (req, res, next) {
                     tmp.bankNumber = add_bankNumber[i];
                 if (add_bankReceive && add_bankReceive.length > i)
                     tmp.bankReceive = add_bankReceive[i];
-                tmp.PartitionKey = tmp.year.toString();
+                tmp.PartitionKey = "Bank";
                 tmp.RowKey = time.toString(); 
 
 
