@@ -17,8 +17,8 @@ block sub_item01
         |예산 확인
         i.dropdown.icon
         div.menu
-            - var sections = ['브랜치 모임', '훈련/회의비', '예산', '소모임/단합친교비', '생일축하 및 상품', '특새', '성탄절/찬양준비/특송', '심방비(경조사)', '팀별/부서사역비', '격려/환송/결혼', '소모품/기타', '성경교재/교육자료', '임원/리더워크숍', '또래/수평모임', '체육행사', '특강비', '겨울수련회', '여름수련회', '야유회', '말씀사경회', '총회'];
-            each ss in sections
+            //- - var sections = ['브랜치 모임', '훈련/회의비', '예산', '소모임/단합친교비', '생일축하 및 상품', '특새', '성탄절/찬양준비/특송', '심방비(경조사)', '팀별/부서사역비', '격려/환송/결혼', '소모품/기타', '성경교재/교육자료', '임원/리더워크숍', '또래/수평모임', '체육행사', '특강비', '겨울수련회', '여름수련회', '야유회', '말씀사경회', '총회', '체육행사', '신입생 OT', '신입생 환영회', '수능 수험생 격려'];
+            each ss in budgetSections
                 a.item(href="/bankCheck?section=#{ss}") #{ss}
 block sub_content
     form#editBank(action="/editBank" method="post")
@@ -26,7 +26,7 @@ block sub_content
             each key, checkIndex in keys
                 - var data = result[key];
                 div.computer.tablet.only.row
-                    - var sections = ['브랜치 모임', '훈련/회의비', '예산', '소모임/단합친교비', '생일축하 및 상품', '특새', '성탄절/찬양준비/특송', '심방비(경조사)', '팀별/부서사역비', '격려/환송/결혼', '소모품/기타', '성경교재/교육자료', '임원/리더워크숍', '또래/수평모임', '체육행사', '특강비', '겨울수련회', '여름수련회', '야유회', '말씀사경회', '총회'];
+                    //- - var sections = ['브랜치 모임', '훈련/회의비', '예산', '소모임/단합친교비', '생일축하 및 상품', '특새', '성탄절/찬양준비/특송', '심방비(경조사)', '팀별/부서사역비', '격려/환송/결혼', '소모품/기타', '성경교재/교육자료', '임원/리더워크숍', '또래/수평모임', '체육행사', '특강비', '겨울수련회', '여름수련회', '야유회', '말씀사경회', '총회', '체육행사', '신입생 OT', '신입생 환영회', '수능 수험생 격려'];
                     div.ui.main.container
                         if checkIndex == 0
                             div.big.ui.red.tag.label #{key}년도 회계
@@ -39,7 +39,7 @@ block sub_content
                                     th 집행 날짜
                                     th 구분
                                     th 상세 내역
-                                    th No
+                                    th 부서
                                     th 수입 금액
                                     th 지출 금액
                                     th 남은 금액
@@ -58,7 +58,7 @@ block sub_content
                                         td #{item.yearString}
                                         td #{item.section}
                                         td(style="max-width:120px") #{item.content||''} 
-                                        td(style="max-width:20px") #{item.receiptNo || ''}
+                                        td(style="max-width:20px") #{item.part || ''}
                                         td(style="max-width:70px") #{item.gain || ''}
                                         td(style="max-width:70px") #{item.spend || ''} 
                                         td #{item.curMoney || ''}
@@ -87,7 +87,7 @@ block sub_content
                                         td #{item.month}.#{item.day}
                                         td #{item.section}
                                         td #{item.content}
-                                        td #{item.receiptNo || ''}
+                                        td #{item.part || ''}
                                         td(style="font-size:6pt") #{item.gain || ''}
                                         td: i.label.info(style="font-size:6pt", data-content="계좌번호: #{item.bankNumber||''}(#{item.bankName||''})") #{item.spend || ''}
                                         td: i.label.info(style="font-size:6pt", data-content="계좌번호: #{item.bankNumber||''}(#{item.bankName||''})") #{item.curMoney || ''}

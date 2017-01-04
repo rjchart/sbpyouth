@@ -36,6 +36,7 @@ jsFunctionString += "\n" + jsFunctionString2 + "\n" + jsFunctionString3 + "\n"
 + jsFunctionString10 + "\n" + jsFunctionString11 + "\n" + jsFunctionString12;
 fs.writeFileSync("javascript/templates.js", jsFunctionString);
 
+var budgetSections = ['브랜치 모임', '훈련/회의비', '예산', '소모임/단합친교비', '생일축하 및 상품', '특새', '성탄절/찬양준비/특송', '심방비(경조사)', '팀별/부서사역비', '격려/환송/결혼', '소모품/기타', '성경교재/교육자료', '임원/리더워크숍', '또래/수평모임', '체육행사', '특강비', '겨울수련회', '여름수련회', '야유회', '말씀사경회', '총회', '체육행사', '신입생 OT', '신입생 환영회', '수능 수험생 격려', '소그룹 성경공부'];
 function RemoveEntityGen (entity) {
     // var resultData = {};
     for (var key in entity) {
@@ -136,7 +137,7 @@ router.get('/bank', function (req, res, next) {
             user.spendSum = MakeMoneyData(spendSum);
             user.curMoney = MakeMoneyData(curMoney);
             user.bankMoney = MakeMoneyData(bankMoney);
-
+            user.budgetSections = budgetSections;
             sbp_member.GetDatas("은행리스트", 'bankList', function (error, result) {
                 if (!error) {
                     user.bankList = result;
@@ -200,7 +201,7 @@ router.get('/bankCheck', function (req, res, next) {
                     item.gain = MakeMoneyData(item.gain);
                     item.spend = MakeMoneyData(item.spend);
                     item.curMoney = MakeMoneyData(item.curMoney);
-                    if (item.year) {
+                    if (item.day) {
                         item.yearString = item.year + "." + item.month + "." + item.day;
                         item.shortYear = item.year.substring(2,4);
                     }
@@ -224,7 +225,7 @@ router.get('/bankCheck', function (req, res, next) {
             user.year = year;
             user.keys = result2.keys;
             user.result = result2.result;
-
+            user.budgetSections = budgetSections;
             sbp_member.GetDatas("은행리스트", 'bankList', function (error, result) {
                 if (!error) {
                     user.bankList = result;
@@ -239,7 +240,7 @@ router.get('/bankCheck', function (req, res, next) {
 
 router.get('/bankList', function (req, res, next) {
     var user = sbp_data.CheckLogin(req);
-
+    user.budgetSections = budgetSections;
     sbp_member.GetDatas("은행리스트", 'bankList', function (error, result) {
         if (!error) {
             user.data = result;
@@ -250,17 +251,28 @@ router.get('/bankList', function (req, res, next) {
 
 router.get('/budgetList', function (req, res, next) {
     var user = sbp_data.CheckLogin(req);
+    var part = req.query.part;
+    if (!part)
+        part = "청년2부";
 
     sbp_member.GetDatas("Budget", 'bank', function (error, result) {
         if (!error) {
             var sum = 0;
+            result2 = [];
             result.forEach(function(item, index) {
+                if (item.part == part)
+                    result2.push(item);
+            });
+
+            result2.forEach(function(item, index) {
                 sum += parseInt(item.money);
                 item.money = MakeMoneyData(item.money);
             });
 
-            user.data = result;
+            user.data = result2;
             user.sum = MakeMoneyData(sum);
+            user.budgetSections = budgetSections;
+            user.part = part;
             res.render('budgetList', user);
         }
     });
@@ -1636,6 +1648,7 @@ router.post('/addBank', function (req, res, next) {
                 tmp.section = add_section[i];
                 tmp.content = add_content[i];
                 tmp.money = add_money[i];
+                tmp.yearString = tmp.year + "." + tmp.month + "." + tmp.day;
 
                 if (tmp.section == '예산')
                     tmp.gain = tmp.money;
@@ -1726,6 +1739,8 @@ router.post('/addBudgetList', function (req, res, next) {
 
     var add_section = req.body.add_section;
     var add_money = req.body.add_money;
+    var add_part = req.body.add_part;
+    var add_year = req.body.add_year;
 
     var time = new Date().getTime();
 
@@ -1736,6 +1751,8 @@ router.post('/addBudgetList', function (req, res, next) {
             continue;
 
         tmp.section = add_section[i];
+        tmp.part = add_part[i];
+        tmp.year = add_year[i];
         if (add_money && add_money.length > i)
             tmp.money = add_money[i];
         tmp.PartitionKey = "Budget"
@@ -1755,6 +1772,7 @@ router.post('/editBudgetList', function (req, res, next) {
     var section = req.body.section;
     var part = req.body.part;
     var money = req.body.money;
+    var year = req.body.year;
     var RowKey = req.body.RowKey;
     var PartitionKey = req.body.PartitionKey;
     var deleteRow = req.body.deleteRow;
@@ -1769,6 +1787,8 @@ router.post('/editBudgetList', function (req, res, next) {
         tmp.section = section[i];
         tmp.money = money[i].replace(/,/g,'');
         tmp.part = part[i];
+        if (year)
+            tmp.year = year[i];
         tmp.deleteRow = deleteRow[i];
         tmp.PartitionKey = 'Budget';
         tmp.RowKey = RowKey[i]; 

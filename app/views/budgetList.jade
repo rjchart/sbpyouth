@@ -21,7 +21,7 @@ block script
                                 },
                                 success: function (response) {
                                     alert('등록 성공했습니다.');
-                                    document.location.reload();
+                                    //- document.location.reload();
                                 }
                             });
                             //- window.alert('Approved!');
@@ -120,7 +120,17 @@ block header_item04
 block content
     div.ui.secondary.pointing.menu.navbar.grid.computer.tablet.only.row
         block sub_item01
-            a.sub.item(href="/budgetList") 전체 조회
+            div.ui.dropdown.sub.item
+                |#{part|| '전체 조회'}
+                i.dropdown.icon
+                div.menu
+                    - var parts = ['청년2부', '청년1부'];
+                    each ss in parts
+                        if (ss == part)
+                            a.item.active(href="/budgetList?part=#{ss}") #{ss}
+                        else
+                            a.item(href="/budgetList?part=#{ss}") #{ss}
+                    a.sub.item(href="/budgetList") 전체 조회
         //- if auth=="manager" || auth=="developer" 
         if auth=="manager" || auth=="developer" 
             div.ui.right.secondary.menu
@@ -134,7 +144,17 @@ block content
                         |Edit
     div.ui.secondary.pointing.menu.navbar.grid.mobile.only.row(style="padding-top:30px !important")
         block sub_item01
-            a.sub.item(href="/back") 전체 조회 
+            div.ui.dropdown.sub.item
+            |#{part}
+            i.dropdown.icon
+            div.menu
+                - var parts = ['청년2부', '청년1부'];
+                each ss in parts
+                    if (ss == part)
+                        a.item.active(href="/budgetList?part=#{ss}") #{ss}
+                    else
+                        a.item(href="/budgetList?part=#{ss}") #{ss}
+                a.sub.item(href="/budgetList") 전체 조회
         div.ui.right.secondary.menu
             div.item
                 button.ui.blue.primary.labeled.icon.button(onclick="AddMemberButton()")
@@ -143,18 +163,21 @@ block content
     block sub_content
         form#editBank(action="/editBudgetList" method="post")
             div.ui.grid
-                - var sections = ['브랜치 모임', '훈련/회의비', '예산', '소모임/단합친교비', '생일축하 및 상품', '특새', '성탄절/찬양준비/특송', '심방비(경조사)', '팀별/부서사역비', '격려/환송/결혼', '소모품/기타', '성경교재/교육자료', '임원/리더워크숍', '또래/수평모임', '체육행사', '특강비', '겨울수련회', '여름수련회', '야유회', '말씀사경회', '총회'];
+                //- - var budgetSections = ['브랜치 모임', '훈련/회의비', '예산', '소모임/단합친교비', '생일축하 및 상품', '특새', '성탄절/찬양준비/특송', '심방비(경조사)', '팀별/부서사역비', '격려/환송/결혼', '소모품/기타', '성경교재/교육자료', '임원/리더워크숍', '또래/수평모임', '체육행사', '특강비', '겨울수련회', '여름수련회', '야유회', '말씀사경회', '총회', '체육행사', '신입생 OT', '신입생 환영회', '수능 수험생 격려'];
                 div.computer.tablet.only.row
                     div.ui.main.container
                         table.bank.ui.celled.very.compact.fix.unstackable.table
                             //- selectable
                             thead(style="text-align:center")
                                 tr
+                                    th 년도
+                                    th 부서
                                     th 예산 분야
                                     th 예산 비용
                                     th 삭제
                             tfoot
                                 tr 
+                                    th
                                     th
                                     th(style="text-align:center") 합계
                                     th(style="text-align:center") #{sum}
@@ -165,14 +188,9 @@ block content
                                     input(type="hidden", name="PartitionKey[#{index}]", value="#{item.PartitionKey}")
                                     input(type="hidden", name="deleteRow[#{index}]", class="delete#{index}", value='false')
                                     tr(class="tr#{index}", href="#")
-                                        td.center.aligned: div.ui.selection.dropdown
-                                            input(type="hidden", name="section[#{index}]", value="#{item.section}")
-                                            i.dropdown.icon(style="position:absolute; right:0px")
-                                            div.text 
-                                            div.menu
-                                                
-                                                each ss in sections
-                                                    div.item(data-value="#{ss}", style="font-size:9px") #{ss}
+                                        td(style="text-align:center")
+                                            div.ui.input
+                                                input.txt.bankYear(class="#{index}", type="text", name="year[#{index}]", value="#{item.year||''}") 
                                         td.center.aligned: div.ui.selection.dropdown
                                             input(type="hidden", name="part[#{index}]", value="#{item.part}")
                                             i.dropdown.icon(style="position:absolute; right:0px")
@@ -180,6 +198,14 @@ block content
                                             div.menu
                                                 - var parts = ['청년1부', '청년2부'];
                                                 each ss in parts
+                                                    div.item(data-value="#{ss}", style="font-size:9px") #{ss}
+                                        td.center.aligned: div.ui.selection.dropdown
+                                            input(type="hidden", name="section[#{index}]", value="#{item.section}")
+                                            i.dropdown.icon(style="position:absolute; right:0px")
+                                            div.text 
+                                            div.menu
+                                                
+                                                each ss in budgetSections
                                                     div.item(data-value="#{ss}", style="font-size:9px") #{ss}
                                         td(style="text-align:center")
                                             div.ui.input
@@ -201,11 +227,24 @@ block content
                                 i.dropdown.icon
                                 div.text
                                 div.menu
-                                    each ss in sections
+                                    each ss in budgetSections
+                                        div.item(data-value="#{ss}") #{ss}
+                        div.field
+                            label 부서
+                            div.ui.selection.dropdown
+                                input(type="hidden", name="add_part[0]", value="청년1부")
+                                i.dropdown.icon
+                                div.text
+                                div.menu
+                                    - var parts = ['청년1부', '청년2부'];
+                                    each ss in parts
                                         div.item(data-value="#{ss}") #{ss}
                         div.field
                             label 예산 비용
                             input(name="add_money[0]", placeholder="입금은행", type="text")
+                        div.field
+                            label 년도
+                            input(name="add_year[0]", placeholder="년도", type="text")
             div.actions
                 div.ui.positive.right.labeled.icon.button 등록
                     i.checkmark.icon

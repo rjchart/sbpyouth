@@ -283,7 +283,7 @@ var jade_mixins = {};
 var jade_interp;
 ;var locals_for_with = (locals || {});(function (auth, bankMoney, curMoney, data, month, off, part, spendSum, undefined, year) {
 buf.push("<div class=\"computer tablet only row\">");
-var sections = ['브랜치 모임', '훈련/회의비', '예산', '소모임/단합친교비', '생일축하 및 상품', '특새', '성탄절/찬양준비/특송', '심방비(경조사)', '팀별/부서사역비', '격려/환송/결혼', '소모품/기타', '성경교재/교육자료', '임원/리더워크숍', '또래/수평모임', '체육행사', '특강비', '겨울수련회', '여름수련회', '야유회', '말씀사경회', '총회'];
+var sections = ['브랜치 모임', '훈련/회의비', '예산', '소모임/단합친교비', '생일축하 및 상품', '특새', '성탄절/찬양준비/특송', '심방비(경조사)', '팀별/부서사역비', '격려/환송/결혼', '소모품/기타', '성경교재/교육자료', '임원/리더워크숍', '또래/수평모임', '체육행사', '특강비', '겨울수련회', '여름수련회', '야유회', '말씀사경회', '총회', '체육행사', '신입생 OT', '신입생 환영회', '수능 수험생 격려', '소그룹 성경공부'];
 buf.push("<div class=\"ui main container\"><div class=\"ui twelve top attached buttons\">");
 var monthList = [1,2,3,4,5,6,7,8,9,10,11,12];
 // iterate monthList
