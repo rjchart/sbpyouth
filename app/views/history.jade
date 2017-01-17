@@ -1,4 +1,35 @@
 extends historyBase
+mixin AccordionTitle(dataArray)
+    div.ui.blue.tag.label
+        i.dropdown.icon 
+        if (dataArray.length == 1)
+            |#{dataArray[0].event_name}
+        else 
+            |#{dataArray[0].event_name}
+    if (!dataArray[0].event_term)
+        strong &nbsp;&nbsp;&nbsp;&nbsp;#{dataArray[0].event_year}.#{dataArray[0].event_month}.#{dataArray[0].event_day}
+    else
+        strong &nbsp;&nbsp;&nbsp;&nbsp;#{dataArray[0].event_year}.#{dataArray[0].event_month}.#{dataArray[0].event_day} ~ #{dataArray[0].end_year}.#{dataArray[0].end_month}.#{dataArray[0].end_day}
+mixin AccordionContent(dataArray)
+    div.ui.three.stackable.cards
+        each data in dataArray
+            div.ui.big.card
+                if (data.photoName)
+                    div.image.outImg(style="background-color:black")
+                        img.fitImg#photo(src="https://sbpyouth.blob.core.windows.net/imgcontainer/#{data.photoName||''}")
+                div.content
+                    div.header #{data.event_subject}
+                    div.meta
+                        if (data.event_location)
+                            |#{data.event_location}
+                        //- span.members #{data.event_part}
+                    if (data.event_description)
+                        div.description
+                            |#{data.event_description}
+                    if (data.members)
+                        div.description(style="color:gray; font-size:10px")
+                            | >> #{data.members}
+
 block sub_item01
     a.active.sub.item(href="/history") 청년부 발자취
 block sub_content
@@ -34,69 +65,15 @@ block sub_content
                     if (first == 0)
                         - first = 1;
                         div.active.title
-                            div.ui.blue.tag.label
-                                i.dropdown.icon 
-                                if (dataArray.length == 1)
-                                    |#{dataArray[0].event_name}
-                                else 
-                                    |#{dataArray[0].event_name}
-                            strong &nbsp;&nbsp;&nbsp;&nbsp;#{dataArray[0].event_year}.#{dataArray[0].event_month}.#{dataArray[0].event_day}
+                            mixin AccordionTitle(dataArray)
                         div.active.content
-                            div.ui.three.stackable.cards
-                                each data in dataArray
-                                    div.ui.big.card
-                                        div.image.outImg(style="background-color:black")
-                                            if (data.usingPhoto == 'true')
-                                                img#photo.fitImg(src="#{data.userPhoto||''}")
-                                            else if (data.photoName) 
-                                                img.fitImg#photo(src="https://sbpyouth.blob.core.windows.net/imgcontainer/#{data.photoName||''}")
-                                            else
-                                                img.fitImg(src="/public/img/image.png")
-                                        div.content
-                                            div.header #{data.event_subject}
-                                            div.meta
-                                                if (data.event_location)
-                                                    |#{data.event_location}
-                                                //- span.members #{data.event_part}
-                                            if (data.event_description)
-                                                div.description
-                                                    |#{data.event_description}
-                                            if (data.members)
-                                                div.description(style="color:gray; font-size:10px")
-                                                    | >> #{data.members}
+                            mixin AccordionContent(dataArray)
                         div.ui.fitted.divider
                     else
                         div.title
-                            div.ui.blue.tag.label
-                                i.dropdown.icon 
-                                if (dataArray.length == 1)
-                                    |#{dataArray[0].event_name}
-                                else 
-                                    |#{dataArray[0].event_name}
-                            strong &nbsp;&nbsp;&nbsp;&nbsp;#{dataArray[0].event_year}.#{dataArray[0].event_month}.#{dataArray[0].event_day}
+                            mixin AccordionTitle(dataArray)
                         div.content
-                            div.ui.three.stackable.cards
-                                each data in dataArray
-                                    div.ui.big.card
-                                        div.image.outImg(style="background-color:black")
-                                            if (data.usingPhoto == 'true')
-                                                img#photo.fitImg(src="#{data.userPhoto||''}")
-                                            else if (data.photoName) 
-                                                img.fitImg#photo(src="https://sbpyouth.blob.core.windows.net/imgcontainer/#{data.photoName||''}")
-                                            else
-                                                img.fitImg(src="/public/img/image.png")
-                                        div.content
-                                            div.header #{data.event_subject}
-                                            div.meta
-                                                if (data.event_location)
-                                                    |#{data.event_location}
-                                                //- span.members #{data.event_part}
-                                            if (data.event_description)
-                                                div.description
-                                                    |#{data.event_description}
-                                            if (data.members)
-                                                div.description(style="color:gray; font-size:10px")
-                                                    | >> #{data.members}
+                            mixin AccordionContent(dataArray)
                         div.ui.fitted.divider
                 if !isLogin
                     br

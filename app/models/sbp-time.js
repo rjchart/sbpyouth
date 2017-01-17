@@ -13,7 +13,7 @@ function getYear() {
 function getFullYear() {
 	var date = new Date();
 	var current_year = date.getFullYear();
-	current_year = 2017;
+	// current_year = 2017;
 	return current_year;
 } 
 

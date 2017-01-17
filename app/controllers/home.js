@@ -356,6 +356,14 @@ function MakeTimePhotos (datas) {
             result[key] = newArray;
             keys.push(key);
         }
+
+        var endTime;
+        if (data.event_term && data.event_term != "") {
+            endTime = new Date(parseInt(data.event_year), parseInt(data.event_month)-1, parseInt(data.event_day) + parseInt(data.event_term) - 1);
+            data.end_year = endTime.getFullYear();
+            data.end_month = endTime.getMonth() + 1;
+            data.end_day = endTime.getDate();
+        }
         result[key].push(data);
     }
 

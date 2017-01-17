@@ -70,22 +70,20 @@ block sub_content
                             thead(style="text-align:center")
                                 tr
                                     th(style="max-width:50px; width:50px;") 날짜
-                                    th(style="max-width:50px; width:50px;") 구분
                                     th 상세 내역
-                                    th(style="max-width:30px; width:30px;") No
+                                    th(style="max-width:60px; width:60px;") 부서
                                     th 수입 금액
                                     th 지출 금액
                                     th 남은 금액
                             tfoot(style="text-align:center")
                                 tr
                                     th(colspan="4", style="font-size:6pt") 은행 금액: #{data.bankMoney}
-                                    th(colspan="2", style="font-size:6pt") 총 지출액: #{data.spendSum} 
+                                    th #{data.spendSum} 
                                     th(style="font-size:6pt") #{curMoney}
                             tbody(style="text-align:center")
                                 each item in data
                                     tr
                                         td #{item.month}.#{item.day}
-                                        td #{item.section}
                                         td #{item.content}
                                         td #{item.part || ''}
                                         td(style="font-size:6pt") #{item.gain || ''}

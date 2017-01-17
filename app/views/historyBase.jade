@@ -363,6 +363,16 @@ block content
 										- for (var dd = 1; dd < 32; ++dd) {
 											div.item(data-value="#{dd}") #{dd}
 										- }
+							div.field(style="min-width:45px; max-width:67px")
+								label 기간
+								div.ui.selection.year.dropdown(style="min-width:20px; max-width:30px")
+									input(type="hidden", name="event_term", value="1")
+									i.dropdown.icon
+									div.text
+									div.menu
+										- var terms = [1, 2, 3, 4, 5, 6, 7];
+										each tt in terms
+											div.item(data-value="#{tt}") #{tt}
 						div.four.fields
 							div.field
 								label 이벤트 이름
