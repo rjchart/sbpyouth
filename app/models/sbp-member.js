@@ -749,7 +749,6 @@ module.exports.GetBranchMembers = function (year, next, attendValue) {
 module.exports.GetUnionBranchMembers = function (year, next, attendValue) {
     if (year == null || year == '' || year == 0) {
         year = sbp_time.getYear();
-        year = '2016-2'
     }
     var query = new azure.TableQuery()
         .where("PartitionKey eq ?", year.toString());
