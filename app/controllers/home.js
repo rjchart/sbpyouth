@@ -2103,6 +2103,46 @@ router.post('/addBranch', function (req, res, next) {
     
 });
 
+
+router.get('/branchNameChange', function (req, res, next) {
+    // var keys = ['branch', 'change'];
+    // var body = req.body;
+    var year = req.query.year;
+    var before = req.query.branch;
+    var after = req.query.change;
+    if (!year)
+        year = sbp_time.getYear();
+    var getTable = sbp_member.GetMembersAndLogWithYear(year, function (error, result) {
+        if (!error) {
+            result.title = title;
+            var changeMembers = [];
+            result.forEach(function (item) {
+                if (item.branch == before) {
+                    item.branch = after;
+                    item.PartitionKey = year;
+                    changeMembers.push(item);
+                }   
+            });
+
+            sbp_member.AddBranch(changeMembers, function (error, result) {
+                if (!error) {
+                    var data = {
+                        result:result
+                    }
+                    res.redirect('/branch');
+                }
+                else 
+                    res.status(500).send("" + error);
+            });
+            // CombineElements(user, result)
+        }
+        else 
+            console.log(error);
+    }, 0);
+    
+    
+});
+
 router.post('/makeBranch', function (req, res, next) {
     var bsList = req.body['make_nameBS'];
     var seperate = req.body['seperate'];

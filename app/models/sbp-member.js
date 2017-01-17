@@ -944,10 +944,12 @@ module.exports.AddBranch = function (addData, next) {
                         else     
                             data.part = "청1부";
                     }
-                    if (data.attendDesc != "기본")
-                        data.part = data.attendDesc;
+                    if (data.attendDesc != "기본" && data.part == null) {
+                        if (data.attendDesc)
+                            data.part = data.attendDesc;
+                    }
                     
-                    if (data.attendDesc == "bs" || data.attendDesc == "BS") {
+                    if (data.attendDesc == "bs" || data.attendDesc == "BS" || data.charge == "bs" || data.charge == "BS") {
                         data.charge = 'bs';
                         data.attendDesc = '';
                     }
