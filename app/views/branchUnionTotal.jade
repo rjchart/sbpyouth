@@ -46,7 +46,7 @@ block sub_content
 							|#{year}년도 브랜치 편성
 						div.ui.container
 							table.ui.celled.striped.structured.table
-								thead
+								thead(style="text-align:center")
 									tr
 										th 브랜치
 										- bsList.forEach( function(item,index) {
@@ -62,16 +62,16 @@ block sub_content
 													a.item(href="/branch?year=#{year}&attendValue=2") <i class="meh icon"></i> well
 													a.item(href="/branch?year=#{year}&attendValue=3") <i class="smile icon"></i> good
 													a.item(href="/branch?year=#{year}&attendValue=4") <i class="thumbs outline up icon"></i> perfect
-								tbody
+								tbody(style="text-align:center")
 									tr
-										td: div.ui.ribbon.label 브랜치장
+										td: label 브랜치장
 										each item in bsList
 											td: label#profile(onclick="ProfileBS('#{item.RowKey}','#{year}','#{item.branch}','#{item.attend}')") #{item.RowKey}
 									- for(var i = 0; i < maxLength.one; i++) {
 									tr 
 										if i == 0
 											td(rowspan="#{maxLength.one}") 
-												div.ui.ribbon.label 브랜치 맴버
+												label 브랜치 맴버
 										each item in bsList
 											td
 												if item.one.length > i 
@@ -81,7 +81,7 @@ block sub_content
 									tr 
 										if i == 0
 											td(rowspan="#{maxLength.arm}") 
-												div.ui.ribbon.label 군입대자
+												label 군입대자
 										each item in bsList
 											td
 												if item.arm.length > i 
@@ -91,7 +91,7 @@ block sub_content
 									tr 
 										if i == 0
 											td(rowspan="#{maxLength.out}") 
-												div.ui.ribbon.label 유학자
+												label 유학자
 										each item in bsList
 											td
 												if item.out.length > i 

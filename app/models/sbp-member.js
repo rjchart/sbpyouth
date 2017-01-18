@@ -163,7 +163,7 @@ function CombineLogToMember(logList, memberList) {
             var oneLog = logList[logKey];
             if (oneLog.RowKey == oneMember.RowKey) {
                 for (var key in oneLog) {
-                    if (key == 'PartitionKey' || key == 'RowKey' || key == 'birthYear' || key == 'attendDesc')
+                    if (key == 'PartitionKey' || key == 'RowKey' || key == 'birthYear' || key == 'attendDesc' || key == 'gender' || key == 'photo' || key == 'photoName')
                         continue;
                     oneMember[key] = oneLog[key];   
                 }
