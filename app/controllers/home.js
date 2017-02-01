@@ -345,12 +345,17 @@ router.get('/churchLeader', function (req, res, next) {
     });
 });
 
+function zeroPad(nr,base){
+  var  len = (String(base).length - String(nr).length)+1;
+  return len > 0? new Array(len).join('0')+nr : nr;
+}
+
 function MakeTimePhotos (datas) {
     result = {};
     var keys = [];
     for (var i = 0; i < datas.length; i++) {
         data = datas[i];
-        var key = data.event_year + "." + data.event_month + "." + data.event_day + ">> " + data.event_name;
+        var key = data.event_year + "." + zeroPad(data.event_month,10) + "." + zeroPad(data.event_day,10) + ">> " + data.event_name;
         if (!result[key]) {
             var newArray = [];
             result[key] = newArray;

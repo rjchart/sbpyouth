@@ -6,7 +6,7 @@ mixin AccordionTitle(dataArray)
             |#{dataArray[0].event_name}
         else 
             |#{dataArray[0].event_name}
-    if (!dataArray[0].event_term)
+    if (!dataArray[0].event_term || dataArray[0].event_term == 1)
         strong &nbsp;&nbsp;&nbsp;&nbsp;#{dataArray[0].event_year}.#{dataArray[0].event_month}.#{dataArray[0].event_day}
     else
         strong &nbsp;&nbsp;&nbsp;&nbsp;#{dataArray[0].event_year}.#{dataArray[0].event_month}.#{dataArray[0].event_day} ~ #{dataArray[0].end_year}.#{dataArray[0].end_month}.#{dataArray[0].end_day}
