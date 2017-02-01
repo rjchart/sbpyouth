@@ -398,7 +398,7 @@ buf.push("</div></div></td><td><div class=\"ui input\"><input type=\"text\"" + (
 }).call(this);
 
 var index = rowNum
-while ((index < 15))
+while ((index < 25))
 {
 buf.push("<input type=\"hidden\"" + (jade.attr("name", "part[" + (index) + "]", true, false)) + (jade.attr("value", "" + (part) + "", true, false)) + "/><tr onclick=\"SelectRow()\" href=\"#\"" + (jade.cls(["tr" + (index) + ""], [true])) + "><td> <div class=\"ui input\"><input type=\"text\"" + (jade.attr("name", "date[" + (index) + "]", true, false)) + " value=\"\" style=\"max-width:80px;\"" + (jade.cls(['txt','date',"" + (index) + ""], [null,null,true])) + "/></div></td><td class=\"center aligned\"><div class=\"ui selection dropdown\"><input type=\"hidden\"" + (jade.attr("name", "section[" + (index) + "]", true, false)) + " value=\"\"/><i style=\"position:absolute; right:0px\" class=\"dropdown icon\"></i><div class=\"text\"> </div><div class=\"menu\">");
 // iterate sections
