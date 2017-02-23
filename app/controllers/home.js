@@ -837,6 +837,19 @@ router.get('/branch', function (req, res, next) {
     var getTable = sbp_member.GetUnionBranchMembers(year, function (error, result) {
         if (!error) {
             var branchs = [];
+
+            result.bsList = result.bsList.sort(function(a,b) {
+                var prio_a = -1;
+                var prio_b = -1;
+                array = ['단결', '보금자리', '다', '참존예', '예배사', '미소', '기대'];
+                prio_a = array.indexOf(a.branch);
+                prio_b = array.indexOf(b.branch);
+
+                if (prio_a > prio_b) return 1;
+                else if (prio_a < prio_b) return -1;
+                else return 0;
+            });
+
             result.bsList.forEach (function (item) {
                 branchs.push(item.branch);
             });

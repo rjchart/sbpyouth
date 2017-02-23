@@ -14,6 +14,13 @@ block sub_item01
             a.item(href="/bank?part=#{part}&year=2016&month=#{month}") 2016
             a.item(href="/bank?part=#{part}&year=2015&month=#{month}") 2015
     div.ui.dropdown.sub.item 
+        |#{month}월
+        i.dropdown.icon
+        div.menu
+            - var monthList = [1,2,3,4,5,6,7,8,9,10,11,12];
+            each ss in monthList
+                a.item(href="/bank?part=#{part}&&year=#{year}&&month=#{ss}") #{ss}월
+    div.ui.dropdown.sub.item 
         |예산 확인
         i.dropdown.icon
         div.menu
