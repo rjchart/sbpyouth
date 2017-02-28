@@ -281,48 +281,10 @@ function bankTable(locals) {
 var buf = [];
 var jade_mixins = {};
 var jade_interp;
-;var locals_for_with = (locals || {});(function (auth, bankMoney, curMoney, data, month, off, part, spendSum, undefined, year) {
+;var locals_for_with = (locals || {});(function (auth, bankMoney, curMoney, data, off, part, spendSum, undefined) {
 buf.push("<div class=\"computer tablet only row\">");
 var sections = ['브랜치 모임', '훈련/회의비', '예산', '소모임/단합친교비', '생일축하 및 상품', '특새', '성탄절/찬양준비/특송', '심방비(경조사)', '팀별/부서사역비', '격려/환송/결혼', '소모품/기타', '성경교재/교육자료', '임원/리더워크숍', '또래/수평모임', '체육행사', '특강비', '겨울수련회', '여름수련회', '야유회', '말씀사경회', '총회', '체육행사', '신입생 OT', '신입생 환영회', '수능 수험생 격려', '소그룹 성경공부'];
-buf.push("<div class=\"ui main container\"><div class=\"ui twelve top attached buttons\">");
-var monthList = [1,2,3,4,5,6,7,8,9,10,11,12];
-// iterate monthList
-;(function(){
-  var $$obj = monthList;
-  if ('number' == typeof $$obj.length) {
-
-    for (var index = 0, $$l = $$obj.length; index < $$l; index++) {
-      var item = $$obj[index];
-
-if ( (month == item))
-{
-buf.push("<a" + (jade.attr("href", "bank?part=" + (part) + "&year=" + (year) + "&month=" + (item) + "", true, false)) + " class=\"ui button active\">" + (jade.escape((jade_interp = item) == null ? '' : jade_interp)) + "월</a>");
-}
-else
-{
-buf.push("<a" + (jade.attr("href", "bank?part=" + (part) + "&year=" + (year) + "&month=" + (item) + "", true, false)) + " class=\"ui button\">" + (jade.escape((jade_interp = item) == null ? '' : jade_interp)) + "월</a>");
-}
-    }
-
-  } else {
-    var $$l = 0;
-    for (var index in $$obj) {
-      $$l++;      var item = $$obj[index];
-
-if ( (month == item))
-{
-buf.push("<a" + (jade.attr("href", "bank?part=" + (part) + "&year=" + (year) + "&month=" + (item) + "", true, false)) + " class=\"ui button active\">" + (jade.escape((jade_interp = item) == null ? '' : jade_interp)) + "월</a>");
-}
-else
-{
-buf.push("<a" + (jade.attr("href", "bank?part=" + (part) + "&year=" + (year) + "&month=" + (item) + "", true, false)) + " class=\"ui button\">" + (jade.escape((jade_interp = item) == null ? '' : jade_interp)) + "월</a>");
-}
-    }
-
-  }
-}).call(this);
-
-buf.push("</div><div class=\"ui attached segment\"><table class=\"bank ui celled unstackable table\"><thead style=\"text-align:center\"><tr><th>집행 날짜</th><th>구분</th><th>상세 내역</th><th>No</th><th>수입 금액</th><th>지출 금액</th><th>남은 금액</th><th>비고</th><th>정보</th><th>이체</th><th>삭제</th></tr></thead><tfoot><tr style=\"text-align:center\"><th colspan=\"4\">은행 금액: " + (jade.escape((jade_interp = bankMoney) == null ? '' : jade_interp)) + "</th><th colspan=\"2\">총 지출액: " + (jade.escape((jade_interp = spendSum) == null ? '' : jade_interp)) + "</th><th colspan=\"2\">남은 금액: " + (jade.escape((jade_interp = curMoney) == null ? '' : jade_interp)) + "</th><th colspan=\"3\"></th></tr></tfoot>");
+buf.push("<div class=\"ui main container\"><table class=\"bank ui celled unstackable table\"><thead style=\"text-align:center\"><tr><th>집행 날짜</th><th>부서</th><th>구분</th><th>상세 내역</th><th>No</th><th>수입 금액</th><th>지출 금액</th><th>남은 금액</th><th>비고</th><th>정보</th><th>이체</th><th>삭제</th></tr></thead><tfoot><tr style=\"text-align:center\"><th colspan=\"5\">은행 금액: " + (jade.escape((jade_interp = bankMoney) == null ? '' : jade_interp)) + "</th><th colspan=\"2\">총 지출액: " + (jade.escape((jade_interp = spendSum) == null ? '' : jade_interp)) + "</th><th colspan=\"2\">남은 금액: " + (jade.escape((jade_interp = curMoney) == null ? '' : jade_interp)) + "</th><th colspan=\"3\"></th></tr></tfoot>");
 if ( auth=="manager" || auth=="developer" )
 {
 buf.push("<tbody>");
@@ -336,7 +298,7 @@ var rowNum = 0;
       var item = $$obj[index];
 
 rowNum++;
-buf.push("<input type=\"hidden\"" + (jade.attr("name", "RowKey[" + (index) + "]", true, false)) + (jade.attr("value", "" + (item.RowKey) + "", true, false)) + "/><input type=\"hidden\"" + (jade.attr("name", "PartitionKey[" + (index) + "]", true, false)) + (jade.attr("value", "" + (item.PartitionKey) + "", true, false)) + "/><input type=\"hidden\"" + (jade.attr("name", "part[" + (index) + "]", true, false)) + (jade.attr("value", "" + (item.part) + "", true, false)) + "/><input type=\"hidden\"" + (jade.attr("name", "deleteRow[" + (index) + "]", true, false)) + " value=\"false\"" + (jade.cls(["delete" + (index) + ""], [true])) + "/><tr onclick=\"SelectRow()\" href=\"#\"" + (jade.cls(["tr" + (index) + ""], [true])) + "><td> <div class=\"ui input\"><input type=\"text\"" + (jade.attr("name", "date[" + (index) + "]", true, false)) + (jade.attr("value", "" + (item.yearString) + "", true, false)) + " style=\"max-width:80px;\"" + (jade.cls(['txt','date',"" + (index) + ""], [null,null,true])) + "/></div></td><td class=\"center aligned\"><div class=\"ui selection dropdown\"><input type=\"hidden\"" + (jade.attr("name", "section[" + (index) + "]", true, false)) + (jade.attr("value", "" + (item.section) + "", true, false)) + "/><i style=\"position:absolute; right:0px\" class=\"dropdown icon\"></i><div class=\"text\"> </div><div class=\"menu\">");
+buf.push("<input type=\"hidden\"" + (jade.attr("name", "RowKey[" + (index) + "]", true, false)) + (jade.attr("value", "" + (item.RowKey) + "", true, false)) + "/><input type=\"hidden\"" + (jade.attr("name", "PartitionKey[" + (index) + "]", true, false)) + (jade.attr("value", "" + (item.PartitionKey) + "", true, false)) + "/><input type=\"hidden\"" + (jade.attr("name", "deleteRow[" + (index) + "]", true, false)) + " value=\"false\"" + (jade.cls(["delete" + (index) + ""], [true])) + "/><tr onclick=\"SelectRow()\" href=\"#\"" + (jade.cls(["tr" + (index) + ""], [true])) + "><td> <div class=\"ui input\"><input type=\"text\"" + (jade.attr("name", "date[" + (index) + "]", true, false)) + (jade.attr("value", "" + (item.yearString) + "", true, false)) + " style=\"max-width:80px;\"" + (jade.cls(['txt','date',"" + (index) + ""], [null,null,true])) + "/></div></td><td><div class=\"ui input\"><input type=\"text\"" + (jade.attr("name", "part[" + (index) + "]", true, false)) + (jade.attr("value", "" + (item.part) + "", true, false)) + " style=\"max-width:60px;\"" + (jade.cls(['txt','part',"" + (index) + ""], [null,null,true])) + "/></div></td><td class=\"center aligned\"><div class=\"ui selection dropdown\"><input type=\"hidden\"" + (jade.attr("name", "section[" + (index) + "]", true, false)) + (jade.attr("value", "" + (item.section) + "", true, false)) + "/><i style=\"position:absolute; right:0px\" class=\"dropdown icon\"></i><div class=\"text\"> </div><div class=\"menu\">");
 // iterate sections
 ;(function(){
   var $$obj = sections;
@@ -368,7 +330,7 @@ buf.push("</div></div></td><td><div class=\"ui input\"><input type=\"text\"" + (
       $$l++;      var item = $$obj[index];
 
 rowNum++;
-buf.push("<input type=\"hidden\"" + (jade.attr("name", "RowKey[" + (index) + "]", true, false)) + (jade.attr("value", "" + (item.RowKey) + "", true, false)) + "/><input type=\"hidden\"" + (jade.attr("name", "PartitionKey[" + (index) + "]", true, false)) + (jade.attr("value", "" + (item.PartitionKey) + "", true, false)) + "/><input type=\"hidden\"" + (jade.attr("name", "part[" + (index) + "]", true, false)) + (jade.attr("value", "" + (item.part) + "", true, false)) + "/><input type=\"hidden\"" + (jade.attr("name", "deleteRow[" + (index) + "]", true, false)) + " value=\"false\"" + (jade.cls(["delete" + (index) + ""], [true])) + "/><tr onclick=\"SelectRow()\" href=\"#\"" + (jade.cls(["tr" + (index) + ""], [true])) + "><td> <div class=\"ui input\"><input type=\"text\"" + (jade.attr("name", "date[" + (index) + "]", true, false)) + (jade.attr("value", "" + (item.yearString) + "", true, false)) + " style=\"max-width:80px;\"" + (jade.cls(['txt','date',"" + (index) + ""], [null,null,true])) + "/></div></td><td class=\"center aligned\"><div class=\"ui selection dropdown\"><input type=\"hidden\"" + (jade.attr("name", "section[" + (index) + "]", true, false)) + (jade.attr("value", "" + (item.section) + "", true, false)) + "/><i style=\"position:absolute; right:0px\" class=\"dropdown icon\"></i><div class=\"text\"> </div><div class=\"menu\">");
+buf.push("<input type=\"hidden\"" + (jade.attr("name", "RowKey[" + (index) + "]", true, false)) + (jade.attr("value", "" + (item.RowKey) + "", true, false)) + "/><input type=\"hidden\"" + (jade.attr("name", "PartitionKey[" + (index) + "]", true, false)) + (jade.attr("value", "" + (item.PartitionKey) + "", true, false)) + "/><input type=\"hidden\"" + (jade.attr("name", "deleteRow[" + (index) + "]", true, false)) + " value=\"false\"" + (jade.cls(["delete" + (index) + ""], [true])) + "/><tr onclick=\"SelectRow()\" href=\"#\"" + (jade.cls(["tr" + (index) + ""], [true])) + "><td> <div class=\"ui input\"><input type=\"text\"" + (jade.attr("name", "date[" + (index) + "]", true, false)) + (jade.attr("value", "" + (item.yearString) + "", true, false)) + " style=\"max-width:80px;\"" + (jade.cls(['txt','date',"" + (index) + ""], [null,null,true])) + "/></div></td><td><div class=\"ui input\"><input type=\"text\"" + (jade.attr("name", "part[" + (index) + "]", true, false)) + (jade.attr("value", "" + (item.part) + "", true, false)) + " style=\"max-width:60px;\"" + (jade.cls(['txt','part',"" + (index) + ""], [null,null,true])) + "/></div></td><td class=\"center aligned\"><div class=\"ui selection dropdown\"><input type=\"hidden\"" + (jade.attr("name", "section[" + (index) + "]", true, false)) + (jade.attr("value", "" + (item.section) + "", true, false)) + "/><i style=\"position:absolute; right:0px\" class=\"dropdown icon\"></i><div class=\"text\"> </div><div class=\"menu\">");
 // iterate sections
 ;(function(){
   var $$obj = sections;
@@ -398,9 +360,9 @@ buf.push("</div></div></td><td><div class=\"ui input\"><input type=\"text\"" + (
 }).call(this);
 
 var index = rowNum
-while ((index < 25))
+while ((index < 15))
 {
-buf.push("<input type=\"hidden\"" + (jade.attr("name", "part[" + (index) + "]", true, false)) + (jade.attr("value", "" + (part) + "", true, false)) + "/><tr onclick=\"SelectRow()\" href=\"#\"" + (jade.cls(["tr" + (index) + ""], [true])) + "><td> <div class=\"ui input\"><input type=\"text\"" + (jade.attr("name", "date[" + (index) + "]", true, false)) + " value=\"\" style=\"max-width:80px;\"" + (jade.cls(['txt','date',"" + (index) + ""], [null,null,true])) + "/></div></td><td class=\"center aligned\"><div class=\"ui selection dropdown\"><input type=\"hidden\"" + (jade.attr("name", "section[" + (index) + "]", true, false)) + " value=\"\"/><i style=\"position:absolute; right:0px\" class=\"dropdown icon\"></i><div class=\"text\"> </div><div class=\"menu\">");
+buf.push("<input type=\"hidden\"" + (jade.attr("name", "part[" + (index) + "]", true, false)) + (jade.attr("value", "" + (part) + "", true, false)) + "/><tr onclick=\"SelectRow()\" href=\"#\"" + (jade.cls(["tr" + (index) + ""], [true])) + "><td> <div class=\"ui input\"><input type=\"text\"" + (jade.attr("name", "date[" + (index) + "]", true, false)) + " value=\"\" style=\"max-width:80px;\"" + (jade.cls(['txt','date',"" + (index) + ""], [null,null,true])) + "/></div></td><td><div class=\"ui input\"><input type=\"text\"" + (jade.attr("name", "part[" + (index) + "]", true, false)) + " value=\"\" style=\"max-width:60px;\"" + (jade.cls(['txt','part',"" + (index) + ""], [null,null,true])) + "/></div></td><td class=\"center aligned\"><div class=\"ui selection dropdown\"><input type=\"hidden\"" + (jade.attr("name", "section[" + (index) + "]", true, false)) + " value=\"\"/><i style=\"position:absolute; right:0px\" class=\"dropdown icon\"></i><div class=\"text\"> </div><div class=\"menu\">");
 // iterate sections
 ;(function(){
   var $$obj = sections;
@@ -455,7 +417,7 @@ buf.push("<input type=\"hidden\"" + (jade.attr("name", "RowKey[" + (index) + "]"
 
 buf.push("</tbody>");
 }
-buf.push("</table></div></div></div><div class=\"mobile only row\"><div class=\"ui main container\"><table class=\"ui celled fixed single line structured compact unstackable table\"><thead style=\"text-align:center\"><tr><th style=\"max-width:50px; width:50px;\">날짜</th><th style=\"max-width:50px; width:50px;\">구분</th><th>상세 내역</th><th style=\"max-width:30px; width:30px;\">No</th><th>수입 금액</th><th>지출 금액</th><th>남은 금액</th></tr></thead><tfoot style=\"text-align:center\"><tr><th colspan=\"4\" style=\"font-size:6pt\">은행 금액: " + (jade.escape((jade_interp = bankMoney) == null ? '' : jade_interp)) + "</th><th colspan=\"2\" style=\"font-size:6pt\">총 지출액: " + (jade.escape((jade_interp = spendSum) == null ? '' : jade_interp)) + " </th><th style=\"font-size:6pt\">" + (jade.escape((jade_interp = curMoney) == null ? '' : jade_interp)) + "</th></tr></tfoot><tbody style=\"text-align:center\">");
+buf.push("</table></div></div><div class=\"mobile only row\"><div class=\"ui main container\"><table class=\"ui celled fixed single line structured compact unstackable table\"><thead style=\"text-align:center\"><tr><th style=\"max-width:50px; width:50px;\">날짜</th><th style=\"max-width:50px; width:50px;\">구분</th><th>상세 내역</th><th style=\"max-width:30px; width:30px;\">No</th><th>수입 금액</th><th>지출 금액</th><th>남은 금액</th></tr></thead><tfoot style=\"text-align:center\"><tr><th colspan=\"4\" style=\"font-size:6pt\">은행 금액: " + (jade.escape((jade_interp = bankMoney) == null ? '' : jade_interp)) + "</th><th colspan=\"2\" style=\"font-size:6pt\">총 지출액: " + (jade.escape((jade_interp = spendSum) == null ? '' : jade_interp)) + " </th><th style=\"font-size:6pt\">" + (jade.escape((jade_interp = curMoney) == null ? '' : jade_interp)) + "</th></tr></tfoot><tbody style=\"text-align:center\">");
 // iterate data
 ;(function(){
   var $$obj = data;
@@ -478,5 +440,5 @@ buf.push("<tr><td>" + (jade.escape((jade_interp = item.month) == null ? '' : jad
   }
 }).call(this);
 
-buf.push("</tbody></table></div></div>");}.call(this,"auth" in locals_for_with?locals_for_with.auth:typeof auth!=="undefined"?auth:undefined,"bankMoney" in locals_for_with?locals_for_with.bankMoney:typeof bankMoney!=="undefined"?bankMoney:undefined,"curMoney" in locals_for_with?locals_for_with.curMoney:typeof curMoney!=="undefined"?curMoney:undefined,"data" in locals_for_with?locals_for_with.data:typeof data!=="undefined"?data:undefined,"month" in locals_for_with?locals_for_with.month:typeof month!=="undefined"?month:undefined,"off" in locals_for_with?locals_for_with.off:typeof off!=="undefined"?off:undefined,"part" in locals_for_with?locals_for_with.part:typeof part!=="undefined"?part:undefined,"spendSum" in locals_for_with?locals_for_with.spendSum:typeof spendSum!=="undefined"?spendSum:undefined,"undefined" in locals_for_with?locals_for_with.undefined:typeof undefined!=="undefined"?undefined:undefined,"year" in locals_for_with?locals_for_with.year:typeof year!=="undefined"?year:undefined));;return buf.join("");
+buf.push("</tbody></table></div></div>");}.call(this,"auth" in locals_for_with?locals_for_with.auth:typeof auth!=="undefined"?auth:undefined,"bankMoney" in locals_for_with?locals_for_with.bankMoney:typeof bankMoney!=="undefined"?bankMoney:undefined,"curMoney" in locals_for_with?locals_for_with.curMoney:typeof curMoney!=="undefined"?curMoney:undefined,"data" in locals_for_with?locals_for_with.data:typeof data!=="undefined"?data:undefined,"off" in locals_for_with?locals_for_with.off:typeof off!=="undefined"?off:undefined,"part" in locals_for_with?locals_for_with.part:typeof part!=="undefined"?part:undefined,"spendSum" in locals_for_with?locals_for_with.spendSum:typeof spendSum!=="undefined"?spendSum:undefined,"undefined" in locals_for_with?locals_for_with.undefined:typeof undefined!=="undefined"?undefined:undefined));;return buf.join("");
 }

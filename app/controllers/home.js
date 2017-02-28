@@ -176,24 +176,23 @@ router.get('/bankCheck', function (req, res, next) {
                 var curMoney = 0;
                 var bankMoney = 0;
                 var spendSum = 0;
-                temp.forEach(function(item) {
+                var removeItem;
+                temp.forEach(function(item, index) {
                     if (!item.gain && !item.spend) {
-                        if (item.section == '예산' || item.PartitionKey == 'Budget')
+                        if (item.section == '예산' || item.PartitionKey == 'Budget') {
+                            bankMoney = item.money;
                             item.gain = item.money;
+                            removeItem = index;
+                        }
                         else
                             item.spend = item.money;
                     }
 
-                    if (item.gain) {
+                    if (item.gain)
                         curMoney = curMoney + parseInt(item.gain);
-                        if (item.paid)
-                            bankMoney = bankMoney + parseInt(item.gain);
-                    }
                     if (item.spend) {
                         curMoney = curMoney - parseInt(item.spend);
                         spendSum = spendSum + parseInt(item.spend);
-                        if (item.paid)
-                            bankMoney = bankMoney - parseInt(item.spend);
                     }
 
 
@@ -214,6 +213,7 @@ router.get('/bankCheck', function (req, res, next) {
                     if (item.content)
                         item.shortContent = item.content.substring(0,4);
                 });
+                tempt = temp.splice( removeItem, 1 );
                 temp.spendSum = MakeMoneyData(spendSum);
                 temp.curMoney = MakeMoneyData(curMoney);
                 temp.bankMoney = MakeMoneyData(bankMoney);
@@ -438,8 +438,13 @@ function MakeYearBank (datas) {
     for (var i = 0; i < datas.length; i++) {
         data = datas[i];
         var year = new Date().getFullYear();
+
+        // if (data.section == '예산' || data.PartitionKey == 'Budget')
+        //     continue;
         if (data.year)
-            year = parseInt(data.year);
+            year = parseInt(data.year) + "년도";
+        if (data.part)
+            year = year + " " + data.part;
         var key = year.toString();
 
         if (!result[key]) {

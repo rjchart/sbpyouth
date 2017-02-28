@@ -28,10 +28,11 @@ block sub_content
                 div.computer.tablet.only.row
                     //- - var sections = ['브랜치 모임', '훈련/회의비', '예산', '소모임/단합친교비', '생일축하 및 상품', '특새', '성탄절/찬양준비/특송', '심방비(경조사)', '팀별/부서사역비', '격려/환송/결혼', '소모품/기타', '성경교재/교육자료', '임원/리더워크숍', '또래/수평모임', '체육행사', '특강비', '겨울수련회', '여름수련회', '야유회', '말씀사경회', '총회', '체육행사', '신입생 OT', '신입생 환영회', '수능 수험생 격려'];
                     div.ui.main.container
-                        if checkIndex == 0
-                            div.big.ui.red.tag.label #{key}년도 회계
+                        if checkIndex == 0 || checkIndex == 1
+                            div.big.ui.red.tag.label #{key} 회계
                         else 
                             div.ui.yellow.devided.selection.label #{key}년도 회계
+                        //- h2.ui.header 청년부
                         table.bank.ui.celled.unstackable.table
                             //- selectable
                             thead(style="text-align:center")
@@ -40,15 +41,12 @@ block sub_content
                                     th 구분
                                     th 상세 내역
                                     th 부서
-                                    th 수입 금액
                                     th 지출 금액
-                                    th 남은 금액
-                                    th 비고
                             tfoot
                                 tr(style="text-align:center")
-                                    th(colspan="4") 은행 금액: #{data.bankMoney}
-                                    th(colspan="2") 총 지출액: #{data.spendSum}
-                                    th(colspan="2") 남은 금액: #{data.curMoney}
+                                    th(colspan="3") 예산: #{data.bankMoney}
+                                    th(colspan="1") 총 지출액: #{data.spendSum}
+                                    th(colspan="1") 남은 금액: #{data.curMoney}
                             tbody
                                 each item, index in data
                                     input(type="hidden", name="RowKey[#{index}]", value="#{item.RowKey}")
@@ -59,10 +57,7 @@ block sub_content
                                         td #{item.section}
                                         td(style="max-width:120px") #{item.content||''} 
                                         td(style="max-width:20px") #{item.part || ''}
-                                        td(style="max-width:70px") #{item.gain || ''}
                                         td(style="max-width:70px") #{item.spend || ''} 
-                                        td #{item.curMoney || ''}
-                                        td(style="max-width:70px") #{item.detail || item.bankReceive || ''}
                                 
                 div.mobile.only.row
                     div.ui.main.container
