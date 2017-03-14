@@ -447,11 +447,11 @@ module.exports.GetBankWithSection = function (section, next) {
     });
 }
 
-module.exports.GetBankWithMonthLog = function (year, month, part, next) {
+module.exports.GetBankWithMonthLog = function (year, month, next) {
     
     var query = new azure.TableQuery()
     // .where('PartitionKey eq ?', year);
-    .where('year eq ? and month eq ? and part eq ?', year, month, part);
+    .where('year eq ? and month eq ?', year, month);
 
     // 데이터베이스 쿼리를 실행합니다.
     tableService.queryEntities('bank', query, null, function (error, result) {

@@ -75,6 +75,55 @@ function MakeMoneyData (data) {
     return null;
 }
 
+function MakeBankDictionary (data) {
+    var result = {};
+    var curMoney = 0;
+    var bankMoney = 0;
+    var spendSum = 0;
+
+    data.forEach(function(item) {
+        if (!item.gain && !item.spend) {
+            if (item.section == '예산')
+                item.gain = item.money;
+            else
+                item.spend = item.money;
+        }
+
+        if (item.gain) {
+            curMoney = curMoney + parseInt(item.gain);
+            if (item.paid)
+                bankMoney = bankMoney + parseInt(item.gain);
+        }
+        if (item.spend) {
+            curMoney = curMoney - parseInt(item.spend);
+            spendSum = spendSum + parseInt(item.spend);
+            if (item.paid)
+                bankMoney = bankMoney - parseInt(item.spend);
+        }
+
+
+        item.curMoney = curMoney;
+        item.gain = MakeMoneyData(item.gain);
+        item.spend = MakeMoneyData(item.spend);
+        item.curMoney = MakeMoneyData(item.curMoney);
+        item.yearString = item.year + "." + item.month + "." + item.day;
+        item.shortYear = item.year.substring(2,4);
+        if (item.section)
+            item.shortSection = item.section.substring(0,4);
+        if (item.content)
+            item.shortContent = item.content.substring(0,4);
+    });
+
+    result.data = data;
+    result.cur = curMoney;
+    result.bank = bankMoney;
+    result.spendSum = MakeMoneyData(spendSum);
+    result.curMoney = MakeMoneyData(curMoney);
+    result.bankMoney = MakeMoneyData(bankMoney);
+
+    return result;
+}
+
 router.get('/bank', function (req, res, next) {
     var user = sbp_data.CheckLogin(req);
 
@@ -91,52 +140,67 @@ router.get('/bank', function (req, res, next) {
     var day = getDate.getDate();
     // user.year = year;
     // res.render('bank', user);
-    sbp_member.GetBankWithMonthLog(year, month, part, function (error, result) {
+    sbp_member.GetBankWithMonthLog(year, month, function (error, result) {
         if (!error) {
+            part1 = [];
+            part2 = [];
+            result.forEach(function(item) {
+                if (item.part && item.part == "청년1부") {
+                    part1.push(item);
+                }
+                else 
+                    part2.push(item);
+            });
             user.data = result;
             user.year = year;
             user.month = month;
             user.day = day;
             user.part = part;
 
-            var curMoney = 0;
-            var bankMoney = 0;
-            var spendSum = 0;
-            result.forEach(function(item) {
-                if (!item.gain && !item.spend) {
-                    if (item.section == '예산')
-                        item.gain = item.money;
-                    else
-                        item.spend = item.money;
-                }
+            user.part1 = MakeBankDictionary(part1);
+            user.part1.name = "청년1부";
+            user.part2 = MakeBankDictionary(part2);
+            user.part2.name = "청년2부";
+            user.totalBank = MakeMoneyData(user.part1.bank + user.part2.bank);
+            user.totalCur = MakeMoneyData(user.part1.cur + user.part2.cur);
+            // var curMoney = 0;
+            // var bankMoney = 0;
+            // var spendSum = 0;
+            // result.forEach(function(item) {
+            //     if (!item.gain && !item.spend) {
+            //         if (item.section == '예산')
+            //             item.gain = item.money;
+            //         else
+            //             item.spend = item.money;
+            //     }
 
-                if (item.gain) {
-                    curMoney = curMoney + parseInt(item.gain);
-                    if (item.paid)
-                        bankMoney = bankMoney + parseInt(item.gain);
-                }
-                if (item.spend) {
-                    curMoney = curMoney - parseInt(item.spend);
-                    spendSum = spendSum + parseInt(item.spend);
-                    if (item.paid)
-                        bankMoney = bankMoney - parseInt(item.spend);
-                }
+            //     if (item.gain) {
+            //         curMoney = curMoney + parseInt(item.gain);
+            //         if (item.paid)
+            //             bankMoney = bankMoney + parseInt(item.gain);
+            //     }
+            //     if (item.spend) {
+            //         curMoney = curMoney - parseInt(item.spend);
+            //         spendSum = spendSum + parseInt(item.spend);
+            //         if (item.paid)
+            //             bankMoney = bankMoney - parseInt(item.spend);
+            //     }
 
 
-                item.curMoney = curMoney;
-                item.gain = MakeMoneyData(item.gain);
-                item.spend = MakeMoneyData(item.spend);
-                item.curMoney = MakeMoneyData(item.curMoney);
-                item.yearString = item.year + "." + item.month + "." + item.day;
-                item.shortYear = item.year.substring(2,4);
-                if (item.section)
-                    item.shortSection = item.section.substring(0,4);
-                if (item.content)
-                    item.shortContent = item.content.substring(0,4);
-            });
-            user.spendSum = MakeMoneyData(spendSum);
-            user.curMoney = MakeMoneyData(curMoney);
-            user.bankMoney = MakeMoneyData(bankMoney);
+            //     item.curMoney = curMoney;
+            //     item.gain = MakeMoneyData(item.gain);
+            //     item.spend = MakeMoneyData(item.spend);
+            //     item.curMoney = MakeMoneyData(item.curMoney);
+            //     item.yearString = item.year + "." + item.month + "." + item.day;
+            //     item.shortYear = item.year.substring(2,4);
+            //     if (item.section)
+            //         item.shortSection = item.section.substring(0,4);
+            //     if (item.content)
+            //         item.shortContent = item.content.substring(0,4);
+            // });
+            // user.spendSum = MakeMoneyData(spendSum);
+            // user.curMoney = MakeMoneyData(curMoney);
+            // user.bankMoney = MakeMoneyData(bankMoney);
             user.budgetSections = budgetSections;
             sbp_member.GetDatas("은행리스트", 'bankList', function (error, result) {
                 if (!error) {
@@ -176,7 +240,7 @@ router.get('/bankCheck', function (req, res, next) {
                 var curMoney = 0;
                 var bankMoney = 0;
                 var spendSum = 0;
-                var removeItem;
+                var removeItem = -1;
                 temp.forEach(function(item, index) {
                     if (!item.gain && !item.spend) {
                         if (item.section == '예산' || item.PartitionKey == 'Budget') {
@@ -213,7 +277,8 @@ router.get('/bankCheck', function (req, res, next) {
                     if (item.content)
                         item.shortContent = item.content.substring(0,4);
                 });
-                tempt = temp.splice( removeItem, 1 );
+                if (removeItem >= 0)
+                    tempt = temp.splice( removeItem, 1 );
                 temp.spendSum = MakeMoneyData(spendSum);
                 temp.curMoney = MakeMoneyData(curMoney);
                 temp.bankMoney = MakeMoneyData(bankMoney);
@@ -1842,73 +1907,81 @@ router.post('/editBank', function (req, res, next) {
     var month = getDate.getMonth();
     var day = getDate.getDate();
 
-    var date = req.body.date;
-    var section = req.body.section;
-    var content = req.body.content;
-    var receiptNo = req.body.receiptNo;
-    var gain = req.body.gain;
-    var spend = req.body.spend;
-    var detail = req.body.detail;
-    var RowKey = req.body.RowKey;
-    if (!RowKey)
-        RowKey = [];
-    var PartitionKey = req.body.PartitionKey;
-    var deleteRow = req.body.deleteRow || [];
-    var paidNum = req.body.paid;
-    var part = req.body.part;
-    var paid = [];
-    if (paidNum)
-        paidNum.forEach( function(item) {
-            var num = parseInt(item);
-            paid[num] = "on"; 
-        });
 
     var addData = [];
-    for (i = 0; i < date.length; i++) {
-        var tmp = {};
-        if (!RowKey || RowKey[i] == null || RowKey[i] == '') {
-            if (date[i] != null && date[i] != '') {
-                RowKey[i] = new Date().getTime().toString() + "_" + i;
-            }
-            else
-                continue;
+    var values = ["청년1부", "청년2부"];
+    values.forEach(function(partItem) {
+
+        var date = req.body.date[partItem];
+        var section = req.body.section[partItem];
+        var content = req.body.content[partItem];
+        var receiptNo = req.body.receiptNo[partItem];
+        var gain = req.body.gain[partItem];
+        var spend = req.body.spend[partItem];
+        var detail = req.body.detail[partItem];
+        var RowKey = req.body.RowKey[partItem];
+        if (!RowKey)
+            RowKey = [];
+        var PartitionKey = req.body.PartitionKey[partItem];
+        var deleteRow = req.body.deleteRow[partItem] || [];
+        var paidNum = req.body.paid[partItem];
+        var part = req.body.part[partItem];
+        var paid = [];
+        if (paidNum) {
+            paidNum.forEach( function(item) {
+                var num = parseInt(item);
+                paid[num] = "on"; 
+            });
         }
-        // var time = new Date().getTime();
+
+        for (i = 0; i < date.length; i++) {
+            var tmp = {};
+            if (!RowKey || RowKey[i] == null || RowKey[i] == '') {
+                if (date[i] != null && date[i] != '') {
+                    RowKey[i] = new Date().getTime().toString() + "_" + i;
+                }
+                else
+                    continue;
+            }
+            // var time = new Date().getTime();
 
 
-        // tmp.date = date[i];
-        tmp.section = section[i];
-        tmp.content = content[i];
-        tmp.receiptNo = receiptNo[i];
-        tmp.gain = gain[i].replace(/,/g,'');
-        tmp.spend = spend[i].replace(/,/g,'');
-        tmp.detail = detail[i];
-        if (deleteRow[i])
-            tmp.deleteRow = deleteRow[i];
-        tmp.part = part[i];
+            // tmp.date = date[i];
+            tmp.section = section[i];
+            tmp.content = content[i];
+            tmp.receiptNo = receiptNo[i];
+            tmp.gain = gain[i].replace(/,/g,'');
+            tmp.spend = spend[i].replace(/,/g,'');
+            tmp.detail = detail[i];
+            if (deleteRow[i])
+                tmp.deleteRow = deleteRow[i];
+            tmp.part = part[i];
 
-        if (paid && paid.length > i && paid[i])
-            tmp.paid = paid[i];
-        else
-            tmp.paid = false;
+            if (paid && paid.length > i && paid[i])
+                tmp.paid = paid[i];
+            else
+                tmp.paid = false;
 
-        if (tmp.gain && tmp.gain > 0)
-            tmp.money = tmp.gain;
-        
-        if (tmp.spend && tmp.spend > 0)
-            tmp.money = tmp.spend;
-        
-        var dateStrings = date[i].split('.');
-        tmp.year = dateStrings[0];
-        tmp.month = dateStrings[1];
-        tmp.day = dateStrings[2];
-        
-        tmp.PartitionKey = 'Bank';
-        tmp.RowKey = RowKey[i]; 
+            if (tmp.gain && tmp.gain > 0)
+                tmp.money = tmp.gain;
+            
+            if (tmp.spend && tmp.spend > 0)
+                tmp.money = tmp.spend;
+            
+            var dateStrings = date[i].split('.');
+            tmp.year = dateStrings[0];
+            tmp.month = dateStrings[1];
+            tmp.day = dateStrings[2];
+            
+            tmp.PartitionKey = 'Bank';
+            tmp.RowKey = RowKey[i]; 
 
 
-        addData.push(tmp);
-    }
+            addData.push(tmp);
+        }
+
+
+    });
     
     sbp_data.AddBank(addData, function (error, result) {
         if (!error) {

@@ -180,8 +180,8 @@ block script
 						var className = event.target.className;
 						var classes = className.split(' ');
 						//- if (classes[3]!='0')
-						var num = parseInt(classes[2])+1;
-						classes[2] = num.toString();
+						var num = parseInt(classes[3])+1;
+						classes[3] = num.toString();
 						className = 'input.' + classes.join('.');
 						$(className).focus();
 					}
@@ -189,8 +189,8 @@ block script
 						var className = event.target.className;
 						var classes = className.split(' ');
 						//- if (classes[3]!='0')
-						var num = parseInt(classes[2])-1;
-						classes[2] = num.toString();
+						var num = parseInt(classes[3])-1;
+						classes[3] = num.toString();
 						className = 'input.' + classes.join('.');
 						$(className).focus();
 					}
@@ -203,9 +203,9 @@ block script
 				console.log("abc");
 			}
 
-			function DeleteRow(index) {
-				var classValue = "tr.tr" + index;
-				var deleteValue = "input.delete" + index;
+			function DeleteRow(part, index) {
+				var classValue = "tr.tr" + part + index;
+				var deleteValue = "input.delete" + part + index;
 
 				var r = confirm("해당 열을 삭제하시겠습니까?");
 				if (r == true) {
