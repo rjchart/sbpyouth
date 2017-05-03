@@ -36,7 +36,7 @@ jsFunctionString += "\n" + jsFunctionString2 + "\n" + jsFunctionString3 + "\n"
 + jsFunctionString10 + "\n" + jsFunctionString11 + "\n" + jsFunctionString12;
 fs.writeFileSync("javascript/templates.js", jsFunctionString);
 
-var budgetSections = ['브랜치 모임', '훈련/회의비', '예산', '소모임/단합친교비', '생일축하 및 상품', '특새', '성탄절/찬양준비/특송', '심방비(경조사)', '팀별/부서사역비', '격려/환송/결혼', '소모품/기타', '성경교재/교육자료', '임원/리더워크숍', '또래/수평모임', '체육행사', '특강비', '겨울수련회', '여름수련회', '야유회', '말씀사경회', '총회', '체육행사', '신입생 OT', '신입생 환영회', '수능 수험생 격려', '소그룹 성경공부'];
+var budgetSections = ['브랜치 모임', '훈련/회의비', '예산', '소모임/단합친교비', '생일축하 및 상품', '특새', '성탄절/찬양준비/특송', '심방비(경조사)', '팀별/부서사역비', '격려/환송/결혼', '소모품/기타', '성경교재/교육자료', '임원/리더워크숍', '또래/수평모임', '체육행사', '특강비', '겨울수련회', '여름수련회', '야유회', '말씀사경회', '총회', '체육행사', '신입생 OT', '신입생 환영회', '수능 수험생 격려', '소그룹 성경공부', '어생주'];
 function RemoveEntityGen (entity) {
     // var resultData = {};
     for (var key in entity) {
@@ -148,7 +148,7 @@ router.get('/bank', function (req, res, next) {
                 if (item.part && item.part == "청년1부") {
                     part1.push(item);
                 }
-                else 
+                else if (item.part && item.part == "청년2부")
                     part2.push(item);
             });
             user.data = result;
@@ -201,6 +201,54 @@ router.get('/bank', function (req, res, next) {
             // user.spendSum = MakeMoneyData(spendSum);
             // user.curMoney = MakeMoneyData(curMoney);
             // user.bankMoney = MakeMoneyData(bankMoney);
+            user.budgetSections = budgetSections;
+            sbp_member.GetDatas("은행리스트", 'bankList', function (error, result) {
+                if (!error) {
+                    user.bankList = result;
+                    res.render('bank', user);
+                }
+                else 
+                    res.render('bank',user);
+            });
+        }
+    });
+});
+
+
+router.get('/bankChild', function (req, res, next) {
+    var user = sbp_data.CheckLogin(req);
+    var part = "어생주";
+
+    var year = req.query.year;
+    var month = req.query.month;
+    var getDate = new Date();
+    if (year == null)
+        year = getDate.getFullYear().toString();
+    if (month == null)
+        month = (getDate.getMonth()+1).toString();
+    var day = getDate.getDate();
+    // user.year = year;
+    // res.render('bank', user);
+    sbp_member.GetBankLog(year, part, function (error, result) {
+        if (!error) {
+            part1 = [];
+            result.forEach(function(item) {
+                if (item.part && item.part == "어생주") {
+                    part1.push(item);
+                }
+            });
+            user.data = result;
+            user.year = year;
+            user.month = month;
+            user.day = day;
+            user.part = part;
+
+            user.part2 = MakeBankDictionary(part1);
+            user.part2.name = "어생주";
+            user.part1 = null;
+            user.totalBank = MakeMoneyData(user.part2.bank);
+            user.totalCur = MakeMoneyData(user.part2.cur);
+
             user.budgetSections = budgetSections;
             sbp_member.GetDatas("은행리스트", 'bankList', function (error, result) {
                 if (!error) {
@@ -1909,7 +1957,7 @@ router.post('/editBank', function (req, res, next) {
 
 
     var addData = [];
-    var values = ["청년1부", "청년2부"];
+    var values = ["청년1부", "청년2부", "어생주"];
     values.forEach(function(partItem) {
 
         var date = req.body.date[partItem];

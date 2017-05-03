@@ -256,6 +256,7 @@ block content
 				div.menu
 					a.item(href="/bank?part=청년2부&year=#{year}&month=#{month}") 청년2부
 					a.item(href="/bank?part=청년1부&year=#{year}&month=#{month}") 청년1부
+					a.item(href="/bank?part=어생주&year=#{year}&month=#{month}") 어생주
 			div.ui.dropdown.sub.item 
 				|#{year}
 				i.dropdown.icon
@@ -291,7 +292,7 @@ block content
 								i.dropdown.icon
 								div.text
 								div.menu
-									- var sections = ['청년2부', '청년1부'];
+									- var sections = ['청년2부', '청년1부', '어생주'];
 									each ss in sections
 										div.item(data-value="#{ss}") #{ss}
 						div.field(style="min-width:45px; max-width:60px")

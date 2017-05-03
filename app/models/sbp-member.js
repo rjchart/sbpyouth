@@ -373,7 +373,7 @@ module.exports.GetDetailCurrentMemberWithGroup = function (group, next) {
 module.exports.GetBankLog = function (year, part, next) {
     
     var query = new azure.TableQuery()
-    .where('year eq ? and part eq ?', year, part);
+    .where('year eq ?', year, part); // and part eq ?
     // .where('PartitionKey eq ? and month eq ?', year, group);
 
     // 데이터베이스 쿼리를 실행합니다.
@@ -472,6 +472,7 @@ module.exports.GetBankWithMonthLog = function (year, month, next) {
             
     });
 }
+
 
 // module.exports.GetHistoryWithMonth = function (year, month, next) {
     
