@@ -1972,7 +1972,9 @@ router.post('/editBank', function (req, res, next) {
             RowKey = [];
         var PartitionKey = req.body.PartitionKey[partItem];
         var deleteRow = req.body.deleteRow[partItem] || [];
-        var paidNum = req.body.paid[partItem];
+        var paidNum;
+        if (req.body.paid)
+            paidNum = req.body.paid[partItem];
         var part = req.body.part[partItem];
         var paid = [];
         if (paidNum) {
@@ -1982,50 +1984,52 @@ router.post('/editBank', function (req, res, next) {
             });
         }
 
-        for (i = 0; i < date.length; i++) {
-            var tmp = {};
-            if (!RowKey || RowKey[i] == null || RowKey[i] == '') {
-                if (date[i] != null && date[i] != '') {
-                    RowKey[i] = new Date().getTime().toString() + "_" + i;
+        if (date) {
+            for (i = 0; i < date.length; i++) {
+                var tmp = {};
+                if (!RowKey || RowKey[i] == null || RowKey[i] == '') {
+                    if (date[i] != null && date[i] != '') {
+                        RowKey[i] = new Date().getTime().toString() + "_" + i;
+                    }
+                    else
+                        continue;
                 }
+                // var time = new Date().getTime();
+
+
+                // tmp.date = date[i];
+                tmp.section = section[i];
+                tmp.content = content[i];
+                tmp.receiptNo = receiptNo[i];
+                tmp.gain = gain[i].replace(/,/g,'');
+                tmp.spend = spend[i].replace(/,/g,'');
+                tmp.detail = detail[i];
+                if (deleteRow[i])
+                    tmp.deleteRow = deleteRow[i];
+                tmp.part = part[i];
+
+                if (paid && paid.length > i && paid[i])
+                    tmp.paid = paid[i];
                 else
-                    continue;
+                    tmp.paid = false;
+
+                if (tmp.gain && tmp.gain > 0)
+                    tmp.money = tmp.gain;
+                
+                if (tmp.spend && tmp.spend > 0)
+                    tmp.money = tmp.spend;
+                
+                var dateStrings = date[i].split('.');
+                tmp.year = dateStrings[0];
+                tmp.month = dateStrings[1];
+                tmp.day = dateStrings[2];
+                
+                tmp.PartitionKey = 'Bank';
+                tmp.RowKey = RowKey[i]; 
+
+
+                addData.push(tmp);
             }
-            // var time = new Date().getTime();
-
-
-            // tmp.date = date[i];
-            tmp.section = section[i];
-            tmp.content = content[i];
-            tmp.receiptNo = receiptNo[i];
-            tmp.gain = gain[i].replace(/,/g,'');
-            tmp.spend = spend[i].replace(/,/g,'');
-            tmp.detail = detail[i];
-            if (deleteRow[i])
-                tmp.deleteRow = deleteRow[i];
-            tmp.part = part[i];
-
-            if (paid && paid.length > i && paid[i])
-                tmp.paid = paid[i];
-            else
-                tmp.paid = false;
-
-            if (tmp.gain && tmp.gain > 0)
-                tmp.money = tmp.gain;
-            
-            if (tmp.spend && tmp.spend > 0)
-                tmp.money = tmp.spend;
-            
-            var dateStrings = date[i].split('.');
-            tmp.year = dateStrings[0];
-            tmp.month = dateStrings[1];
-            tmp.day = dateStrings[2];
-            
-            tmp.PartitionKey = 'Bank';
-            tmp.RowKey = RowKey[i]; 
-
-
-            addData.push(tmp);
         }
 
 
